@@ -29006,6 +29006,440 @@ def func_get_opening_closing_stock_for_balancesheet(startdate,enddate,request):
 
 
 
+# def balancesheet(request):
+
+#     if request.method == 'POST':
+#         # startdate = request.POST.get('startdate')
+#         enddate = request.POST.get('enddate')
+#         # startdate = datetime.strptime(startdate, "%d-%m-%Y").date()
+#         enddate = datetime.strptime(enddate, "%d-%m-%Y").date()
+#     else:
+#         # startdate = date.today()
+#         enddate = date.today()
+    
+#     startdate = datetime(1900, 1, 1, 0, 0, 0).date()
+#     startdate_text = startdate
+#     enddate_text = enddate
+
+#     currentuser = request.user
+#     homebranch = UserProfile.objects.get(user=request.user).branch
+
+#     equity_total = 0
+#     liability_total = 0
+#     asset_total = 0
+
+#     balance_sheet_dict = {"asset":[],
+#     "liability":[]}
+#     cash_credit=0
+#     cash_debit = 0
+#     card_credit = 0 
+#     card_debit = 0
+#     bank_credit = 0 
+#     bank_debit = 0
+#     upi_credit = 0
+#     upi_debit = 0
+
+#     # transaction_obj = Transaction.objects.filter(branch=homebranch)
+
+#     transaction_obj = func_get_transaction_for_balancesheet(startdate,enddate,request)
+
+#     # print('transaction today',transaction_obj)
+#     for trans in transaction_obj:
+#         credit_or_debit = 'credit'
+#         if trans['transaction'].transactiontype == 'purchase':
+#             credit_or_debit = 'credit'
+#         elif trans['transaction'].transactiontype == 'purchasereturn':
+#             credit_or_debit = 'debit'
+#         elif trans['transaction'].transactiontype == 'sale':
+#             credit_or_debit = 'debit'
+#         elif trans['transaction'].transactiontype == 'salereturn':
+#             credit_or_debit = 'credit'
+#         elif trans['transaction'].transactiontype == 'service':
+#             credit_or_debit = 'debit'
+#         elif trans['transaction'].transactiontype == 'payment':
+#             credit_or_debit = 'credit'
+#         elif trans['transaction'].transactiontype == 'receipt':
+#             credit_or_debit = 'debit'
+#         else:
+#             pass
+
+
+#         # All possible combinations
+#         if trans['transaction'].paymentmode == 'Cash':
+#             if credit_or_debit == 'credit':
+#                 cash_credit += trans['transaction'].amount
+#             elif credit_or_debit == 'debit':
+#                 cash_debit += trans['transaction'].amount
+
+#         elif trans['transaction'].paymentmode == 'Bank':
+#             if credit_or_debit == 'credit':
+#                 bank_credit += trans['transaction'].amount
+#             elif credit_or_debit == 'debit':
+#                 bank_debit += trans['transaction'].amount
+
+#         elif trans['transaction'].paymentmode == 'UPI':
+#             if credit_or_debit == 'credit':
+#                 upi_credit += trans['transaction'].amount
+#             elif credit_or_debit == 'debit':
+#                 upi_debit += trans['transaction'].amount
+
+#         elif trans['transaction'].paymentmode == 'Card':
+#             if credit_or_debit == 'credit':
+#                 card_credit += trans['transaction'].amount
+#             elif credit_or_debit == 'debit':
+#                 card_debit += trans['transaction'].amount
+
+#         # elif trans['transaction'].paymentmode == 'Card':
+#         #     if credit_or_debit == 'credit':
+#         #         card_credit += trans['transaction'].amount
+#         #     elif credit_or_debit == 'debit':
+#         #         card_debit += trans['transaction'].amount
+#         else:
+#             pass
+
+#     def format_negative_value(value):
+#         if value < 0:
+#             return f"({abs(round(value,2))})" 
+#         return format(value, '.2f')
+
+#     CASH_ACCOUNT = cash_debit-cash_credit
+#     CASH_IN_BANK = bank_debit-bank_credit
+#     CASH_IN_UPI = upi_debit-upi_credit
+#     CASH_IN_CARD = card_debit-card_credit
+
+#     balance_sheet_dict['asset'].append({"CASH_ACCOUNT":format_negative_value(CASH_ACCOUNT)})
+#     balance_sheet_dict['asset'].append({"CASH_IN_BANK":format_negative_value(CASH_IN_BANK)})
+#     balance_sheet_dict['asset'].append({"CASH_IN_UPI":format_negative_value(CASH_IN_UPI)})
+#     balance_sheet_dict['asset'].append({"CASH_IN_CARD":format_negative_value(CASH_IN_CARD)})
+
+    
+
+#     # Calculate values
+#     CASH_ACCOUNT = cash_debit - cash_credit
+#     CASH_IN_BANK = bank_debit - bank_credit
+#     CASH_IN_UPI = upi_debit - upi_credit
+#     CASH_IN_CARD = card_debit - card_credit
+
+
+
+
+#     asset_total += ((cash_debit-cash_credit)+(bank_debit-bank_credit)+(upi_debit-upi_credit)+(card_debit-card_credit))
+
+#     ASSET_SIDE =['BRANCH ACCOUNTS',
+#     'STOCK IN HAND',
+#     'FIXED ASSETS',
+#     'INVESTMENTS',
+#     'LOAN AND ADVANCES',
+#     'OTHER ASSETS',
+#     'BRANCH ACCOUNTS'
+#     ]
+#     LIABILITY_SIDE = ['BORROWINGS',
+#     'DEPOSITS',
+#     'OTHER LIABILITIES',
+#     ]
+#     EQUITY_SIDE = [
+#         'RESERVES AND SURPLUSES',
+#         'SHARE CAPITAL',
+
+#     ]
+
+
+#     # Initialize dictionaries to store accumulated values for each account
+#     asset_accounts = {}
+#     liability_accounts = {}
+#     equity_accounts = {}
+
+#     # Initialize lists for final results
+#     payment_list_asset = []
+#     payment_list_liability = []
+#     payment_list_equity = []
+#     # Process all payments
+#     payments_obj = Payments.objects.filter(Q(branch=homebranch)& Q(paymentdate__gte=startdate)
+#         & Q(paymentdate__lte=enddate))
+#     for pay in payments_obj:
+#         debit_acc = pay.debitaccount
+#         acc_key = debit_acc.replace(" ", "_")
+#         acc_head = CoASubAccounts.objects.filter(description=debit_acc).first().head_root
+        
+#         # Process based on account type
+#         if acc_head in ASSET_SIDE:
+#             # Accumulate amounts for the same account
+#             if acc_key in asset_accounts:
+#                 asset_accounts[acc_key] += pay.amount
+#             else:
+#                 asset_accounts[acc_key] = pay.amount
+#             asset_total += pay.amount
+            
+#         elif acc_head in LIABILITY_SIDE:
+#             if acc_key in liability_accounts:
+#                 liability_accounts[acc_key] += pay.amount
+#             else:
+#                 liability_accounts[acc_key] = pay.amount
+#             liability_total += pay.amount
+            
+#         elif acc_head in EQUITY_SIDE:
+#             if acc_key in equity_accounts:
+#                 equity_accounts[acc_key] += pay.amount
+#             else:
+#                 equity_accounts[acc_key] = pay.amount
+#             equity_total += pay.amount
+
+#     # Convert accumulated accounts to list format
+#     for acc_key, amount in asset_accounts.items():
+#         payment_list_asset.append({acc_key: amount})
+
+#     for acc_key, amount in liability_accounts.items():
+#         payment_list_liability.append({acc_key: amount})
+
+#     for acc_key, amount in equity_accounts.items():
+#         payment_list_equity.append({acc_key: amount})
+
+
+
+
+
+
+
+#     # Initialize dictionaries to store accumulated values for each account
+#     asset_accounts = {}
+#     liability_accounts = {}
+#     equity_accounts = {}
+
+#     # Initialize lists for final results
+#     receipt_list_asset = []
+#     receipt_list_liability = []
+#     receipt_list_equity = []
+#     # Process all receipts
+#     receipts_obj = Receipts.objects.filter(Q(branch=homebranch)& Q(receiptdate__gte=startdate)
+#         & Q(receiptdate__lte=enddate))
+#     for receipt in receipts_obj:
+#         credit_acc = receipt.creditaccount
+#         acc_key = credit_acc.replace(" ", "_")
+#         acc_head = CoASubAccounts.objects.filter(description=credit_acc).first().head_root
+        
+#         # Process based on account type
+#         if acc_head in ASSET_SIDE:
+#             # Accumulate amounts for the same account
+#             if acc_key in asset_accounts:
+#                 asset_accounts[acc_key] += receipt.amount
+#             else:
+#                 asset_accounts[acc_key] = receipt.amount
+#             asset_total += receipt.amount
+            
+#         elif acc_head in LIABILITY_SIDE:
+#             if acc_key in liability_accounts:
+#                 liability_accounts[acc_key] += receipt.amount
+#             else:
+#                 liability_accounts[acc_key] = receipt.amount
+#             liability_total += receipt.amount
+            
+#         elif acc_head in EQUITY_SIDE:
+#             if acc_key in equity_accounts:
+#                 equity_accounts[acc_key] += receipt.amount
+#             else:
+#                 equity_accounts[acc_key] = receipt.amount
+#             equity_total += receipt.amount
+
+#     # Convert accumulated accounts to list format
+#     for acc_key, amount in asset_accounts.items():
+#         receipt_list_asset.append({acc_key: amount})
+
+#     for acc_key, amount in liability_accounts.items():
+#         receipt_list_liability.append({acc_key: amount})
+
+#     for acc_key, amount in equity_accounts.items():
+#         receipt_list_equity.append({acc_key: amount})
+
+
+
+    
+#     data = Sale.objects.filter(Q(branch=homebranch)& Q(invoicedate__gte=startdate)
+#         & Q(invoicedate__lte=enddate)).order_by("-pk")
+
+#     saleid_set = set()
+#     sale_obj = [
+#         sale
+#         for sale in data
+#         if (sale.saleid not in saleid_set and not saleid_set.add(sale.saleid))
+#     ]
+
+#     service_obj =Service.objects.filter(Q(branch=homebranch)& Q(memodate__gte=startdate)
+#         & Q(memodate__lte=enddate))
+
+#     cust_dict={}
+#     for item in sale_obj:
+#         if item.duebalance != 0:
+#             if item.customerid in cust_dict.keys():
+#                 cust_dict[item.customerid] += item.duebalance
+#                 asset_total += item.duebalance
+#             else:
+#                 cust_dict[item.customerid] = item.duebalance
+#                 asset_total += item.duebalance
+
+#     for item in service_obj:
+#         if item.duebalance != 0:
+#             cust_id = Customers.objects.filter(unique_id=item.customerid).first().id
+#             if cust_id in cust_dict.keys():
+#                 cust_dict[cust_id] += item.duebalance
+#                 asset_total += item.duebalance
+#             else:
+#                 cust_dict[cust_id] = item.duebalance
+#                 asset_total += item.duebalance
+
+#     cust_dict = {f"{Customers.objects.filter(id=key).first().firstname}_{Customers.objects.filter(id=key).first().lastname}":value for key,value in cust_dict.items()}
+
+#     account_receivable_list = [cust_dict]
+
+
+#     data = BranchPurchase.objects.filter(
+#         Q(branch=homebranch)
+#         & ~Q(purchase_type="transfer")
+#         & ~Q(purchase_type="stockadd")
+#          & Q(invoicedate__gte=startdate)
+#         & Q(invoicedate__lte=enddate)
+#     ).order_by("-pk")
+#     purchaseid_set = set()
+#     purchase_obj = [
+#         purchase
+#         for purchase in data
+#         if (
+#             purchase.purchaseid not in purchaseid_set
+#             and not purchaseid_set.add(purchase.purchaseid)
+#         )
+#     ]
+
+ 
+#     sup_dict = {}
+#     for item in purchase_obj:
+#         if item.duebalance != 0:
+#             sup_id = Suppliers.objects.filter(id=item.externalsupplier.id).first().id
+#             if sup_id in sup_dict.keys():
+#                 sup_dict[sup_id] += item.duebalance
+#                 liability_total += item.duebalance
+#             else:
+#                 sup_dict[sup_id] = item.duebalance
+#                 liability_total += item.duebalance
+
+#     sup_dict = {f"{Suppliers.objects.filter(id=key).first().name}":value for key,value in sup_dict.items()}
+#     account_payable_list = [sup_dict]
+
+
+
+#     ###################################################
+
+#     sale_tax_payable = 0
+#     for item in sale_obj:
+#         # if item.duebalance == 0:
+#         sale_tax_payable +=item.totaltax
+#     liability_total += sale_tax_payable
+
+
+
+#     purchase_tax_receivable = 0
+#     for item in purchase_obj:
+#         # if item.duebalance == 0:
+#         purchase_tax_receivable +=item.totaltax
+#     asset_total += purchase_tax_receivable
+
+
+#     service_tax_payable = 0
+#     for item in service_obj:
+#         # if item.duebalance == 0:
+#         servicerefnum = item.servicerefnumber
+#         serv_disc_obj = ServiceDiscountDetails.objects.filter(servicerefnumber=servicerefnum).first()
+#         servicetax=serv_disc_obj.servicetaxtotal_afterdiscount
+#         sparetax=serv_disc_obj.sparetaxtotal_afterdiscount
+#         totaltax = servicetax + sparetax
+#         service_tax_payable += totaltax
+#     liability_total += service_tax_payable
+
+
+#     purchase_return_tax = 0
+#     data = PurchaseReturn.objects.filter(Q(status='Processed') & Q(branch=homebranch) & Q(createddate__gte=startdate)
+#         & Q(createddate__lte=enddate))
+#     purchase_return_set = set()
+#     purchase_return_obj = [
+#         purchase
+#         for purchase in data
+#         if (
+#             purchase.purchasereturnid not in purchase_return_set
+#             and not purchase_return_set.add(purchase.purchasereturnid)
+#         )
+#     ]
+
+#     for ret in purchase_return_obj:
+#         purchase_return_tax += ret.totaltax
+#     asset_total -= purchase_return_tax 
+
+
+#     sale_return_tax = 0
+#     data = SaleReturn.objects.filter(Q(branch=homebranch)& Q(createddate__gte=startdate)
+#         & Q(createddate__lte=enddate))
+#     sale_return_set = set()
+#     sale_return_obj = [
+#         sale
+#         for sale in data
+#         if (
+#             sale.salereturnid not in sale_return_set
+#             and not sale_return_set.add(sale.salereturnid)
+#         )
+#     ]
+
+#     for ret in sale_return_obj:
+#         sale_return_tax += ret.totaltax
+#     liability_total -= sale_return_tax
+    
+
+#     ##################################################
+
+#     ################## Retained earning ############################
+#     retained_earnings = func_get_placcount_for_balancesheet(startdate,enddate,request)
+    
+#     if retained_earnings['pnl'] == 'Profit':
+#         equity_total += retained_earnings['balance']
+#     else:
+#         equity_total -= retained_earnings['balance']
+#         retained_earnings['balance'] = f"({retained_earnings['balance']})"
+#     ################################################################
+
+
+#     ################### closing stock ############################
+#     closing_stock_value = func_get_opening_closing_stock_for_balancesheet(startdate,enddate,request)
+#     asset_total += closing_stock_value
+#     ##############################################################
+
+
+
+#     context = {'asset':balance_sheet_dict['asset'],'payment_list_asset':payment_list_asset,
+#     'payment_list_liability':payment_list_liability,
+#     'payment_list_equity':payment_list_equity,
+#     'receipt_list_asset':receipt_list_asset,
+#     'receipt_list_liability':receipt_list_liability,
+#     'receipt_list_equity':receipt_list_equity,
+#     'account_receivable':account_receivable_list,
+#     'account_payable_list':account_payable_list,
+#     'total_asset':asset_total,
+#     'total_liability':liability_total,
+#     'total_equity':equity_total,
+#     'total_liability_equity':(liability_total+equity_total),
+#    'sale_return_tax' :sale_return_tax,
+#     'purchase_return_tax' :purchase_return_tax,
+#     'service_tax_payable':service_tax_payable ,
+#     'sale_tax_payable':sale_tax_payable,
+#     'purchase_tax_receivable':purchase_tax_receivable,
+#     'startdate_text':startdate_text,
+#     'enddate_text':enddate_text,
+#     'retained_earnings':retained_earnings,
+#     'closing_stock_value':closing_stock_value,
+    
+#     }
+
+#     return render(request,'balancesheetnew.html',context)
+
+
+
+
+
 def balancesheet(request):
 
     if request.method == 'POST':
@@ -29107,10 +29541,10 @@ def balancesheet(request):
     CASH_IN_UPI = upi_debit-upi_credit
     CASH_IN_CARD = card_debit-card_credit
 
-    balance_sheet_dict['asset'].append({"CASH_ACCOUNT":format_negative_value(CASH_ACCOUNT)})
-    balance_sheet_dict['asset'].append({"CASH_IN_BANK":format_negative_value(CASH_IN_BANK)})
-    balance_sheet_dict['asset'].append({"CASH_IN_UPI":format_negative_value(CASH_IN_UPI)})
-    balance_sheet_dict['asset'].append({"CASH_IN_CARD":format_negative_value(CASH_IN_CARD)})
+    balance_sheet_dict['asset'].append({"Cash_Account":format_negative_value(CASH_ACCOUNT)})
+    balance_sheet_dict['asset'].append({"Cash_In_Bank":format_negative_value(CASH_IN_BANK)})
+    balance_sheet_dict['asset'].append({"Cash_In_Upi":format_negative_value(CASH_IN_UPI)})
+    balance_sheet_dict['asset'].append({"Cash_in_Card":format_negative_value(CASH_IN_CARD)})
 
     
 
@@ -29120,8 +29554,8 @@ def balancesheet(request):
     CASH_IN_UPI = upi_debit - upi_credit
     CASH_IN_CARD = card_debit - card_credit
 
-
-
+    total_cash_in_hand = CASH_ACCOUNT + CASH_IN_BANK + CASH_IN_UPI + CASH_IN_CARD
+    total_cash_in_hand = format_negative_value(round(total_cash_in_hand,2))
 
     asset_total += ((cash_debit-cash_credit)+(bank_debit-bank_credit)+(upi_debit-upi_credit)+(card_debit-card_credit))
 
@@ -29175,14 +29609,14 @@ def balancesheet(request):
                 liability_accounts[acc_key] += pay.amount
             else:
                 liability_accounts[acc_key] = pay.amount
-            liability_total += pay.amount
+            liability_total -= pay.amount
             
         elif acc_head in EQUITY_SIDE:
             if acc_key in equity_accounts:
                 equity_accounts[acc_key] += pay.amount
             else:
                 equity_accounts[acc_key] = pay.amount
-            equity_total += pay.amount
+            equity_total -= pay.amount
 
     # Convert accumulated accounts to list format
     for acc_key, amount in asset_accounts.items():
@@ -29193,11 +29627,6 @@ def balancesheet(request):
 
     for acc_key, amount in equity_accounts.items():
         payment_list_equity.append({acc_key: amount})
-
-
-
-
-
 
 
     # Initialize dictionaries to store accumulated values for each account
@@ -29224,7 +29653,7 @@ def balancesheet(request):
                 asset_accounts[acc_key] += receipt.amount
             else:
                 asset_accounts[acc_key] = receipt.amount
-            asset_total += receipt.amount
+            asset_total -= receipt.amount
             
         elif acc_head in LIABILITY_SIDE:
             if acc_key in liability_accounts:
@@ -29266,15 +29695,22 @@ def balancesheet(request):
     service_obj =Service.objects.filter(Q(branch=homebranch)& Q(memodate__gte=startdate)
         & Q(memodate__lte=enddate))
 
+
+
+
+    accounts_receivable_total = 0
+
     cust_dict={}
     for item in sale_obj:
         if item.duebalance != 0:
             if item.customerid in cust_dict.keys():
                 cust_dict[item.customerid] += item.duebalance
                 asset_total += item.duebalance
+                accounts_receivable_total += item.duebalance
             else:
                 cust_dict[item.customerid] = item.duebalance
                 asset_total += item.duebalance
+                accounts_receivable_total += item.duebalance
 
     for item in service_obj:
         if item.duebalance != 0:
@@ -29282,13 +29718,18 @@ def balancesheet(request):
             if cust_id in cust_dict.keys():
                 cust_dict[cust_id] += item.duebalance
                 asset_total += item.duebalance
+                accounts_receivable_total += item.duebalance
             else:
                 cust_dict[cust_id] = item.duebalance
                 asset_total += item.duebalance
+                accounts_receivable_total += item.duebalance
+
+    accounts_receivable_total = format_negative_value(round(accounts_receivable_total,2))
 
     cust_dict = {f"{Customers.objects.filter(id=key).first().firstname}_{Customers.objects.filter(id=key).first().lastname}":value for key,value in cust_dict.items()}
 
     account_receivable_list = [cust_dict]
+    
 
 
     data = BranchPurchase.objects.filter(
@@ -29310,18 +29751,24 @@ def balancesheet(request):
 
  
     sup_dict = {}
+    accounts_payable_total = 0
     for item in purchase_obj:
         if item.duebalance != 0:
             sup_id = Suppliers.objects.filter(id=item.externalsupplier.id).first().id
             if sup_id in sup_dict.keys():
                 sup_dict[sup_id] += item.duebalance
                 liability_total += item.duebalance
+                accounts_payable_total += item.duebalance
             else:
                 sup_dict[sup_id] = item.duebalance
                 liability_total += item.duebalance
+                accounts_payable_total += item.duebalance
 
     sup_dict = {f"{Suppliers.objects.filter(id=key).first().name}":value for key,value in sup_dict.items()}
     account_payable_list = [sup_dict]
+
+
+    accounts_payable_total = format_negative_value(round(accounts_payable_total,2))
 
 
 
@@ -29353,6 +29800,8 @@ def balancesheet(request):
         service_tax_payable += totaltax
     liability_total += service_tax_payable
 
+    
+
 
     purchase_return_tax = 0
     data = PurchaseReturn.objects.filter(Q(status='Processed') & Q(branch=homebranch) & Q(createddate__gte=startdate)
@@ -29370,6 +29819,8 @@ def balancesheet(request):
     for ret in purchase_return_obj:
         purchase_return_tax += ret.totaltax
     asset_total -= purchase_return_tax 
+
+    
 
 
     sale_return_tax = 0
@@ -29389,7 +29840,8 @@ def balancesheet(request):
         sale_return_tax += ret.totaltax
     liability_total -= sale_return_tax
     
-
+    total_tax_payable=((sale_tax_payable+service_tax_payable)-sale_return_tax)
+    total_tax_payable = format_negative_value(round(total_tax_payable,2))
     ##################################################
 
     ################## Retained earning ############################
@@ -29409,7 +29861,11 @@ def balancesheet(request):
     ##############################################################
 
 
+    total_tax_receivable = purchase_tax_receivable - purchase_return_tax
+    total_tax_receivable = format_negative_value(round(total_tax_receivable,2))
 
+
+    
     context = {'asset':balance_sheet_dict['asset'],'payment_list_asset':payment_list_asset,
     'payment_list_liability':payment_list_liability,
     'payment_list_equity':payment_list_equity,
@@ -29426,18 +29882,19 @@ def balancesheet(request):
     'purchase_return_tax' :purchase_return_tax,
     'service_tax_payable':service_tax_payable ,
     'sale_tax_payable':sale_tax_payable,
+    "total_tax_payable":total_tax_payable,
     'purchase_tax_receivable':purchase_tax_receivable,
     'startdate_text':startdate_text,
     'enddate_text':enddate_text,
     'retained_earnings':retained_earnings,
     'closing_stock_value':closing_stock_value,
-    
+    "accounts_payable_total":accounts_payable_total,
+    "total_cash_in_hand":total_cash_in_hand,
+    "accounts_receivable_total":accounts_receivable_total,
+    "total_tax_receivable":total_tax_receivable
     }
 
     return render(request,'balancesheetnew.html',context)
-
-
-
 
 
 

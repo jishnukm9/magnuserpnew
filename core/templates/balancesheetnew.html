@@ -1,14 +1,35 @@
+
+
 {% extends "navbar.html" %} 
 {% load custom_filters %}
 {% block content %}
 
 <style>
-  .custom-header {
-        background-color: #f8f9fa;
-        color: #333333;
-        font-weight: bold;
-    }
+.custom-header {
+    background-color: #f8f9fa;
+}
 
+.section-content {
+    display: none;
+}
+
+.section-header {
+    cursor: pointer;
+}
+
+.section-header i {
+    transition: transform 0.3s;
+}
+
+.section-header.expanded i {
+    transform: rotate(90deg);
+}
+
+.checkbox-container {
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #e9ecef;
+}
 </style>
 
 <div class="main-panel">
@@ -21,42 +42,46 @@
               <a class="nav-link active ps-0 pe-0 ms-0 me-3" style="color: #4555B9; border-bottom:2px solid #4555B9; font-weight: 500;" href="">
                 Balancesheet
               </a>
-             
             </nav>
           </div>
           <br />
 
           <div class="card shadow-sm mb-4" style="border-radius:8px; border:1px solid #e9ecef;">
-            
             <div class="card-header py-3 d-flex justify-content-between bg-white">
-              <h5 class="m-0 font-weight-bold " style="color:#2c2e2f"> <strong>Balance Sheet</strong> </h5>
-          
+              <h5 class="m-0 font-weight-bold" style="color:#2c2e2f"> <strong>Balance Sheet</strong> </h5>
               <div class="d-flex align-items-center gap-3">
-  
-                        
-                <i id="fa-magnifying-glass-moneyreciept"   data-toggle="modal" data-target="#balancesheetsearch" class="fa-solid fa-magnifying-glass  fs-4"></i>
-  
+                <i id="fa-magnifying-glass-moneyreciept" data-toggle="modal" data-target="#balancesheetsearch" class="fa-solid fa-magnifying-glass fs-4"></i>
                 <a class="moneyreciept-clear" href="{% url 'balancesheet_new' %}">Clear</a>
-             </div>
+              </div>
             </div>
+
+            <!-- <div class="checkbox-container">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="expandAllSections">
+                <label class="form-check-label" for="expandAllSections">
+                  Expand All Sections
+                </label>
+              </div>
+            </div> -->
+
             <div class="card-body p-4">
-              
-              <div>
+              <div class="d-flex justify-content-between">
+                <p> <strong>Date</strong> : {{enddate_text}} </p>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="expandAllSections">
+                  <label class="form-check-label p-0 m-0 fw-bold" style="padding-top:16px" for="expandAllSections">
+                    Expand All
+                  </label>
+                </div>
+              </div>
 
-                <p>  <strong>Date</strong> : {{enddate_text}} </p>
-            </div>
-              <!-- Filter Controls -->
-              
-
-              <!-- Balance Tables -->
               <div class="row">
                 <!-- Liabilities and Equity Tables -->
                 <div class="col-md-6">
-                  <!-- Liabilities Table -->
                   <div class="table-responsive mb-4">
                     <table class="table table-bordered">
-                      <thead  class="custom-header">
-                        <tr >
+                      <thead class="custom-header">
+                        <tr>
                           <th class="py-3 px-4 fs-5" style="width: 70%; color: #2c2e2f; font-weight: 600;">
                             Liabilities
                           </th>
@@ -66,59 +91,87 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for item in receipt_list_liability %}
-                        {% for key, value in item.items %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
-                        {% endfor %}
-                        {% endfor %}
-
-                        {% for item in payment_list_liability %}
-                        {% for key, value in item.items %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
-                        {% endfor %}
-                        {% endfor %}
-
-
-                        <tr>
-                          <td class="fw-bold fs-7 py-3">Account Payable</td>
-                          <td></td>
+                        <!-- Account Payable Section -->
+                        <tr class="section-header" data-section="accountPayable">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            Account Payable
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">{{ accounts_payable_total }}</td>
                         </tr>
                         {% for item in account_payable_list %}
                         {% for key, value in item.items %}
-                        <tr>
+                        <tr class="section-content" data-section="accountPayable">
                           <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
                           <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
                         {% endfor %}
 
-                        <!-- <tr>
+                        <!-- Tax Payable Section -->
+                        <tr class="section-header" data-section="taxPayable">
                           <td class="fw-bold fs-7 py-3">
-
+                            <i class="fas fa-chevron-right me-2"></i>
+                            Tax Payable
                           </td>
-                        </tr> -->
-                        <tr>
-                          <td class="fw-bold fs-7 py-3">Tax Payable</td>
-                          <td></td>
+                          <td class="py-3 px-4 text-end align-middle">({{ total_tax_payable }})</td>
                         </tr>
-                        <tr>
+                        <tr class="section-content" data-section="taxPayable">
                           <td class="py-3 px-4 align-middle">Sale Tax Payable</td>
                           <td class="py-3 px-4 text-end align-middle">{{ sale_tax_payable | floatformat:2 }}</td>
                         </tr>
-                        <tr>
+                        <tr class="section-content" data-section="taxPayable">
                           <td class="py-3 px-4 align-middle">Less: Tax on Sales Returns</td>
                           <td class="py-3 px-4 text-end align-middle">({{ sale_return_tax | floatformat:2 }})</td>
                         </tr>
-                        <tr>
+                        <tr class="section-content" data-section="taxPayable">
                           <td class="py-3 px-4 align-middle">Service Tax Payable</td>
                           <td class="py-3 px-4 text-end align-middle">{{ service_tax_payable | floatformat:2 }}</td>
                         </tr>
+
+
+
+
+                        {% for item in receipt_list_liability %}
+                        {% for key, value in item.items %}
+                        <tr class="section-header" data-section="reclia">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            {{ key | replaceunderscore }}
+                          </td>
+                        
+                            <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
+                          
+                        </tr>
+                        <tr class="section-content" data-section="reclia">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+
+
+                        
+                        {% for item in payment_list_liability %}
+                        {% for key, value in item.items %}
+                        <tr class="section-header" data-section="paylia">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            {{ key | replaceunderscore }}
+                          </td>
+                       
+                            <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
+                        
+                        </tr>
+                        <tr class="section-content" data-section="paylia">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                        
+
+
 
 
 
@@ -135,7 +188,8 @@
                     </table>
                   </div>
 
-                  <!-- Equity Table -->
+                  <!-- Rest of your Equity table remains the same -->
+                    <!-- Equity Table -->
                   <div class="table-responsive">
                     <table class="table table-bordered" >
                       <thead  class="custom-header">
@@ -151,32 +205,58 @@
                       <tbody>
                         {% for item in receipt_list_equity %}
                         {% for key, value in item.items %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
+                        <tr class="section-header" data-section="receq">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            {{ key | replaceunderscore }}
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
+                        </tr>
+                        <tr class="section-content" data-section="receq">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
                         {% endfor %}
+
+
                         {% for item in payment_list_equity %}
                         {% for key, value in item.items %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
+                        <tr class="section-header" data-section="payeq">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            {{ key | replaceunderscore }}
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
+                        </tr>
+                        <tr class="section-content" data-section="payeq">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
                         </tr>
                         {% endfor %}
                         {% endfor %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">Reatained Earnings ({{retained_earnings.pnl}})</td>
-                          <td class="py-3 px- text-end align-middle">{{ retained_earnings.balance }}</td>
+
+
+
+                        <tr class="section-header" data-section="closeStock">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            Reatained Earnings ({{retained_earnings.pnl}})
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">{{ retained_earnings.balance }}</td>
+                        </tr>
+                        <tr class="section-content" data-section="closeStock">
+                          <td class="py-3 px-4 align-middle">Reatained Earnings ({{retained_earnings.pnl}})</td>
+                          <td class="py-3 px-4 text-end align-middle">{{ retained_earnings.balance }}</td>
                         </tr>
 
                         <tr class="table-light fw-bold">
-                          <td class="py-3 px- align-middle">Total Equity</td>
-                          <td class="py-3 px- text-end align-middle">{{total_equity | floatformat:2}}</td>
+                          <td class="py-3 px-4 align-middle">Total Equity</td>
+                          <td class="py-3 px-4 text-end align-middle">{{total_equity | floatformat:2}}</td>
                         </tr>
                         <tr class="table-secondary fw-bold">
-                          <td class="py-3 px- align-middle">Total Liabilities and Equity</td>
-                          <td class="py-3 px- text-end align-middle">{{total_liability_equity | floatformat:2}}</td>
+                          <td class="py-3 px-4 align-middle">Total Liabilities and Equity</td>
+                          <td class="py-3 px-4 text-end align-middle">{{total_liability_equity | floatformat:2}}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -186,9 +266,9 @@
                 <!-- Assets Table -->
                 <div class="col-md-6">
                   <div class="table-responsive">
-                    <table class="table table-bordered" >
-                      <thead  class="custom-header">
-                        <tr >
+                    <table class="table table-bordered">
+                      <thead class="custom-header">
+                        <tr>
                           <th class="py-3 px-4 fs-5" style="width: 70%; color: #2c2e2f; font-weight: 600;">
                             Assets
                           </th>
@@ -198,76 +278,115 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td class="fw-bold fs-7 py-3">Cash In Hand</td>
-                          <td></td>
+                        <!-- Cash in Hand Section -->
+                        <tr class="section-header" data-section="cashInHand">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            Cash In Hand
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">{{ total_cash_in_hand }}</td>
                         </tr>
                         {% for item in asset %}
-                          {% for key, value in item.items %}
-                          <tr>
-                              <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                              <td class="py-3 px-4 text-end align-middle">{{ value }}</td>
-                          </tr>
-                          {% endfor %}
-                      {% endfor %}
-                        {% for item in payment_list_asset %}
                         {% for key, value in item.items %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
+                        <tr class="section-content" data-section="cashInHand">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">{{ value }}</td>
                         </tr>
                         {% endfor %}
                         {% endfor %}
 
-                        {% for item in receipt_list_asset %}
-                        {% for key, value in item.items %}
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
+                        <!-- Account Receivable Section -->
+                        <tr class="section-header" data-section="accountReceivable">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            Account Receivable
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">{{ accounts_receivable_total | floatformat:2 }}</td>
                         </tr>
-                        {% endfor %}
-                        {% endfor %}
-
-                        <tr>
-                          <td class="py-3 px- align-middle fw-bold">Closing Stock</td>
-                          <td class="py-3 px- text-end align-middle">{{ closing_stock_value | floatformat:2 }}</td>
-                        </tr>
-
-
-                        <tr>
-                          <td class="fw-bold fs-7 py-3">Account Receivable</td>
-                          <td></td>
-                        </tr>
-
                         {% for item in account_receivable %}
                         {% for key, value in item.items %}
-                        <tr>
+                        <tr class="section-content" data-section="accountReceivable">
                           <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
                           <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
                         {% endfor %}
 
-                        <!-- <tr>
+                        <!-- Tax Receivable Section -->
+                        <tr class="section-header" data-section="taxReceivable">
                           <td class="fw-bold fs-7 py-3">
-
+                            <i class="fas fa-chevron-right me-2"></i>
+                            Tax Receivable
                           </td>
-                        </tr> -->
-                        <tr>
-                          <td class="fw-bold fs-7 py-3">Tax Receivable</td>
-                          <td></td>
+                          <td class="py-3 px-4 text-end align-middle">{{ total_tax_receivable }}</td>
                         </tr>
-                        <tr>
+                        <tr class="section-content" data-section="taxReceivable">
                           <td class="py-3 px-4 align-middle">Purchase Tax Receivable</td>
                           <td class="py-3 px-4 text-end align-middle">{{ purchase_tax_receivable | floatformat:2 }}</td>
                         </tr>
-                        <tr>
+                        <tr class="section-content" data-section="taxReceivable">
                           <td class="py-3 px-4 align-middle">Less: Tax on Purchase Returns</td>
                           <td class="py-3 px-4 text-end align-middle">({{ purchase_return_tax | floatformat:2 }})</td>
                         </tr>
 
 
+
+                        {% for item in payment_list_asset %}
+                        {% for key, value in item.items %}
+                        <tr class="section-header" data-section="payAsset">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            {{ key | replaceunderscore }}
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
+                        </tr>
+
+                        <tr class="section-content" data-section="payAsset">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
+                        </tr>
+
+                        {% endfor %}
+                        {% endfor %}
+
+
+
+
+                        {% for item in receipt_list_asset %}
+                        {% for key, value in item.items %}
+                        <tr class="section-header" data-section="recAsset">
+                          <td class="fw-bold fs-7 py-3">
+                            <i class="fas fa-chevron-right me-2"></i>
+                            {{ key | replaceunderscore }}
+                          </td>
+                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
+                        </tr>
+                        <tr class="section-content" data-section="recAsset">
+                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+
+
+
                         
+                          <tr class="section-header" data-section="closeStock">
+                            <td class="fw-bold fs-7 py-3">
+                              <i class="fas fa-chevron-right me-2"></i>
+                              Closing Stock
+                            </td>
+                            <td class="py-3 px-4 text-end align-middle">{{ closing_stock_value | floatformat:2 }}</td>
+                          </tr>
+                          <tr class="section-content" data-section="closeStock">
+                            <td class="py-3 px-4 align-middle">Closing Stock</td>
+                            <td class="py-3 px-4 text-end align-middle">{{ closing_stock_value | floatformat:2 }}</td>
+                          </tr>
+                      
+
+
+
+
                         <tr class="table-light fw-bold">
                           <td class="py-3 px-4 align-middle">Total Assets</td>
                           <td class="py-3 px-4 text-end align-middle">{{total_asset | floatformat:2}}</td>
@@ -285,72 +404,36 @@
   </div>
 </div>
 
+<!-- Your existing modal code remains the same -->
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const expandAllCheckbox = document.getElementById('expandAllSections');
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    const sectionContents = document.querySelectorAll('.section-content');
 
-<div class="modal fade" tabindex="-1" id="balancesheetsearch">
-  <div class="modal-dialog">
-    <div class="modal-content w-100">
-      <div
-        class="modal-header d-flex justify-content-between align-items-center m"
-      >
-        <h5 class="modal-title"><strong>Search Balance Sheet</strong></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-           <span aria-hidden="true">&times;</span>
-         </button>
-      </div>
-    
-      <form action="{% url 'balancesheet_new' %}" method="POST">
-        {% csrf_token %}
-        <div class="modal-body">
-           
-       
+    // Handle expand all checkbox
+    expandAllCheckbox.addEventListener('change', function() {
+        const isExpanded = this.checked;
+        sectionHeaders.forEach(header => {
+            header.classList.toggle('expanded', isExpanded);
+        });
+        sectionContents.forEach(content => {
+            content.style.display = isExpanded ? 'table-row' : 'none';
+        });
+    });
 
-            <!-- <div class="form-group">
-              <label class=" mb-2" for="">  <strong>Start Date</strong>      </label>
-              <div id="datepicker" 
-                        
-           class="input-group date datepicker-field" 
-           data-date-format="dd-mm-yyyy">
-          <input class="form-control " 
-          name="startdate"
-          autocomplete="off" 
-          
-                 type="text"  />
-          <span class="input-group-addon">
-              <i class="glyphicon glyphicon-calendar"></i>
-          </span>
-      </div>
-            </div> -->
-            <div class="form-group">
-              <label class=" mb-2" for="">  <strong>As of Date</strong>      </label>
-              <div id="datepicker" 
-                        
-           class="input-group date datepicker-field" 
-           data-date-format="dd-mm-yyyy">
-          <input class="form-control " 
-          name="enddate"
-          autocomplete="off" 
-          
-                 type="text"  />
-          <span class="input-group-addon">
-              <i class="glyphicon glyphicon-calendar"></i>
-          </span>
-      </div>
-            </div>
-           
-         </div>
-         <div class="modal-footer">
-
-
-
-        
-           <button type="submit" class="btn btn-primary">Search</button>
-         </div>
-      </form>
-      
-     
-    </div>
-  </div>
-</div>
-
+    // Handle individual section toggles
+    sectionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const sectionName = this.dataset.section;
+            const contents = document.querySelectorAll(`.section-content[data-section="${sectionName}"]`);
+            this.classList.toggle('expanded');
+            contents.forEach(content => {
+                content.style.display = this.classList.contains('expanded') ? 'table-row' : 'none';
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

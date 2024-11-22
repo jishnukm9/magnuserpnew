@@ -1,0 +1,34 @@
+2024-11-22   *  Bought office Table (Payment) 
+     Assets:FIXED ASSETS:Bought Office Table     2000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-22   *  Office chair (Payment) 
+     Assets:FIXED ASSETS:Bought Office Table     2000 INR
+     Assets:CASH AT BANKS:CASH AT BANKS
+
+2024-11-22  *  given back office chair  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      2000  INR
+     Assets:FIXED ASSETS:Bought Office Table
+
+2024-11-22  *  Owners Capital  (Receipt) 
+     Assets:CASH AT BANKS:CASH AT BANKS      40000  INR
+     Equity:SHARE CAPITAL:Owners Capital
+
+2024-11-22   *  Reverse Owners Capital (Payment) 
+     Equity:SHARE CAPITAL:Owners Capital     40000.00 INR
+     Assets:CASH AT BANKS:CASH AT BANKS
+
+2024-11-22 * INV76756555 (Purchase Credit Transaction)
+     Expenses:Purchase        34500.0 INR 
+     Assets:Purchase:Cash
+     Liabilities:Purchase:AccountPayable:Rony electronics  -4500.0 INR
+
+2024-11-22 * INV0900909123 (Purchase Credit Transaction)
+     Expenses:Purchase        34500.0 INR 
+     Assets:Purchase:Cash
+     Liabilities:Purchase:AccountPayable:CellFix Components  -31500.0 INR
+
+2024-11-22  *  Loan From Canara Bank  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      80000  INR
+     Liabilities:BORROWINGS:Loan From Canara Bank
+
