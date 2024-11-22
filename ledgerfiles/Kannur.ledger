@@ -32,3 +32,9 @@
      Assets:CASH ACCOUNT:CASH ACCOUNT      80000  INR
      Liabilities:BORROWINGS:Loan From Canara Bank
 
+2024-11-22 * INV-24111 (Sale Credit Transaction)
+    Assets:Sale:Cash              910.0 INR
+    Assets:Sale:AccountReceivable:jishnu        10.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable                                   -120.0  INR
+

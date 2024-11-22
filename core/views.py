@@ -29840,6 +29840,7 @@ def balancesheet(request):
         sale_return_tax += ret.totaltax
     liability_total -= sale_return_tax
     
+    print("tax payable",sale_tax_payable,service_tax_payable,sale_return_tax)
     total_tax_payable=((sale_tax_payable+service_tax_payable)-sale_return_tax)
     total_tax_payable = format_negative_value(round(total_tax_payable,2))
     ##################################################
