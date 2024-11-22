@@ -29009,14 +29009,15 @@ def func_get_opening_closing_stock_for_balancesheet(startdate,enddate,request):
 def balancesheet(request):
 
     if request.method == 'POST':
-        startdate = request.POST.get('startdate')
+        # startdate = request.POST.get('startdate')
         enddate = request.POST.get('enddate')
-        startdate = datetime.strptime(startdate, "%d-%m-%Y").date()
+        # startdate = datetime.strptime(startdate, "%d-%m-%Y").date()
         enddate = datetime.strptime(enddate, "%d-%m-%Y").date()
     else:
-        startdate = date.today()
+        # startdate = date.today()
         enddate = date.today()
-
+    
+    startdate = datetime(1900, 1, 1, 0, 0, 0).date()
     startdate_text = startdate
     enddate_text = enddate
 
@@ -29106,10 +29107,6 @@ def balancesheet(request):
     CASH_IN_UPI = upi_debit-upi_credit
     CASH_IN_CARD = card_debit-card_credit
 
-    print("cash bank",format_negative_value(CASH_IN_BANK))
-    print("cash ",format_negative_value(CASH_ACCOUNT))
-    print("cash UPI",format_negative_value(CASH_IN_UPI))
-    print("cash card",format_negative_value(CASH_IN_CARD))
     balance_sheet_dict['asset'].append({"CASH_ACCOUNT":format_negative_value(CASH_ACCOUNT)})
     balance_sheet_dict['asset'].append({"CASH_IN_BANK":format_negative_value(CASH_IN_BANK)})
     balance_sheet_dict['asset'].append({"CASH_IN_UPI":format_negative_value(CASH_IN_UPI)})
@@ -29438,6 +29435,8 @@ def balancesheet(request):
     }
 
     return render(request,'balancesheetnew.html',context)
+
+
 
 
 
