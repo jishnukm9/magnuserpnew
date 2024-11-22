@@ -11191,6 +11191,9 @@ def payment_form(request):
     debit_dropdown = CoASubAccounts.objects.all()
     # Below filter filters only cash related accounts because credits in payments are always cash related
     credit_dropdown = coa.COA_GROUP_LIST
+    credit_dropdown = [account for account in credit_dropdown 
+                if account['name'] in ['CASH ACCOUNT', 'CASH AT BANKS']]
+
     return render(
         request,
         "paymentform.html",
@@ -11513,6 +11516,8 @@ def receipt_form(request):
     credit_dropdown = CoASubAccounts.objects.all()
     # Below filter filters only cash related accounts because credits in Receipts are always cash related
     debit_dropdown = coa.COA_GROUP_LIST
+    debit_dropdown = [account for account in debit_dropdown 
+                if account['name'] in ['CASH ACCOUNT', 'CASH AT BANKS']]
     return render(
         request,
         "receiptform.html",
