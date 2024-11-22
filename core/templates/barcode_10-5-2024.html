@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{bc_type}} Barcode</title>
+    <style>
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      .barcode-container {
+        width: 100%;
+        
+      }
+
+      .barcode-item {
+        /* width: 20%;
+        margin-right: 12px;
+        margin-bottom: 60px; */
+        display: inline-block;
+        position: relative;
+       
+      }
+      .barcode-item-purchase {
+        /* width: 20%;
+        margin-right: 12px;
+        margin-bottom: 10px; */
+        display: inline-block;
+        position: relative;
+      }
+
+      .barcode-text {
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+        text-align: center;
+        word-wrap: break-word;
+  overflow-wrap: break-word;
+      }
+
+      .barcode-image {
+        width: 92%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .barcode-details {
+        width: 100%;
+        position: absolute;
+        top: 89px;
+        left:0;
+      }
+
+      .company{
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+      {% if bc_type == 'Service' %}
+    <div class="barcode-container" style="margin-left:230px;display:flex; justify-content: center;align-items: center;">
+      {% for barcode in barcode_base64 %}
+      <div class="barcode-item" style="margin-right:100px;" >
+       
+        <!-- <p class="company">{{company_name}}</p> -->
+        <img src="data:image/png;base64,{{ barcode }}" class="barcode-image" />
+        <div class="barcode-details">
+          <!-- <p class="barcode-text">{{date}}</p>
+          <p class="barcode-text">{{mobile}}:<span>{{customer}}</span></p>
+          <p class="barcode-text">{{problem}}</p> -->
+        </div>
+       
+      </div>
+
+
+
+      <div class="barcode-item" >
+       
+        <!-- <p class="company">{{company_name}}</p> -->
+        <img src="data:image/png;base64,{{ barcode }}" class="barcode-image" />
+        <div class="barcode-details">
+          <!-- <p class="barcode-text">{{date}}</p>
+          <p class="barcode-text">{{mobile}}:<span>{{customer}}</span></p>
+          <p class="barcode-text">{{problem}}</p> -->
+        </div>
+       
+      </div>
+      {% endfor %}
+      {% elif bc_type == 'Purchase' %}
+      <div style="width: 100%">
+        {% for barcode in barcode_base64 %}
+        <div class="barcode-item-purchase">
+            <!-- <p class="company">{{company_name}}</p> -->
+            <img src="data:image/png;base64,{{ barcode }}" class="barcode-image" />
+          </div>
+        
+  
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
