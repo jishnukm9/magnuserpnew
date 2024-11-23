@@ -28133,36 +28133,57 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     end_datetime = timezone.make_aware(datetime.combine(enddate, datetime.max.time()))
 
     # Calculate total opening stock value
-    additions_value_before_start = StockTransaction.objects.filter(
+    additions_before_start_transactions = StockTransaction.objects.filter(
         created_date__lt=start_datetime,
         transactiontype='Add',
         branch=branch
-    ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+    ).values('purchase_rate', 'quantity')
+    
+    additions_value_before_start = sum(
+        transaction['purchase_rate'] * transaction['quantity']
+        for transaction in additions_before_start_transactions
+    )
 
-    subtractions_value_before_start = StockTransaction.objects.filter(
+    subtractions_before_start_transactions = StockTransaction.objects.filter(
         created_date__lt=start_datetime,
         transactiontype='Sub',
         branch=branch
-    ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+    ).values('purchase_rate', 'quantity')
+    
+    subtractions_value_before_start = sum(
+        transaction['purchase_rate'] * transaction['quantity']
+        for transaction in subtractions_before_start_transactions
+    )
 
     opening_stock_value = additions_value_before_start - subtractions_value_before_start
 
     expense_total += opening_stock_value
 
     # Calculate stock value changes during the period
-    additions_value_during_period = StockTransaction.objects.filter(
+    additions_during_period_transactions = StockTransaction.objects.filter(
         created_date__gte=start_datetime,
         created_date__lte=end_datetime,
         transactiontype='Add',
         branch=branch
-    ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
-
-    subtractions_value_during_period = StockTransaction.objects.filter(
+    ).values('purchase_rate', 'quantity')
+    
+    additions_value_during_period = sum(
+        transaction['purchase_rate'] * transaction['quantity']
+        for transaction in additions_during_period_transactions
+    )
+    
+    subtractions_during_period_transactions = StockTransaction.objects.filter(
         created_date__gte=start_datetime,
         created_date__lte=end_datetime,
         transactiontype='Sub',
         branch=branch
-    ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+    ).values('purchase_rate', 'quantity')
+    
+    subtractions_value_during_period = sum(
+        transaction['purchase_rate'] * transaction['quantity']
+        for transaction in subtractions_during_period_transactions
+    )
+
 
     stock_change_value = additions_value_during_period - subtractions_value_during_period
 
@@ -28194,7 +28215,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
 
     purchase_expense = 0
     for items in purchase_obj:
-        purchase_expense += items.totalbillingamount
+        purchase_expense += (items.totalbillingamount-items.totaltax)
 
     expense_total += purchase_expense 
 
@@ -28209,7 +28230,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     ]
     sale_income = 0
     for items in sale_obj :
-        sale_income += items.totalbillingamount
+        sale_income += (items.totalbillingamount-items.totaltax)
     income_total += sale_income
 
 
@@ -28217,10 +28238,13 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     # service income
 
     service_obj =Service.objects.filter(Q(branch=branch)& Q(memodate__gte=startdate)
-        & Q(memodate__lte=enddate))
+        & Q(memodate__lte=enddate)& Q(status='Delivered(Ok)'))
     service_income = 0
     for item in service_obj:
-        service_income += item.finalamount
+        servicerefnumber = item.servicerefnumber
+        servicedic_obj = ServiceDiscountDetails.objects.filter(servicerefnumber=servicerefnumber).first()
+        total_tax = servicedic_obj.sparetaxtotal_afterdiscount + servicedic_obj.servicetaxtotal_afterdiscount
+        service_income += (finalamount - total_tax)
     income_total += service_income
 
     # spare cost
@@ -28248,7 +28272,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     ]
 
     for ret in purchase_return_obj:
-        purchase_return += ret.nettotal
+        purchase_return += (ret.nettotal - ret.totaltax)
     income_total += purchase_return
 
 
@@ -28267,7 +28291,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     ]
 
     for ret in sale_return_obj:
-        sale_return += ret.nettotal
+        sale_return += (ret.nettotal - ret.totaltax)
     expense_total += sale_return
   
     # OTHER EXPENSE
@@ -28383,7 +28407,11 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
         pnl = 'Loss'
         final = expense_total
 
+    # balance = round((balance / (1 + (15/100))),2)
+
     print("bal",balance,"pnl",pnl)
+
+
 
     return {"balance":balance,'pnl':pnl}
 
@@ -29789,31 +29817,56 @@ def balancesheet(request):
     
 
     list_asset_total = []
+    asset_keys = set()
+
     for rec_item in receipt_list_asset:
-        for pay_item in payment_list_asset:
-            for key in rec_item.keys():
-                if key in pay_item.keys():
-                    dict = {}
-                    final = pay_item[key] - rec_item[key] 
-                    dict[key] = format_negative_value(round(final,2))
-                    list_asset_total.append(dict)
-                    continue
+        asset_keys.update(rec_item.keys())
+    for pay_item in payment_list_asset:
+        asset_keys.update(pay_item.keys())
+
+    for key in asset_keys:
+        dict = {}
+        rec_value = next((item[key] for item in receipt_list_asset if key in item), 0)
+        pay_value = next((item[key] for item in payment_list_asset if key in item), 0)
+        final = pay_value - rec_value
+        dict[key] = format_negative_value(round(final, 2))
+        list_asset_total.append(dict)
+             
+
 
 
     list_liability_total = []
+    liability_keys = set()
+
     for rec_item in receipt_list_liability:
-        for pay_item in payment_list_liability:
-            for key in rec_item.keys():
-                if key in pay_item.keys():
-                    dict = {}
-                    final = rec_item[key] - pay_item[key] 
-                    dict[key] = format_negative_value(round(final,2))
-                    list_liability_total.append(dict)
-                    continue
+        liability_keys.update(rec_item.keys())
+    for pay_item in payment_list_liability:
+        liability_keys.update(pay_item.keys())
+
+    for key in liability_keys:
+        dict = {}
+        rec_value = next((item[key] for item in receipt_list_liability if key in item), 0)
+        pay_value = next((item[key] for item in payment_list_liability if key in item), 0)
+        final = rec_value - pay_value
+        dict[key] = format_negative_value(round(final, 2))
+        list_liability_total.append(dict)
 
 
     list_equity_total = []
+    equity_keys = set()
+
     for rec_item in receipt_list_equity:
+        equity_keys.update(rec_item.keys())
+    for pay_item in payment_list_equity:
+        equity_keys.update(pay_item.keys())
+
+    for key in equity_keys:
+        dict = {}
+        rec_value = next((item[key] for item in receipt_list_equity if key in item), 0)
+        pay_value = next((item[key] for item in payment_list_equity if key in item), 0)
+        final = rec_value - pay_value
+        dict[key] = format_negative_value(round(final,2))
+        list_equity_total.append(dict)
         for pay_item in payment_list_equity:
             for key in rec_item.keys():
                 if key in pay_item.keys():
@@ -30400,12 +30453,9 @@ def balancesheet(request):
 
 
 
-
-
-
-
 @login_required
 def placcountnew(request):
+
     if request.method == 'POST':
         startdate = request.POST.get('startdate')
         enddate = request.POST.get('enddate')
@@ -30417,15 +30467,21 @@ def placcountnew(request):
 
     startdate_text = startdate
     enddate_text = enddate
-    branch = request.user.userprofile.branch
+
+    branch=request.user.userprofile.branch
+
+
+
     income_total = 0
     expense_total = 0
 
-    # Opening stock Closing stock section (Quantity)
+    #Opening stock Closing stock section
+
+    # Convert dates to datetime objects with time component
     start_datetime = timezone.make_aware(datetime.combine(startdate, datetime.min.time()))
     end_datetime = timezone.make_aware(datetime.combine(enddate, datetime.max.time()))
 
-    # Calculate total opening stock quantity (This part remains unchanged)
+    # Calculate total opening stock
     additions_before_start = StockTransaction.objects.filter(
         created_date__lt=start_datetime,
         transactiontype='Add',
@@ -30440,7 +30496,7 @@ def placcountnew(request):
 
     opening_stock = additions_before_start - subtractions_before_start
 
-    # Calculate stock changes during the period (quantity) (This part remains unchanged)
+    # Calculate stock changes during the period
     additions_during_period = StockTransaction.objects.filter(
         created_date__gte=start_datetime,
         created_date__lte=end_datetime,
@@ -30456,10 +30512,25 @@ def placcountnew(request):
     ).aggregate(total=Sum('quantity'))['total'] or 0
 
     stock_change = additions_during_period - subtractions_during_period
+
+    # Calculate closing stock
     closing_stock = opening_stock + stock_change
 
-    # Opening stock Closing stock section (STOCK VALUE)
-    # Calculate total opening stock value using purchase_rate * quantity
+    
+
+    #Opening stock Closing stock section (STOCK VALUE)
+
+    # Convert dates to datetime objects with time component
+    start_datetime = timezone.make_aware(datetime.combine(startdate, datetime.min.time()))
+    end_datetime = timezone.make_aware(datetime.combine(enddate, datetime.max.time()))
+
+    # Calculate total opening stock value
+    # additions_value_before_start = StockTransaction.objects.filter(
+    #     created_date__lt=start_datetime,
+    #     transactiontype='Add',
+    #     branch=branch
+    # ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+
     additions_before_start_transactions = StockTransaction.objects.filter(
         created_date__lt=start_datetime,
         transactiontype='Add',
@@ -30470,6 +30541,13 @@ def placcountnew(request):
         transaction['purchase_rate'] * transaction['quantity']
         for transaction in additions_before_start_transactions
     )
+
+    # subtractions_value_before_start = StockTransaction.objects.filter(
+    #     created_date__lt=start_datetime,
+    #     transactiontype='Sub',
+    #     branch=branch
+    # ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+
     
     subtractions_before_start_transactions = StockTransaction.objects.filter(
         created_date__lt=start_datetime,
@@ -30481,11 +30559,28 @@ def placcountnew(request):
         transaction['purchase_rate'] * transaction['quantity']
         for transaction in subtractions_before_start_transactions
     )
-    
+
+
+
     opening_stock_value = additions_value_before_start - subtractions_value_before_start
+
     expense_total += opening_stock_value
 
     # Calculate stock value changes during the period
+    # additions_value_during_period = StockTransaction.objects.filter(
+    #     created_date__gte=start_datetime,
+    #     created_date__lte=end_datetime,
+    #     transactiontype='Add',
+    #     branch=branch
+    # ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+
+    # subtractions_value_during_period = StockTransaction.objects.filter(
+    #     created_date__gte=start_datetime,
+    #     created_date__lte=end_datetime,
+    #     transactiontype='Sub',
+    #     branch=branch
+    # ).aggregate(total_value=Sum('transaction_value'))['total_value'] or 0
+
     additions_during_period_transactions = StockTransaction.objects.filter(
         created_date__gte=start_datetime,
         created_date__lte=end_datetime,
@@ -30509,10 +30604,18 @@ def placcountnew(request):
         transaction['purchase_rate'] * transaction['quantity']
         for transaction in subtractions_during_period_transactions
     )
+
     
     stock_change_value = additions_value_during_period - subtractions_value_during_period
+
+    # Calculate closing stock value
     closing_stock_value = opening_stock_value + stock_change_value
+
     income_total += closing_stock_value
+
+
+    print("income",income_total)
+
 
     #Purchase Expense
 
@@ -30535,7 +30638,7 @@ def placcountnew(request):
 
     purchase_expense = 0
     for items in purchase_obj:
-        purchase_expense += items.totalbillingamount
+        purchase_expense += (items.totalbillingamount-items.totaltax)
 
     expense_total += purchase_expense 
 
@@ -30550,7 +30653,7 @@ def placcountnew(request):
     ]
     sale_income = 0
     for items in sale_obj :
-        sale_income += items.totalbillingamount
+        sale_income += (items.totalbillingamount-items.totaltax)
     income_total += sale_income
 
 
@@ -30558,10 +30661,13 @@ def placcountnew(request):
     # service income
 
     service_obj =Service.objects.filter(Q(branch=branch)& Q(memodate__gte=startdate)
-        & Q(memodate__lte=enddate))
+        & Q(memodate__lte=enddate) & Q(status='Delivered(Ok)'))
     service_income = 0
     for item in service_obj:
-        service_income += item.finalamount
+        servicerefnumber = item.servicerefnumber
+        servicedic_obj = ServiceDiscountDetails.objects.filter(servicerefnumber=servicerefnumber).first()
+        total_tax = servicedic_obj.sparetaxtotal_afterdiscount + servicedic_obj.servicetaxtotal_afterdiscount
+        service_income += (finalamount - total_tax)
     income_total += service_income
 
     # spare cost
@@ -30589,7 +30695,7 @@ def placcountnew(request):
     ]
 
     for ret in purchase_return_obj:
-        purchase_return += ret.nettotal
+        purchase_return += (ret.nettotal - ret.totaltax)
     income_total += purchase_return
 
 
@@ -30608,7 +30714,7 @@ def placcountnew(request):
     ]
 
     for ret in sale_return_obj:
-        sale_return += ret.nettotal
+        sale_return += (ret.nettotal - ret.totaltax)
     expense_total += sale_return
   
     # OTHER EXPENSE
@@ -30746,32 +30852,6 @@ def placcountnew(request):
     'startdate_text':startdate_text,
     'enddate_text':enddate_text,
     }
-    
 
     return render(request, "placcountnew.html", data)
-
-    
-########################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

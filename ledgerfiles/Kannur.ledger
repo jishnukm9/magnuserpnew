@@ -107,3 +107,109 @@
      Expenses:Purchase        69000.0  INR 
      Assets:Purchase:Cash 
 
+2024-11-23 * 35427 (Purchase Transaction)
+     Expenses:Purchase        575.0  INR 
+     Assets:Purchase:Bank 
+
+2024-11-23 * INV-24111 (Sale Transaction)
+    Assets:Sale:Bank              690.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -90.0  INR
+
+2024-11-23 * 45454 (Purchase Transaction)
+     Expenses:Purchase        575.0  INR 
+     Assets:Purchase:Bank 
+
+2024-11-23 * INV-24112 (Sale Transaction)
+    Assets:Sale:Card              690.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -90.0  INR
+
+2024-11-23 * 45122 (Purchase Transaction)
+     Expenses:Purchase        48300.0  INR 
+     Assets:Purchase:Bank 
+
+2024-11-23 * INV-24113 (Sale Transaction)
+    Assets:Sale:Bank              5290.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -690.0  INR
+
+2024-11-23   *  eqyuipment (Payment) 
+     Assets:FIXED ASSETS:equipment     15000 INR
+     Assets:CASH AT BANKS:CASH AT BANKS
+
+2024-11-23  *  owner equipment  (Receipt) 
+     Assets:CASH AT BANKS:CASH AT BANKS      1500000  INR
+     Equity:SHARE CAPITAL:owner capital
+
+2024-11-23 * 35427 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Cash      575.0 INR 
+     Income:PurchaseReturn
+
+2024-11-23 * INV-24111 (Sale Return Transaction)
+     Expenses:SaleReturn:Cash       690.0 INR
+     Assets:SaleReturn
+     Liabilities:Sale:TaxPayable      90.0  INR
+
+2024-11-23 * 45456 (Purchase Credit Transaction)
+     Expenses:Purchase        17250.0 INR 
+     Assets:Purchase:Bank
+     Liabilities:Purchase:AccountPayable:new supplier 1  -17250.0 INR
+
+2024-11-23 * 4645 (Purchase Credit Transaction)
+     Expenses:Purchase        8050.0 INR 
+     Assets:Purchase:Cash
+     Liabilities:Purchase:AccountPayable:new supplier  -3050.0 INR
+
+2024-11-23 * INV7676555 (Purchase Transaction)
+     Expenses:Purchase        4600.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-23 * INV-24111 (Sale Transaction)
+    Assets:Sale:Cash              575.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -75.0  INR
+
+2024-11-23 * INV-24112 (Sale Transaction)
+    Assets:Sale:Card              500.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -65.22  INR
+
+2024-11-23 * INV7675755 (Purchase Transaction)
+     Expenses:Purchase        7000.0  INR 
+     Assets:Purchase:UPI 
+
+2024-11-23 * INV76767363563 (Purchase Transaction)
+     Expenses:Purchase        4600.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-23 * INV-24111 (Sale Transaction)
+    Assets:Sale:Cash              1150.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -150.0  INR
+
+2024-11-23   *  Owners Capital (Payment) 
+     Equity:SHARE CAPITAL:Owners Capital     1000000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-23  *  Owners Capital  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      1000000.00  INR
+     Equity:SHARE CAPITAL:Owners Capital
+
+2024-11-23  *  Loan Taken From ICICI Bank  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      50000  INR
+     Liabilities:BORROWINGS:Loan Taken From ICICI Bank
+
+2024-11-23   *  Loan Taken From ICICI Bank Revrsing (Payment) 
+     Liabilities:BORROWINGS:Loan Taken From ICICI Bank     50000.00 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-23 * INV56565656 (Purchase Transaction)
+     Expenses:Purchase        2300.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-23 * INV-24111 (Sale Transaction)
+    Assets:Sale:Cash              690.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -90.0  INR
+
