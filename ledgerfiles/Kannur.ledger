@@ -62,3 +62,35 @@
      Liabilities:BORROWINGS:Loan From Canara Bank     80000.00 INR
      Assets:CASH AT BANKS:CASH AT BANKS
 
+2024-11-23  *  Loan From Canara Bank  (Receipt) 
+     Assets:CASH AT BANKS:CASH AT BANKS      40000  INR
+     Liabilities:OTHER LIABILITIES:Loan from canara Bank
+
+2024-11-23   *  Loan From Canara Bank Reverse (Payment) 
+     Liabilities:OTHER LIABILITIES:Loan from canara Bank     40000.00 INR
+     Assets:CASH AT BANKS:CASH AT BANKS
+
+2024-11-23  *  Owners Capital  (Receipt) 
+     Assets:CASH AT BANKS:CASH AT BANKS      100000  INR
+     Equity:SHARE CAPITAL:Owners Capital
+
+2024-11-23   *  Owners Capital Reversed (Payment) 
+     Equity:SHARE CAPITAL:Owners Capital     100000 INR
+     Assets:CASH AT BANKS:CASH AT BANKS
+
+2024-11-23   *  Office Furniture (Payment) 
+     Assets:FIXED ASSETS:Office Furniture     200 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-23  *  Office Furniture Reversed  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      200  INR
+     Assets:FIXED ASSETS:Office Furniture
+
+2024-11-23  *  Loan From Canara Bank  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      300  INR
+     Liabilities:OTHER LIABILITIES:Loan from canara Bank
+
+2024-11-23   *  Owners capital reversed (Payment) 
+     Equity:SHARE CAPITAL:Owners Capital     10000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+

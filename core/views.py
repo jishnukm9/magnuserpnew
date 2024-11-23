@@ -28298,7 +28298,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     for pay in payments_obj:
         debit_acc = pay.debitaccount
         acc_key = debit_acc.replace(" ", "_")
-        acc_head = CoASubAccounts.objects.filter(description=debit_acc).first().head_root
+        acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
         
         # Process based on account type
         if acc_head in INCOME_SIDE:
@@ -28343,7 +28343,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     for receipt in receipts_obj:
         credit_acc = receipt.creditaccount
         acc_key = credit_acc.replace(" ", "_")
-        acc_head = CoASubAccounts.objects.filter(description=credit_acc).first().head_root
+        acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
         
         # Process based on account type
         if acc_head in INCOME_SIDE:
@@ -29159,7 +29159,7 @@ def func_get_opening_closing_stock_for_balancesheet(startdate,enddate,request):
 #     for pay in payments_obj:
 #         debit_acc = pay.debitaccount
 #         acc_key = debit_acc.replace(" ", "_")
-#         acc_head = CoASubAccounts.objects.filter(description=debit_acc).first().head_root
+#         acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
         
 #         # Process based on account type
 #         if acc_head in ASSET_SIDE:
@@ -29215,7 +29215,7 @@ def func_get_opening_closing_stock_for_balancesheet(startdate,enddate,request):
 #     for receipt in receipts_obj:
 #         credit_acc = receipt.creditaccount
 #         acc_key = credit_acc.replace(" ", "_")
-#         acc_head = CoASubAccounts.objects.filter(description=credit_acc).first().head_root
+#         acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
         
 #         # Process based on account type
 #         if acc_head in ASSET_SIDE:
@@ -29559,7 +29559,8 @@ def balancesheet(request):
 
     asset_total += ((cash_debit-cash_credit)+(bank_debit-bank_credit)+(upi_debit-upi_credit)+(card_debit-card_credit))
 
-    ASSET_SIDE =['BRANCH ACCOUNTS',
+    ASSET_SIDE =[
+        'BRANCH ACCOUNTS',
     'STOCK IN HAND',
     'FIXED ASSETS',
     'INVESTMENTS',
@@ -29592,7 +29593,7 @@ def balancesheet(request):
     for pay in payments_obj:
         debit_acc = pay.debitaccount
         acc_key = debit_acc.replace(" ", "_")
-        acc_head = CoASubAccounts.objects.filter(description=debit_acc).first().head_root
+        acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
         
         # Process based on account type
         if acc_head in ASSET_SIDE:
@@ -29643,7 +29644,7 @@ def balancesheet(request):
     for receipt in receipts_obj:
         credit_acc = receipt.creditaccount
         acc_key = credit_acc.replace(" ", "_")
-        acc_head = CoASubAccounts.objects.filter(description=credit_acc).first().head_root
+        acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
         
         # Process based on account type
         if acc_head in ASSET_SIDE:
@@ -29684,6 +29685,47 @@ def balancesheet(request):
     # print("receipt list asset",receipt_list_asset)
     # print("payment list asset",payment_list_asset)
 
+    
+
+    list_asset_total = []
+    for rec_item in receipt_list_asset:
+        for pay_item in payment_list_asset:
+            for key in rec_item.keys():
+                if key in pay_item.keys():
+                    dict = {}
+                    final = pay_item[key] - rec_item[key] 
+                    dict[key] = format_negative_value(round(final,2))
+                    list_asset_total.append(dict)
+                    continue
+
+
+    list_liability_total = []
+    for rec_item in receipt_list_liability:
+        for pay_item in payment_list_liability:
+            for key in rec_item.keys():
+                if key in pay_item.keys():
+                    dict = {}
+                    final = rec_item[key] - pay_item[key] 
+                    dict[key] = format_negative_value(round(final,2))
+                    list_liability_total.append(dict)
+                    continue
+
+
+    list_equity_total = []
+    for rec_item in receipt_list_equity:
+        for pay_item in payment_list_equity:
+            for key in rec_item.keys():
+                if key in pay_item.keys():
+                    dict = {}
+                    final = rec_item[key] - pay_item[key] 
+                    dict[key] = format_negative_value(round(final,2))
+                    list_equity_total.append(dict)
+                    continue
+
+
+    # print("list asset total",list_asset_total)
+    # print("list liability total",list_liability_total)
+    # print("list equity total",list_equity_total)
 
 
     
@@ -29897,7 +29939,10 @@ def balancesheet(request):
     "accounts_payable_total":accounts_payable_total,
     "total_cash_in_hand":total_cash_in_hand,
     "accounts_receivable_total":accounts_receivable_total,
-    "total_tax_receivable":total_tax_receivable
+    "total_tax_receivable":total_tax_receivable,
+    'list_asset_total':list_asset_total,
+    'list_liability_total':list_liability_total,
+    'list_equity_total':list_equity_total,
     }
 
     return render(request,'balancesheetnew.html',context)
@@ -30142,7 +30187,7 @@ def placcountnew(request):
     for pay in payments_obj:
         debit_acc = pay.debitaccount
         acc_key = debit_acc.replace(" ", "_")
-        acc_head = CoASubAccounts.objects.filter(description=debit_acc).first().head_root
+        acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
         
         # Process based on account type
         if acc_head in INCOME_SIDE:
@@ -30187,7 +30232,7 @@ def placcountnew(request):
     for receipt in receipts_obj:
         credit_acc = receipt.creditaccount
         acc_key = credit_acc.replace(" ", "_")
-        acc_head = CoASubAccounts.objects.filter(description=credit_acc).first().head_root
+        acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
         
         # Process based on account type
         if acc_head in INCOME_SIDE:
