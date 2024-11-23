@@ -213,3 +213,13 @@
     Income:Sale
     Liabilities:Sale:TaxPayable      -90.0  INR
 
+2024-11-23 * INV-24112 (Sale Transaction)
+    Assets:Sale:Cash              345.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -45.0  INR
+
+2024-11-23 * INV-24112 (Sale Return Transaction)
+     Expenses:SaleReturn:Cash       345.0 INR
+     Assets:SaleReturn
+     Liabilities:Sale:TaxPayable      45.0  INR
+
