@@ -29574,7 +29574,6 @@ def balancesheet(request):
     EQUITY_SIDE = [
         'RESERVES AND SURPLUSES',
         'SHARE CAPITAL',
-
     ]
 
 
@@ -29678,6 +29677,12 @@ def balancesheet(request):
 
     for acc_key, amount in equity_accounts.items():
         receipt_list_equity.append({acc_key: amount})
+
+
+
+
+    # print("receipt list asset",receipt_list_asset)
+    # print("payment list asset",payment_list_asset)
 
 
 
@@ -29840,7 +29845,7 @@ def balancesheet(request):
         sale_return_tax += ret.totaltax
     liability_total -= sale_return_tax
     
-    print("tax payable",sale_tax_payable,service_tax_payable,sale_return_tax)
+    # print("tax payable",sale_tax_payable,service_tax_payable,sale_return_tax)
     total_tax_payable=((sale_tax_payable+service_tax_payable)-sale_return_tax)
     total_tax_payable = format_negative_value(round(total_tax_payable,2))
     ##################################################

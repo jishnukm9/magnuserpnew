@@ -55,14 +55,7 @@
               </div>
             </div>
 
-            <!-- <div class="checkbox-container">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="expandAllSections">
-                <label class="form-check-label" for="expandAllSections">
-                  Expand All Sections
-                </label>
-              </div>
-            </div> -->
+           
 
             <div class="card-body p-4">
               <div class="d-flex justify-content-between">
@@ -132,43 +125,38 @@
 
 
 
-                        {% for item in receipt_list_liability %}
-                        {% for key, value in item.items %}
-                        <tr class="section-header" data-section="reclia">
-                          <td class="fw-bold fs-7 py-3">
-                            <i class="fas fa-chevron-right me-2"></i>
-                            {{ key | replaceunderscore }}
-                          </td>
-                        
-                            <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
+                        {% with merged_keys=receipt_list_liability|merge_keys:payment_list_liability %}
+                        {% for key in merged_keys %}
+                          <!-- Section Header -->
+                          <tr class="section-header" data-section="{{ key }}">
+                            <td class="fw-bold fs-7 py-3">
+                              <i class="fas fa-chevron-right me-2"></i>
+                              {{ key | replaceunderscore }}
+                            </td>
+                            <td class="py-3 px-4 text-end align-middle"></td>
+                          </tr>
                           
-                        </tr>
-                        <tr class="section-content" data-section="reclia">
-                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
+                          <!-- Receipt Entry (if exists) -->
+                          {% with receipt_value=receipt_list_liability|get_value:key %}
+                            {% if receipt_value != 0 %}
+                              <tr class="section-content" data-section="{{ key }}">
+                                <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                                <td class="py-3 px-4 text-end align-middle">{{ receipt_value|floatformat:2 }}</td>
+                              </tr>
+                            {% endif %}
+                          {% endwith %}
+                          
+                          <!-- Payment Entry (if exists) -->
+                          {% with payment_value=payment_list_liability|get_value:key %}
+                            {% if payment_value != 0 %}
+                              <tr class="section-content" data-section="{{ key }}">
+                                <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                                <td class="py-3 px-4 text-end align-middle">({{ payment_value|floatformat:2 }})</td>
+                              </tr>
+                            {% endif %}
+                          {% endwith %}
                         {% endfor %}
-                        {% endfor %}
-
-
-                        
-                        {% for item in payment_list_liability %}
-                        {% for key, value in item.items %}
-                        <tr class="section-header" data-section="paylia">
-                          <td class="fw-bold fs-7 py-3">
-                            <i class="fas fa-chevron-right me-2"></i>
-                            {{ key | replaceunderscore }}
-                          </td>
-                       
-                            <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
-                        
-                        </tr>
-                        <tr class="section-content" data-section="paylia">
-                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
-                        </tr>
-                        {% endfor %}
-                        {% endfor %}
+                      {% endwith %}
                         
 
 
@@ -203,38 +191,55 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for item in receipt_list_equity %}
-                        {% for key, value in item.items %}
-                        <tr class="section-header" data-section="receq">
-                          <td class="fw-bold fs-7 py-3">
-                            <i class="fas fa-chevron-right me-2"></i>
-                            {{ key | replaceunderscore }}
-                          </td>
-                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
-                        <tr class="section-content" data-section="receq">
-                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
+    
+                        
+
+                        
+                        {% with merged_keys=receipt_list_equity|merge_keys:payment_list_equity %}
+                        {% for key in merged_keys %}
+                          <!-- Section Header -->
+                          <tr class="section-header" data-section="{{ key }}">
+                            <td class="fw-bold fs-7 py-3">
+                              <i class="fas fa-chevron-right me-2"></i>
+                              {{ key | replaceunderscore }}
+                            </td>
+                            <td class="py-3 px-4 text-end align-middle"></td>
+                          </tr>
+                          
+                          <!-- Receipt Entry (if exists) -->
+                          {% with receipt_value=receipt_list_equity|get_value:key %}
+                            {% if receipt_value != 0 %}
+                              <tr class="section-content" data-section="{{ key }}">
+                                <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                                <td class="py-3 px-4 text-end align-middle">{{ receipt_value|floatformat:2 }}</td>
+                              </tr>
+                            {% endif %}
+                          {% endwith %}
+                          
+                          <!-- Payment Entry (if exists) -->
+                          {% with payment_value=payment_list_equity|get_value:key %}
+                            {% if payment_value != 0 %}
+                              <tr class="section-content" data-section="{{ key }}">
+                                <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+                                <td class="py-3 px-4 text-end align-middle">({{ payment_value|floatformat:2 }})</td>
+                              </tr>
+                            {% endif %}
+                          {% endwith %}
                         {% endfor %}
-                        {% endfor %}
+                      {% endwith %}
 
 
-                        {% for item in payment_list_equity %}
-                        {% for key, value in item.items %}
-                        <tr class="section-header" data-section="payeq">
-                          <td class="fw-bold fs-7 py-3">
-                            <i class="fas fa-chevron-right me-2"></i>
-                            {{ key | replaceunderscore }}
-                          </td>
-                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
-                        </tr>
-                        <tr class="section-content" data-section="payeq">
-                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
-                        </tr>
-                        {% endfor %}
-                        {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -331,42 +336,41 @@
 
 
 
-                        {% for item in payment_list_asset %}
-                        {% for key, value in item.items %}
-                        <tr class="section-header" data-section="payAsset">
-                          <td class="fw-bold fs-7 py-3">
-                            <i class="fas fa-chevron-right me-2"></i>
-                            {{ key | replaceunderscore }}
-                          </td>
-                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
-
-                        <tr class="section-content" data-section="payAsset">
-                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px-4 text-end align-middle">{{ value | floatformat:2 }}</td>
-                        </tr>
-
-                        {% endfor %}
-                        {% endfor %}
+      
 
 
-
-
-                        {% for item in receipt_list_asset %}
-                        {% for key, value in item.items %}
-                        <tr class="section-header" data-section="recAsset">
-                          <td class="fw-bold fs-7 py-3">
-                            <i class="fas fa-chevron-right me-2"></i>
-                            {{ key | replaceunderscore }}
-                          </td>
-                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
-                        </tr>
-                        <tr class="section-content" data-section="recAsset">
-                          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
-                          <td class="py-3 px-4 text-end align-middle">({{ value | floatformat:2 }})</td>
-                        </tr>
-                        {% endfor %}
-                        {% endfor %}
+                        {% with merged_keys=receipt_list_asset|merge_keys:payment_list_asset %}
+  {% for key in merged_keys %}
+    <!-- Section Header -->
+    <tr class="section-header" data-section="{{ key }}">
+      <td class="fw-bold fs-7 py-3">
+        <i class="fas fa-chevron-right me-2"></i>
+        {{ key | replaceunderscore }}
+      </td>
+      <td class="py-3 px-4 text-end align-middle"></td>
+    </tr>
+    
+    <!-- Payment Entry (if exists) -->
+    {% with payment_value=payment_list_asset|get_value:key %}
+      {% if payment_value != 0 %}
+        <tr class="section-content" data-section="{{ key }}">
+          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+          <td class="py-3 px-4 text-end align-middle">{{ payment_value|floatformat:2 }}</td>
+        </tr>
+      {% endif %}
+    {% endwith %}
+    
+    <!-- Receipt Entry (if exists) -->
+    {% with receipt_value=receipt_list_asset|get_value:key %}
+      {% if receipt_value != 0 %}
+        <tr class="section-content" data-section="{{ key }}">
+          <td class="py-3 px-4 align-middle">{{ key | replaceunderscore }}</td>
+          <td class="py-3 px-4 text-end align-middle">({{ receipt_value|floatformat:2 }})</td>
+        </tr>
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
+{% endwith %}
 
 
 

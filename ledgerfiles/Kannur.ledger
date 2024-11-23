@@ -38,3 +38,27 @@
     Income:Sale
     Liabilities:Sale:TaxPayable                                   -120.0  INR
 
+2024-11-23 * INV-24112 (Sale Transaction)
+    Assets:Sale:Cash              920.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -120.0  INR
+
+2024-11-23 * INV-24113 (Sale Transaction)
+    Assets:Sale:Bank              2875.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -375.0  INR
+
+2024-11-23 * INV-24111 (Sale Due full Transaction)
+    Assets:Sale:AccountReceivable:jishnu     -10 INR 
+    Assets:Sale:UPI 
+
+2024-11-23 * INV-24114 (Sale Credit Transaction)
+    Assets:Sale:Card              0.0 INR
+    Assets:Sale:AccountReceivable:jishnu        4025.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable                                   -525.0  INR
+
+2024-11-23   *  Loan from canara bank reverse (Payment) 
+     Liabilities:BORROWINGS:Loan From Canara Bank     80000.00 INR
+     Assets:CASH AT BANKS:CASH AT BANKS
+

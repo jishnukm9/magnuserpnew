@@ -68,10 +68,12 @@
                       <tbody>
                         {% for item in receipt_list_liability %}
                         {% for key, value in item.items %}
+                        
                         <tr>
                           <td class="py-3 px- align-middle fw-bold "  >{{ key | replaceunderscore }}</td>
                           <td class="py-3 px- text-end align-middle">{{ value | floatformat:2 }}</td>
                         </tr>
+
                         {% endfor %}
                         {% endfor %}
 
