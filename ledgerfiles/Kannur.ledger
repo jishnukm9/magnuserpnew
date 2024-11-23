@@ -94,3 +94,16 @@
      Equity:SHARE CAPITAL:Owners Capital     10000 INR
      Assets:CASH ACCOUNT:CASH ACCOUNT
 
+2024-11-23 * INV987857587665 (Purchase Transaction)
+     Expenses:Purchase        2300.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-23 * INV-24111 (Sale Transaction)
+    Assets:Sale:Cash              345.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -45.0  INR
+
+2024-11-23 * INV7878787555 (Purchase Transaction)
+     Expenses:Purchase        69000.0  INR 
+     Assets:Purchase:Cash 
+

@@ -64,7 +64,7 @@
 
       <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css" media="all">
         
-       
+  
    </head>
    <!-- <body class="sidebar-icon-only" > -->
       <body class="{{request.user.userprofile.sidebar_status}}"  >
@@ -834,7 +834,7 @@
 
 
 
-
+     
       <!-- plugins:js -->
       <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
       <!-- endinject -->
@@ -910,7 +910,9 @@ https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js -->
       <script src="{% static 'js/table2excel.js' %}"></script>
       <script src="{% static 'js/jquery.toast.min.js' %}"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-
+      <script src="
+      https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js
+      "></script>
      <script>
          var csrf_token = '{{csrf_token}}'
       </script>
