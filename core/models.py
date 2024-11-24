@@ -665,6 +665,7 @@ class Transaction(models.Model):
     remarks = models.CharField(default=None, blank=True, max_length=200, null=True)
     transactiondate = models.DateField(null=True, blank=True, default=None)
 
+
     def __str__(self):
         return str(self.transactionid)
 

@@ -229,3 +229,108 @@
     Income:Sale
     Liabilities:Sale:TaxPayable                                   -45.0  INR
 
+2024-11-24 * INV-24111 (Sale Return Transaction)
+     Expenses:SaleReturn:Cash       300.0 INR
+     Assets:SaleReturn
+     Liabilities:Sale:TaxPayable      45.0  INR
+
+2024-11-24 * INV767633434 (Purchase Transaction)
+     Expenses:Purchase        15065.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * INV767633434 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Card      14565.0 INR 
+     Income:PurchaseReturn
+
+2024-11-01 * INV7676555 (Purchase Transaction)
+     Expenses:Purchase        34500.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-02 * INV-24114 (Sale Transaction)
+    Assets:Sale:Card              4025.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -525.0  INR
+
+2024-11-24 * INV7676555 (Purchase Transaction)
+     Expenses:Purchase        69000.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * 090900089 (Purchase Transaction)
+     Expenses:Purchase        89000.04  INR 
+     Assets:Purchase:Card 
+
+2024-11-24 * INV76755554 (Purchase Transaction)
+     Expenses:Purchase        34500.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * INV76755554 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Cash      34000.0 INR 
+     Income:PurchaseReturn
+
+2024-11-24 * INV76765555 (Purchase Transaction)
+     Expenses:Purchase        10000.06  INR 
+     Assets:Purchase:Card 
+
+2024-11-24 * 6556654444 (Purchase Transaction)
+     Expenses:Purchase        33999.98  INR 
+     Assets:Purchase:Card 
+
+2024-11-24 * 6556654444 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Cash      34500.0 INR 
+     Income:PurchaseReturn
+
+2024-11-24 * INV76765555 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Card      10350.0 INR 
+     Income:PurchaseReturn
+
+2024-11-24 * INV65657676 (Purchase Transaction)
+     Expenses:Purchase        4000.04  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * INV65657676 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Cash      4000.0 INR 
+     Income:PurchaseReturn
+
+2024-11-24 * INV7676555555 (Purchase Transaction)
+     Expenses:Purchase        33999.98  INR 
+     Assets:Purchase:Card 
+
+2024-11-24 * INV7676555555 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Cash      33999.98 INR 
+     Income:PurchaseReturn
+
+2024-11-24 * 090990901212 (Purchase Transaction)
+     Expenses:Purchase        4549.98  INR 
+     Assets:Purchase:Card 
+
+2024-11-24 * INV7676555 (Purchase Transaction)
+     Expenses:Purchase        10000.06  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * INV7676555 (Purchase Return Transaction)
+     Assets:PurchaseReturn:Cash      10000.06 INR 
+     Income:PurchaseReturn
+
+2024-11-24 * INV87878555 (Purchase Transaction)
+     Expenses:Purchase        34500.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * INV-24111 (Sale Transaction)
+    Assets:Sale:Cash              4025.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -525.0  INR
+
+2024-11-24 * INV76575765765 (Purchase Transaction)
+     Expenses:Purchase        34500.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-24 * INV-24111 (Sale Transaction)
+    Assets:Sale:Cash              3525.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -459.78  INR
+
+2024-11-24 * INV-24111 (Sale Return Transaction)
+     Expenses:SaleReturn:Cash       3525.0 INR
+     Assets:SaleReturn
+     Liabilities:Sale:TaxPayable      459.78  INR
+

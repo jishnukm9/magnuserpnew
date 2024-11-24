@@ -2043,7 +2043,7 @@ $(document).ready(function () {
 
     let previousDue = $("#prevdue").val();
     let amountPaid = $("#amountrecieved").val();
-    console.log("prev", previousDue, "amount rec", amountPaid);
+  
     if (parseFloat(amountPaid) > parseFloat(previousDue)) {
       submitStatus = true;
       alert("Amount Paid is larger than Previous Due");
@@ -2056,354 +2056,10 @@ $(document).ready(function () {
   });
 });
 
-// purchase form validation
-// $(document).ready(function () {
- 
 
-//   const purchaseFormValidation = function () {
-//     $("#purchaseForm").submit(function (event) {
-//       event.preventDefault(); 
-
-//       $(".saledisabledselect").prop("disabled", false);
-//       $(".purchasedisabledselect").prop("disabled", false);
-
-//       var submitStatus = false; 
-   
-//       var products = [];
-//       $(".purchase-entry-table tbody tr").each(function () {
-//         var product = $(this).find('[name^="name"]').val();
-//         if (products.includes(product)) {
-//           submitStatus = true;
-//           alert("Duplicate product in invoice entries.");
-//           return false; 
-//         }
-//         products.push(product);
-
-//         var unitprice = $(this).find('[name^="price"]').val();
-//         if (unitprice === "" || unitprice === undefined || unitprice == "") {
-//           submitStatus = true;
-//           alert("Unit Price is required.");
-//           return false;
-//         }
-
-//         let finalAmount = $("#totalbillingamount").val();
-//         let amountPaid = $("#amountrecieved").val();
-
-//         if (parseFloat(amountPaid) > parseFloat(finalAmount)) {
-//           submitStatus = true;
-//           alert("Amount Paid is larger than Final Amount.");
-//           return false;
-//         }
-
-//         var purchasegst = $(this).find('[name^="purchasegst"]').val();
-//         if (
-//           purchasegst === "" ||
-//           purchasegst === undefined ||
-//           purchasegst == ""
-//         ) {
-//           submitStatus = true;
-//           alert("Purchas GST is required.");
-//           return false;
-//         }
-
-//         var salegst = $(this).find('[name^="salegst"]').val();
-//         if (salegst === "" || salegst === undefined || salegst == "") {
-//           submitStatus = true;
-//           alert("Sales GST is required.");
-//           return false;
-//         }
-
-//         var quantity = $(this).find('[name^="quantity"]').val();
-//         if (quantity === "" || quantity === undefined || quantity == "") {
-//           submitStatus = true;
-//           alert("Quantity is required.");
-//           return false;
-//         }
-
-//         var mrp = $(this).find('[name^="mrp"]').val();
-//         if (mrp === "" || mrp === undefined || mrp == "") {
-//           submitStatus = true;
-//           alert("MRP required.");
-//           return false;
-//         }
-
-//         var mop = $(this).find('[name^="mop"]').val();
-//         if (mop === "" || mop === undefined || mop == "") {
-//           submitStatus = true;
-//           alert("MOP is required.");
-//           return false;
-//         }
-//       });
-
-//       var invoicenumber = $(this).find('[name^="invoicenumber"]').val();
-//       if (
-//         invoicenumber === "" ||
-//         invoicenumber === undefined ||
-//         invoicenumber === null
-//       ) {
-//         submitStatus = true;
-//         alert("Invoice Number is required.");
-//         return false;
-//       }
-
-//       var supplier = $(this).find('[name^="supplier"]').val();
-//       if (supplier === "" || supplier === undefined || supplier === null) {
-//         submitStatus = true;
-//         alert("Supplier is required.");
-//         return false;
-//       }
-
-//       var paymentmode = $(this).find('[name^="paymentmode"]').val();
-//       if (
-//         paymentmode === "" ||
-//         paymentmode === undefined ||
-//         paymentmode == ""
-//       ) {
-//         submitStatus = true;
-//         alert("Payment Mode is required.");
-//         return false;
-//       }
-
-
-//       if (!submitStatus) {
-//         $("#purchaseForm")[0].submit();
-//       }
-//     });
-//   };
-
-//   $("#amountrecieved").on("change", function () {
-//     console.log("changed..");
-//     purchaseFormValidation();
-//   });
-
-//   purchaseFormValidation();
-// });
 
 $(".close-conf").click(function () {
   $("#confirmationModal").css("display", "none");
-});
-
-// #############################################
-// ##############  Purchase Return #############
-// #############################################
-
-const purchaseReturnFormValidation = function () {
-  $("#purchasereturnform").submit(function (event) {
-    event.preventDefault();
-    let status = false;
-
-
-    
-
-      
-    // Check if at least one checkbox is checked
-    if ($("[name^='productcheck']:checked").length === 0) {
-      status = true;
-      alert("Please check at least one product row.");
-      return false;
-    }
-
-    // Iterate through checked checkboxes
-    $("[name^='productcheck']:checked").each(function () {
-      var rowIndex = this.name.match(/\d+/)[0];
-
-      // Get return quantity and refund amount inputs for the current row
-      var returnQtyInput = $("#returnqty" + rowIndex);
-      var refundAmountInput = $("#refundamount" + rowIndex);
-
-      // Check if return quantity and refund amount are empty
-      if (!returnQtyInput.val() || !refundAmountInput.val()) {
-        status = true;
-        // Alert and prevent form submission
-        alert(
-          "Please fill in return quantity and refund amount for the checked rows.",
-        );
-        location.reload();
-        return false;
-        
-      }
-
-      let returnQtyInput2 = parseFloat($("#returnqty" + rowIndex).val());
-      let availableQuantity = parseFloat($("#qtynow" + rowIndex).val());
-      let product = $("#product" + rowIndex).val();
-
-     
-
-      if(availableQuantity < returnQtyInput2){
-
-
-        status = true;
-        // Alert and prevent form submission
-        alert(
-          `Only ${availableQuantity} ${product} left in stock`,
-        );
-        location.reload();
-        return false;
-     
-
-
-      }
-
-     
-
-
-
-      
-    });
-
-    // If all checks pass, the form will be submitted
-    if (!status) {
-      $("#purchasereturnform")[0].submit();
-    }
-  });
-};
-
-purchaseReturnFormValidation();
-
-$(document).ready(function () {
-  $(".purchase-return-table tbody tr [name^='productcheck']").change(
-    function () {
-      console.log("product checked..");
-
-      purchaseReturnFormValidation();
-
-      let closestTr = $(this).closest("tr");
-
-      if ($(this).prop("checked")) {
-        closestTr.find("[name^='returnqty']").removeAttr("readonly");
-        closestTr.find("[name^='rate']").removeAttr("readonly");
-        closestTr.find("[name^='tax']").removeAttr("disabled");
-        closestTr.find("[name^='refundamount']").removeAttr("readonly");
-        closestTr.find("[name^='reason']").removeAttr("disabled");
-      } else {
-        closestTr.find("[name^='returnqty']").attr("readonly", true);
-        closestTr.find("[name^='rate']").attr("readonly", true);
-        closestTr.find("[name^='tax']").attr("disabled", true);
-        closestTr.find("[name^='refundamount']").attr("readonly", true);
-        closestTr.find("[name^='reason']").attr("disabled", true);
-      }
-    },
-  );
-
-  let totalAmount = 0;
-  let taxFinal = 0;
-  let qtyFinal = 0;
-  let discount = 0;
-
-  function calculateNetAmount() {
-    var netAmount = 0;
-    var totalTaxAmount = 0;
-    let totalQty = 0;
-
-    // Loop through each row in the table
-    $(".purchase-return-table tr:gt(0)").each(function () {
-      if ($(this).find("[name^='productcheck']").prop("checked")) {
-        let refundAmount =
-          parseFloat($(this).find('input[name^="refundamount"]').val()) || 0;
-        let rate = parseFloat($(this).find('input[name^="rate"]').val()) || 0;
-        let returnQty =
-          parseInt($(this).find('input[name^="returnqty"]').val()) || 0;
-        let tax =
-          parseFloat(
-            $(this).find('select[name^="tax"]').find(":selected").data("tax"),
-          ) || 0;
-        let taxAmount = refundAmount - rate * returnQty;
-
-        netAmount += refundAmount;
-        totalTaxAmount += taxAmount;
-        totalQty += returnQty;
-       
-      }
-    });
-
-    // Set the calculated net amount in the input field and round to two decimal places
-    $('input[name="totalamount"]').val(netAmount.toFixed(2));
-    $('input[name="totalqty"]').val(totalQty);
-    $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
-    $("#nettotal").val((netAmount - discount).toFixed(2));
-
-    totalAmount = netAmount;
-    taxFinal = totalTaxAmount;
-    qtyFinal = totalQty;
-  }
-
-  function calculateDiscount() {
-    $("#adjustment").change(function () {
-      let disc = $(this).val();
-      let discountval;
-      if (isNaN(disc) || disc == "" || disc == undefined || disc == null) {
-        discountval = 0;
-      } else {
-        discountval = parseFloat($(this).val());
-      }
-
-      discount = discountval;
-
-      $("#nettotal").val((totalAmount - discount).toFixed(2));
-    });
-  }
-
-  $(".purchase-return-table tbody tr [name^='returnqty']").change(function () {
-    
-    let closestTr = $(this).closest("tr");
-    if (($(this).val() == "") | ($(this).val() == undefined)) {
-      console.log("not defined qty");
-
-      closestTr.find("[name^='refundamount']").val("");
-      calculateNetAmount();
-      calculateDiscount();
-      return false;
-    }
-
-    let avqty = parseInt(closestTr.find("[name^='availablequantity']").val());
-    let rqty = parseInt($(this).val());
-
-    if (rqty > avqty) {
-      alert("Quantity Should not be greater than Available Quantity");
-      parseInt($(this).val(""));
-      return false;
-    }
-    let rate = parseFloat(closestTr.find("[name^='rate']").val());
-    let tax = parseInt(
-      closestTr.find('select[name^="tax"]').find(":selected").data("tax"),
-    );
-    let refundAmount = rqty * rate + rqty * rate * (tax / 100);
-
-    closestTr.find("[name^='refundamount']").val(refundAmount);
-
-    calculateNetAmount();
-    calculateDiscount();
-  });
-
-  $(".purchase-return-table tbody tr [name^='rate']").change(function () {
-    let closestTr = $(this).closest("tr");
-
-    let rate = parseFloat($(this).val());
-    let rqty = parseInt(closestTr.find("[name^='returnqty']").val());
-    let tax = parseInt(
-      closestTr.find('select[name^="tax"]').find(":selected").data("tax"),
-    );
-    let refundAmount = rqty * rate + rqty * rate * (tax / 100);
-
-    closestTr.find("[name^='refundamount']").val(refundAmount);
-
-    calculateNetAmount();
-    calculateDiscount();
-  });
-
-  $(".purchase-return-table tbody tr select[name^='tax']").change(function () {
-    let closestTr = $(this).closest("tr");
-
-    let rate = parseFloat(closestTr.find("[name^='rate']").val());
-    let rqty = parseInt(closestTr.find("[name^='returnqty']").val());
-    let tax = parseInt($(this).find(":selected").data("tax"));
-    let refundAmount = rqty * rate + rqty * rate * (tax / 100);
-
-    closestTr.find("[name^='refundamount']").val(refundAmount);
-
-    calculateNetAmount();
-    calculateDiscount();
-  });
 });
 
 
@@ -2747,147 +2403,9 @@ $(document).ready(function () {
   }
 
 
-
-
-
-
 });
 
-// this script do the Total quantity, Net quantity ,
-// Discount calculations when entering values in purchase form (addpurchase.html)
 
-// $(document).ready(function () {
-//   let totalAmount = 0;
-//   let dueAmount = 0;
-//   $('input[name="recieved"]').val(roundToTwoDecimal(0.0));
-//   $('input[name="totalbillingamount"]').val(roundToTwoDecimal(0.0));
-
-//   // Trigger the calculation when the quantity or unit price inputs change
-//   $(".purchase-entry-table tbody").on(
-//     "input change",
-//     'input[name^="quantity"], input[name^="price"], select[name^="purchasegst"]',
-//     function () {
-//       calculateNetAmount();
-//       calculateDiscount();
-//       dueCalculation();
-//     },
-//   );
-
-//   $(document).on("click", ".deletebtn", function () {
-//     calculateNetAmount();
-//     calculateDiscount();
-//     dueCalculation();
-//   });
-
-//   function calculateNetAmount() {
-//     var netAmount = 0;
-//     var totalTaxAmount = 0;
-//     // Loop through each row in the table
-//     $(".purchase-entry-table tr:gt(0)").each(function () {
-//       var quantity =
-//         parseInt($(this).find('input[name^="quantity"]').val()) || 0;
-//       var price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
-//       var purchaseGst =
-//         parseFloat(
-//           $(this)
-//             .find('select[name^="purchasegst"]')
-//             .find(":selected")
-//             .data("purchasegst"),
-//         ) || 0;
-//       var totalTax = quantity * price * (purchaseGst / 100);
-//       var totalPrice =
-//         quantity * price + quantity * price * (purchaseGst / 100);
-  
-    
-//       totalPrice = parseFloat(totalPrice.toFixed(2))
-
-//       netAmount += totalPrice;
-//       totalTaxAmount += totalTax;
-
-      
-//     });
-//     // Set the calculated net amount in the input field and round to two decimal places
-//     $('input[name="totalbillingamount"]').val(netAmount.toFixed(2));
-//     $('input[name="recieved"]').val(netAmount.toFixed(2));
-//     $('input[name="duebalance"]').val(netAmount.toFixed(2));
-//     $('input[name="totalamount"]').val(netAmount.toFixed(2));
-//     $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
-//     totalAmount = netAmount;
-
-
-
-//   }
-
-//   // Calculate discount when discount method changes
-//   $('select[name="discountmethod"]').on("change", function () {
- 
-//     calculateDiscount();
-//     dueCalculation();
-//   });
-
-//   // Calculate discount when discount changes
-//   $('input[name="discount"]').on("input change", function () {
-  
-//     calculateDiscount();
-//     dueCalculation();
-//   });
-
-//   function calculateDiscount() {
-//     var discountMethod = $("#discountmethod").val();
-  
-//     var total = parseFloat($('input[name="totalbillingamount"]').val());
-   
-//     if (discountMethod === "") {
-//       // $('input[name="netamount"]').val(roundToTwoDecimal(total));
-//       $('input[name="duebalance"]').val(totalAmount.toFixed(2));
-//       $('input[name="totalbillingamount"]').val(totalAmount.toFixed(2));
-//       $('input[name="recieved"]').val(totalAmount.toFixed(2));
-//       dueAmount = totalAmount;
-//     } else if (totalAmount === 0) {
-//       $('input[name="duebalance"]').val(0);
-//       $('input[name="totalbillingamount"]').val(0);
-//       $('input[name="recieved"]').val(0);
-//     } else if (discountMethod === "percentage") {
-//       var discount = parseFloat($('input[name="discount"]').val()) || 0;
-//       var net = parseFloat(totalAmount - totalAmount * (discount / 100));
-    
-//       $('input[name="duebalance"]').val(net.toFixed(2));
-//       $('input[name="totalbillingamount"]').val(net.toFixed(2));
-//       $('input[name="recieved"]').val(net.toFixed(2));
-//       dueAmount = net.toFixed(2);
-//     } else if (discountMethod === "flat") {
-//       var discount = parseFloat($('input[name="discount"]').val()) || 0;
-//       var net = parseFloat(totalAmount - discount);
-    
-//       $('input[name="duebalance"]').val(net.toFixed(2));
-//       $('input[name="totalbillingamount"]').val(net.toFixed(2));
-//       $('input[name="recieved"]').val(net.toFixed(2));
-//       // $('input[name="totalamount"]').val(roundToTwoDecimal(net));
-//       dueAmount = net.toFixed(2);
-//     }
-//   }
-
-//   // Helper function to round a number to two decimal places
-//   function roundToTwoDecimal(number) {
-//     return Math.round(number * 100) / 100;
-//   }
-
-//   $('input[name="recieved"]').on("input change", function () {
-//     dueCalculation();
-//   });
-
-//   function dueCalculation() {
-//     let recieved = parseFloat($('input[name="recieved"]').val()) || 0;
-    
-//     console.log("due amnt",dueAmount)
-//     console.log("received",recieved)
-//     let duebal = dueAmount- recieved;
-//     duebal = duebal.toFixed(2)
-//     console.log("DUE BAL1",duebal )
-//     $('input[name="duebalance"]').val(duebal);
-  
-//   }
-// });
 
 
 
@@ -2924,6 +2442,238 @@ $(document).ready(function () {
     $(".finaldue").val(finalvalue.toFixed(2));
   }
 });
+
+
+
+// #####################################################
+// ##############  Purchase Return Section #############
+// #####################################################
+
+const purchaseReturnFormValidation = function () {
+  $("#purchasereturnform").submit(function (event) {
+    event.preventDefault();
+    let status = false;
+   
+    // enable tax select element
+    $(".purchasereturn-tax-select").prop("disabled", false);
+
+    // Check if at least one checkbox is checked
+    if ($("[name^='productcheck']:checked").length === 0) {
+      status = true;
+      alert("Please check at least one product row.");
+      return false;
+    }
+
+    // Iterate through checked checkboxes
+    $("[name^='productcheck']:checked").each(function () {
+      var rowIndex = this.name.match(/\d+/)[0];
+
+      // Get return quantity and refund amount inputs for the current row
+      var returnQtyInput = $("#returnqty" + rowIndex);
+      var refundAmountInput = $("#refundamount" + rowIndex);
+
+      // Check if return quantity and refund amount are empty
+      if (!returnQtyInput.val() || !refundAmountInput.val()) {
+        status = true;
+        // Alert and prevent form submission
+        alert(
+          "Please fill in return quantity and refund amount for the checked rows.",
+        );
+        location.reload();
+        return false;
+        
+      }
+
+      let returnQtyInput2 = parseFloat($("#returnqty" + rowIndex).val());
+      let availableQuantity = parseFloat($("#qtynow" + rowIndex).val());
+      let product = $("#product" + rowIndex).val();
+
+     
+
+      if(availableQuantity < returnQtyInput2){
+
+
+        status = true;
+        // Alert and prevent form submission
+        alert(
+          `Only ${availableQuantity} ${product} left in stock`,
+        );
+        location.reload();
+        return false;
+      }
+
+    });
+
+    // If all checks pass, the form will be submitted
+    if (!status) {
+      $("#purchasereturnform")[0].submit();
+    }
+
+      // disable tax select element
+    $(".purchasereturn-tax-select").prop("disabled", true);
+  });
+};
+
+purchaseReturnFormValidation();
+
+
+$(document).ready(function () {
+  let totalAmount = 0;
+  let taxFinal = 0;
+  let qtyFinal = 0;
+  let adjustment = 0;
+  let originalTotalAmount = 0;
+  let isAdjustmentChange = false;
+
+  // Keep existing checkbox change handler
+  $(".purchase-return-table tbody tr [name^='productcheck']").change(
+    function () {
+
+
+      purchaseReturnFormValidation();
+
+      let closestTr = $(this).closest("tr");
+
+      if ($(this).prop("checked")) {
+        closestTr.find("[name^='returnqty']").removeAttr("readonly");
+        // closestTr.find("[name^='rate']").removeAttr("readonly");
+        // closestTr.find("[name^='tax']").removeAttr("disabled");
+        // closestTr.find("[name^='refundamount']").removeAttr("readonly");
+        closestTr.find("[name^='reason']").removeAttr("disabled");
+      } else {
+        closestTr.find("[name^='returnqty']").attr("readonly", true);
+        closestTr.find("[name^='rate']").attr("readonly", true);
+        closestTr.find("[name^='tax']").attr("disabled", true);
+        closestTr.find("[name^='refundamount']").attr("readonly", true);
+        closestTr.find("[name^='reason']").attr("disabled", true);
+      }
+    },
+  );
+
+  function restoreOriginalPrices() {
+    $(".purchase-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        var originalPrice = parseFloat($(this).find('input[name^="price"]').val());
+        if (originalPrice) {
+          $(this).find('input[name^="priceafteradjustment"]').val(originalPrice.toFixed(2));
+          // $(this).find('input[name^="rate"]').val(originalPrice.toFixed(2));
+        }
+      }
+    });
+  }
+
+  function calculateOriginalTotal() {
+    var finalOriginal = 0;
+    $(".purchase-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        let returnQty = parseInt($(this).find('input[name^="returnqty"]').val()) || 0;
+        let price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
+        let tax = parseFloat($(this).find('select[name^="tax"]').find(":selected").data("tax")) || 0;
+        finalOriginal += ((returnQty * price) + (returnQty * price * (tax / 100)));
+      }
+    });
+    originalTotalAmount = finalOriginal;
+  }
+
+  function applyAdjustment() {
+    let adjustmentVal = parseFloat($("#adjustment").val()) || 0;
+    if (adjustmentVal <= 0) {
+      restoreOriginalPrices();
+      return;
+    }
+
+    calculateOriginalTotal();
+    let adjustmentPercentage = (adjustmentVal * 100) / originalTotalAmount;
+
+    $(".purchase-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        let originalPrice = parseFloat($(this).find('input[name^="price"]').val()) || 0;
+        let newPrice = originalPrice - (originalPrice * (adjustmentPercentage / 100));
+        $(this).find('input[name^="priceafteradjustment"]').val(newPrice.toFixed(2));
+        // $(this).find('input[name^="rate"]').val(newPrice.toFixed(2));
+      }
+    });
+  }
+
+  function calculateNetAmount() {
+    var netAmount = 0;
+    var totalTaxAmount = 0;
+    let totalQty = 0;
+
+    $(".purchase-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        let returnQty = parseInt($(this).find('input[name^="returnqty"]').val()) || 0;
+        // let rate = parseFloat($(this).find('input[name^="rate"]').val()) || 0;
+        let rate = parseFloat($(this).find('input[name^="priceafteradjustment"]').val()) || 0; //added24-11-2024
+        let tax = parseFloat($(this).find('select[name^="tax"]').find(":selected").data("tax")) || 0;
+        
+        let rowAmount = returnQty * rate;
+        let rowTax = rowAmount * (tax / 100);
+        let totalRowAmount = rowAmount + rowTax;
+
+        netAmount += totalRowAmount;
+        totalTaxAmount += rowTax;
+        totalQty += returnQty;
+
+        $(this).find('input[name^="refundamount"]').val(totalRowAmount.toFixed(2));
+      }
+    });
+
+    if (!isAdjustmentChange) {
+      $('input[name="totalamount"]').val(netAmount.toFixed(2));
+      totalAmount = netAmount;
+    }
+
+    // $('input[name="totalamount"]').val(netAmount.toFixed(2));
+    $('input[name="totalqty"]').val(totalQty);
+    $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
+    $("#nettotal").val(netAmount.toFixed(2));
+
+    totalAmount = netAmount;
+    taxFinal = totalTaxAmount;
+    qtyFinal = totalQty;
+  }
+
+  $("#adjustment").on("change input", function() {
+    isAdjustmentChange = true;
+    restoreOriginalPrices();
+    applyAdjustment();
+    calculateNetAmount();
+    isAdjustmentChange = false;
+  });
+
+  $(".purchase-return-table tbody tr [name^='returnqty']").on("change input",function () {
+    let closestTr = $(this).closest("tr");
+    if (!$(this).val()) {
+      closestTr.find("[name^='refundamount']").val("");
+      calculateNetAmount();
+      return false;
+    }
+
+    let avqty = parseInt(closestTr.find("[name^='availablequantity']").val());
+    let rqty = parseInt($(this).val());
+
+    if (rqty > avqty) {
+      alert("Quantity Should not be greater than Available Quantity");
+      $(this).val("");
+      return false;
+    }
+
+    applyAdjustment();
+    calculateNetAmount();
+  });
+
+  $(".purchase-return-table tbody tr [name^='rate']").on("change input",function () {
+    calculateNetAmount();
+  });
+
+  $(".purchase-return-table tbody tr select[name^='tax']").on("change input",function () {
+    calculateNetAmount();
+  });
+});
+
+
+
 
 // ########################################################
 // ############### sales section ###########################
@@ -3685,8 +3435,6 @@ $(document).ready(function () {
 // changes when clicking on addsalediscount saleform
  
 
-
-
 // this script is for customer form pop up modal in sale form
 
 $(document).ready(function () {
@@ -3699,57 +3447,21 @@ $(document).ready(function () {
   });
 });
 
-// ################### Sales Return section #######################
 
 // #############################################
-// ##############  Sales Return #############
+// ##############  Sales Return Section ########
 // #############################################
-
-const salesReturnFormValidation = function () {
-  $("#salesreturnform").submit(function (event) {
-    event.preventDefault();
-    let status = false;
-    // Check if at least one checkbox is checked
-    if ($("[name^='productcheck']:checked").length === 0) {
-      status = true;
-      alert("Please check at least one product row.");
-      return false;
-    }
-
-    // Iterate through checked checkboxes
-    $("[name^='productcheck']:checked").each(function () {
-      var rowIndex = this.name.match(/\d+/)[0];
-
-      // Get return quantity and refund amount inputs for the current row
-      var returnQtyInput = $("#returnqty-sale" + rowIndex);
-      var refundAmountInput = $("#refundamount-sale" + rowIndex);
-
-      // Check if return quantity and refund amount are empty
-      if (!returnQtyInput.val() || !refundAmountInput.val()) {
-        status = true;
-        // Alert and prevent form submission
-        alert(
-          "Please fill in return quantity and refund amount for the checked rows.",
-        );
-        return false;
-      }
-    });
-
-    // If all checks pass, the form will be submitted
-    if (!status) {
-      $("#salesreturnform")[0].submit();
-    }
-  });
-};
-
-salesReturnFormValidation();
 
 $(document).ready(function () {
+  let totalAmount = 0;
+  let taxFinal = 0;
+  let qtyFinal = 0;
+  let discount = 0;
+  let originalTotalAmount = 0;
+  let isAdjustmentChange = false;
+
+  // Keep existing checkbox change handler with additions for new field
   $(".sales-return-table tbody tr [name^='productcheck']").change(function () {
-    console.log("product checked..");
-
-    salesReturnFormValidation();
-
     let closestTr = $(this).closest("tr");
 
     if ($(this).prop("checked")) {
@@ -3758,153 +3470,171 @@ $(document).ready(function () {
     } else {
       closestTr.find("[name^='returnqty-sale']").attr("readonly", true);
       closestTr.find("[name^='reason-sale']").attr("disabled", true);
+      closestTr.find("[name^='refundamount-sale']").val("");
+      calculateNetAmount();
     }
   });
 
-  let totalAmount = 0;
-  let taxFinal = 0;
-  let qtyFinal = 0;
-  let discount = 0;
+  function restoreOriginalPrices() {
+    $(".sales-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        var originalPrice = parseFloat($(this).find('input[name^="price-sale"]').val());
+        if (originalPrice) {
+          $(this).find('input[name^="priceafteradjustment-sale"]').val(originalPrice.toFixed(2));
+          // $(this).find('input[name^="rate-sale"]').val(originalPrice.toFixed(2));
+        }
+      }
+    });
+  }
+
+  function calculateOriginalTotal() {
+    var finalOriginal = 0;
+    $(".sales-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        let returnQty = parseInt($(this).find('input[name^="returnqty-sale"]').val()) || 0;
+        let price = parseFloat($(this).find('input[name^="price-sale"]').val()) || 0;
+        let tax = parseFloat($(this).find('select[name^="tax-sale"]').find(":selected").data("tax")) || 0;
+        finalOriginal += ((returnQty * price) + (returnQty * price * (tax / 100)));
+      }
+    });
+    originalTotalAmount = finalOriginal;
+  }
 
   function calculateNetAmount() {
     var netAmount = 0;
     var totalTaxAmount = 0;
     let totalQty = 0;
 
-    // Loop through each row in the table
+    // Calculate amounts after discount
     $(".sales-return-table tr:gt(0)").each(function () {
       if ($(this).find("[name^='productcheck']").prop("checked")) {
-        let refundAmount =
-          parseFloat($(this).find('input[name^="refundamount-sale"]').val()) ||
-          0;
-        let rate =
-          parseFloat($(this).find('input[name^="rate-sale"]').val()) || 0;
-        let returnQty =
-          parseInt($(this).find('input[name^="returnqty-sale"]').val()) || 0;
-        let tax =
-          parseFloat(
-            $(this)
-              .find('select[name^="tax-sale"]')
-              .find(":selected")
-              .data("tax"),
-          ) || 0;
-        let taxAmount = refundAmount - rate * returnQty;
+        let returnQty = parseInt($(this).find('input[name^="returnqty-sale"]').val()) || 0;
+        // let rate = parseFloat($(this).find('input[name^="rate-sale"]').val()) || 0;
+        let rate = parseFloat($(this).find('input[name^="priceafteradjustment-sale"]').val()) || 0;
+        let tax = parseFloat($(this).find('select[name^="tax-sale"]').find(":selected").data("tax")) || 0;
+        
+        let rowAmount = returnQty * rate;
+        let rowTax = rowAmount * (tax / 100);
+        let totalRowAmount = rowAmount + rowTax;
 
-        netAmount += refundAmount;
-        totalTaxAmount += taxAmount;
+        $(this).find('input[name^="refundamount-sale"]').val(totalRowAmount.toFixed(2));
+
+        netAmount += totalRowAmount;
+        totalTaxAmount += rowTax;
         totalQty += returnQty;
-        console.log(
-          "ref-",
-          netAmount,
-          "qty-",
-          totalQty,
-          "tax-",
-          totalTaxAmount,
-        );
       }
     });
 
-    // Set the calculated net amount in the input field and round to two decimal places
-    $('input[name="totalamount-sale"]').val(netAmount.toFixed(2));
+    // Only update totalamount if it's not an adjustment change
+    if (!isAdjustmentChange) {
+      $('input[name="totalamount-sale"]').val(netAmount.toFixed(2));
+      totalAmount = netAmount;
+    }
+
     $('input[name="totalqty-sale"]').val(totalQty);
     $('input[name="totaltax-sale"]').val(totalTaxAmount.toFixed(2));
     $("#nettotal-sale").val((netAmount - discount).toFixed(2));
 
-    totalAmount = netAmount;
     taxFinal = totalTaxAmount;
     qtyFinal = totalQty;
   }
 
-  function calculateDiscount() {
-    $("#discount-sale").change(function () {
-      let disc = $(this).val();
-      let discountval;
-      if (isNaN(disc) || disc == "" || disc == undefined || disc == null) {
-        discountval = 0;
-      } else {
-        discountval = parseFloat($(this).val());
-      }
-      discount = discountval;
+  function applyAdjustment() {
+    let discountVal = parseFloat($("#discount-sale").val()) || 0;
+    if (discountVal <= 0) {
+      restoreOriginalPrices();
+      return;
+    }
 
-      $("#nettotal-sale").val((totalAmount - discount).toFixed(2));
+    calculateOriginalTotal();
+    let discountPercentage = (discountVal * 100) / originalTotalAmount;
+
+    $(".sales-return-table tr:gt(0)").each(function () {
+      if ($(this).find("[name^='productcheck']").prop("checked")) {
+        let originalPrice = parseFloat($(this).find('input[name^="price-sale"]').val()) || 0;
+        let newPrice = originalPrice - (originalPrice * (discountPercentage / 100));
+        $(this).find('input[name^="priceafteradjustment-sale"]').val(newPrice.toFixed(2));
+        // $(this).find('input[name^="rate-sale"]').val(newPrice.toFixed(2));
+      }
     });
   }
 
-  $(".sales-return-table tbody tr [name^='returnqty-sale']").change(
-    function () {
-      console.log("qty-", $(this).val());
-      let closestTr = $(this).closest("tr");
-      if (($(this).val() == "") | ($(this).val() == undefined)) {
-        console.log("not defined qty");
+  $("#discount-sale").on("change input", function() {
+    isAdjustmentChange = true;
+    restoreOriginalPrices();
+    applyAdjustment();
+    calculateNetAmount();
+    isAdjustmentChange = false;
+  });
 
-        closestTr.find("[name^='refundamount-sale']").val("");
-        calculateNetAmount();
-        calculateDiscount();
-        return false;
-      }
-
-      let avqty = parseInt(
-        closestTr.find("[name^='availablequantity-sale']").val(),
-      );
-      let rqty = parseInt($(this).val());
-
-      if (rqty > avqty) {
-        alert("Quantity Should not be greater than Available Quantity");
-        parseInt($(this).val(""));
-        return false;
-      }
-      let rate = parseFloat(closestTr.find("[name^='rate-sale']").val());
-      let tax = parseInt(
-        closestTr
-          .find('select[name^="tax-sale"]')
-          .find(":selected")
-          .data("tax"),
-      );
-      let refundAmount = rqty * rate + rqty * rate * (tax / 100);
-
-      closestTr.find("[name^='refundamount-sale']").val(refundAmount);
-
+  $(".sales-return-table tbody tr [name^='returnqty-sale']").on("change input",function () {
+    let closestTr = $(this).closest("tr");
+    if (!$(this).val()) {
+      closestTr.find("[name^='refundamount-sale']").val("");
       calculateNetAmount();
-      calculateDiscount();
-    },
-  );
+      return false;
+    }
+
+    let avqty = parseInt(closestTr.find("[name^='availablequantity-sale']").val());
+    let rqty = parseInt($(this).val());
+
+    if (rqty > avqty) {
+      alert("Quantity Should not be greater than Available Quantity");
+      $(this).val("");
+      return false;
+    }
+
+    applyAdjustment();
+    calculateNetAmount();
+  });
 });
+
+// Modify the form validation to enable tax dropdowns
+const salesReturnFormValidation = function () {
+  $("#salesreturnform").submit(function (event) {
+    event.preventDefault();
+    let status = false;
+
+    if ($("[name^='productcheck']:checked").length === 0) {
+      status = true;
+      alert("Please check at least one product row.");
+      return false;
+    }
+
+    $("[name^='productcheck']:checked").each(function () {
+      var rowIndex = this.name.match(/\d+/)[0];
+      var returnQtyInput = $("#returnqty-sale" + rowIndex);
+      var refundAmountInput = $("#refundamount-sale" + rowIndex);
+
+      if (!returnQtyInput.val() || !refundAmountInput.val()) {
+        status = true;
+        alert("Please fill in return quantity and refund amount for the checked rows.");
+        return false;
+      }
+    });
+
+    if (!status) {
+      // Enable tax dropdowns before submission
+      $("[name^='productcheck']:checked").each(function () {
+        var rowIndex = this.name.match(/\d+/)[0];
+        $("#tax-sale" + rowIndex).prop('readonly', false);
+      });
+
+      $("#salesreturnform")[0].submit();
+
+      // Disable tax dropdowns after submission
+      setTimeout(function() {
+        $("[name^='tax-sale']").prop('readonly', true);
+      }, 100);
+    }
+  });
+};
+
 
 // ########################################################
 // ############### Accounts section ###########################
 // ########################################################
 
-// $(document).ready(function () {
-//   $("#moneyid").click(function () {
-//       console.log("money receipt clear button for export");
-
-//       // Create a new instance of Table2Excel
-//       var table2excel = new Table2Excel();
-
-//       // Get the table element
-//       var table = document.getElementById("moneyreciept-table");
-
-//       // Get all the table rows, including those hidden by pagination
-//       var allRows = table.getElementsByTagName("tr");
-
-//       // Create a new table to combine all the data
-//       var combinedTable = document.createElement("table");
-
-//       // Clone the header row (if applicable) and add it to the combined table
-//       var headerRow = table.querySelector("thead tr");
-//       if (headerRow) {
-//           combinedTable.appendChild(headerRow.cloneNode(true));
-//       }
-
-//       // Loop through all rows and add them to the combined table
-//       for (var i = 0; i < allRows.length; i++) {
-//           combinedTable.appendChild(allRows[i].cloneNode(true));
-//       }
-
-//       // Export the combined table to Excel
-//       table2excel.export(combinedTable, "MoneyReciept.xlsx");
-//   });
-// });
 
 // this function do the filtering of customer list when selecting Branch,Added By (customers.html)
 function myFilterFunctionMoneyReciept() {

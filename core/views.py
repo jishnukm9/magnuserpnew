@@ -3880,7 +3880,7 @@ def purchaseReturn(request):
         "data": data,
         "paymentmode": paymentmode,
     }
-    return render(request, "purchasereturn.html", context)
+    return render(request, "purchasereturnnew.html", context)
 
 
 # This function take Purchase invoice number and returns the purchase details
@@ -3981,7 +3981,7 @@ def purchaseReturnSearch(request):
         "user": user,
     }
 
-    return render(request, "purchasereturn.html", context)
+    return render(request, "purchasereturnnew.html", context)
 
 
 # saving purchase return
@@ -6054,7 +6054,7 @@ def salesReturn(request):
         "data": data,
         "paymentmode": paymentmode,
     }
-    return render(request, "salesreturn.html", context)
+    return render(request, "salesreturnnew.html", context)
 
 
 @user_passes_test(
@@ -6167,7 +6167,7 @@ def salesReturnSearch(request):
         branch = item.branch
 
         break
-    print("invoice number...",invoicenumber)
+  
     salereturn_exist = SaleReturn.objects.filter(invoicenumber=invoicenumber).first()
     if salereturn_exist:
         already_returned = True
@@ -6210,7 +6210,7 @@ def salesReturnSearch(request):
         "already_returned":already_returned
     }
 
-    return render(request, "salesreturn.html", context)
+    return render(request, "salesreturnnew.html", context)
 
 
 @login_required
@@ -28397,12 +28397,12 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
 
 
     if income_total > expense_total:
-        balance = income_total - expense_total
+        balance = round(income_total - expense_total,2)
         balance_text = 'Net Profilt (Income > Expenses)'
         pnl = 'Profit'
         final = income_total
     else:
-        balance = expense_total - income_total
+        balance = round(expense_total - income_total,2)
         balance_text = 'Net Loss (Expenses > Income)'
         pnl = 'Loss'
         final = expense_total

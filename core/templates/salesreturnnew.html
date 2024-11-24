@@ -12,10 +12,10 @@
               
 
                   <nav class="nav nav-borders">
-                    <a class="nav-link active ps-0 pe-0 ms-0 me-3" style="color: #4555B9 ; border-bottom:2px solid #4555B9;" href=""> Purchase Return </a>
-                    <a class="nav-link active ps-0 pe-0 ms-0 me-3" style="color:#444;"  href="{% url 'purchasereturnlist' %}"> Purchase Return List</a>
+                    <a class="nav-link active ps-0 pe-0 ms-0 me-3" style="color: #4555B9 ; border-bottom:2px solid #4555B9;" href=""> Sales Return </a>
+                    <a class="nav-link active ps-0 pe-0 ms-0 me-3" style="color:#444;"  href="{% url 'salesreturnlist' %}"> Sales Return List</a>
    
-                    
+  
                    
                 </nav>
                 </div>
@@ -26,10 +26,14 @@
                        
 
                                 <div class="card  mb-4" style="border-radius:5px;border:0.5px solid #e2e2e2;" >
-                                  <div class="card-header py-3 bg-white" >
-                                      <h5 class="m-0 font-weight-bold " style="color:#2c2e2f"> <strong>Purchase Return </strong> </h5>
-                                      
-                                  </div>
+                                  <div class="card-header py-3 bg-white d-flex justify-content-between" >
+                                      <h5 class="m-0 font-weight-bold " style="color:#2c2e2f"> <strong>Sales Return </strong> </h5>
+                                    {% if already_returned == True %}
+                                    <p class="fw-bold text-danger m-0 p-0">Note : This Sale Invoice is already returned once</p>
+                                    {% else %}
+                                    <p></p>
+                                    {% endif %}
+                                    </div>
                                   <div class="card-body">
 
 
@@ -37,20 +41,20 @@
 
                                         <div class="row mb-4">
                                             <div class="col-lg-3 col-md-3 col-sm-12">
-                                                <label for="invoiceno" class="mb-2"> <p><strong>Invoice Number</strong></p> </label>
-                                                <form action="{% url 'purchasereturnsearch' %}" method="post">
+                                                <label for="invoiceno" class="">  <p><strong>Invoice Number</strong> </p>  </label>
+                                                <form action="{% url 'salesreturnsearch' %}" method="post">
                                                 {% csrf_token %}
                                                 <div class="d-flex gap-1">
                                                    
-                                                <select  name="purid" class="form-control selectizefield" id="invoiceno">
-                                                    {% if selected_purchaseid == '' %}
+                                                <select  name="invoiceno" class="form-control selectizefield" required id="invoiceno">
+                                                    {% if selected_invoiceno == '' %}
                                                     <option value="" selected>Invoice Number</option>
                                                     {% else %}
-                                                    <option value="{{selected_purchaseid}}" selected>{{selected_invoiceno}} - {{selected_purchaseid}}</option>
+                                                    <option value="{{selected_saleid}}" selected>{{selected_invoiceno}} - {{selected_saleid}}</option>
                                                     
                                                     {% endif %}
                                                     {% for inv in invoicenumbers %}
-                                                    <option value="{{inv.purchaseid}}">{{inv.invoicenumber}} - {{inv.purchaseid}}</option>
+                                                    <option value="{{inv.saleid}}">{{inv.invoicenumber}} - {{inv.saleid}}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <button type="submit" class="btn btn-primary text-white"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -60,27 +64,29 @@
                                             </div>
 
                                             <div class="col-lg-3 col-md-3 col-sm-12">
+                                               
                                                 
                                             </div>
                                             <div class="col-lg-3 col-md-3 col-sm-12">
                                                 <label for="branch" class=""> <p><strong>Branch</strong> </p>    </label>
 
+
                                                 <select readonly class="form-control">
                                                     <option value="{{branch}}" selected>{{branch}}</option>
                                                 </select>
 
-                                                <!-- <input readonly class="form-control" type="text" value="{{branch}}"> -->
+                                               
                                             </div>
                                             <div class="col-lg-3 col-md-3 col-sm-12">
-                                                <label for="supplier" class=""> <p><strong>Supplier</strong></p> </label>
+                                                <label for="supplier" class=""> <p><strong>Customer</strong> </p>    </label>
                                                 <select readonly class="form-control">
-                                                    <option value="{{supplier}}" selected>{{supplier}}</option>
+                                                    <option value="{{customer}}" selected>{{customer}}</option>
                                                 </select>
-                                                <!-- <input readonly class="form-control" type="text" value="{{supplier}}"> -->
+                                                <!-- <input readonly class="form-control" type="text" value="{{customer}}"> -->
                                             </div>
                                         </div>
 
-                                        <form id="purchasereturnform" action="{% url 'addpurchasereturn' %}" method="POST"> 
+                                        <form id="salesreturnform" action="{% url 'addsalesreturn' %}" method="POST"> 
                                             {% csrf_token %}
 
 
@@ -88,24 +94,25 @@
 
 
                                             <table
-                                            class="table table-bordered   purchase-return-table table-responsive"
+                                            class="table table-bordered   sales-return-table table-responsive"
                                             
                                           
                                           >
-                                            <thead   >
+                                            <thead  >
                                               <tr style="background-color: #e2e6fb3d">
                                                 <th  width="2%">Sl</th>
-                                                <th  width="3"></th>
-                                                <th width="41%">Name <span style="color:#e2e6fb3d;">------------------------</span> </th>
-                                                <th width="3%" class="puchase-qty-right ">Initial Qty</th>
-                                                <th width="3%" class="puchase-qty-right ">Available Qty</th>
+                                                <th  width="3%"></th>
+                                                <th  width="16%">Barcode</th>
+                                                <th width="25%">Name <span style="color:#e2e6fb3d;">------------------------</span> </th>
+                                                <th width="3%" class="puchase-qty-right ">Initial Sold Qty</th>
+                                               
                                                 <th width="7%">Unit Price<span style="color:#e2e6fb3d;">----</span> </th>
-                                                
+                                                <th width="7%">Price After Adj.<span style="color:#e2e6fb3d;">----</span></th>
                                                 <th width="3%" >Return Qty<span style="color:#e2e6fb3d;">-</span> </th>
                                                 <th width="7%">Rate<span style="color:#e2e6fb3d;">--------</span> </th>
                                                 <th width="9%">Tax<span style="color:#e2e6fb3d;">------</span> </th>
                                                 <th width="5%">Refund Amount</th>
-                                                <th width="17%">Reason<span style="color:#e2e6fb3d;">----</span> </th>
+                                                <th width="20%">Reason<span style="color:#e2e6fb3d;">----</span> </th>
                                           
                                                 
                                                 <!-- <th width="2%" class="puchase-qty-left"></th> -->
@@ -113,10 +120,12 @@
                                             </thead>
                                             <tbody >
 
-                                {% for item in purchasedata %}
+                                {% for item in salesdata %}
 
                                               <tr style="background-color:#fff;">
                                                 <td>{{forloop.counter}}</td>
+
+                                                
                                                 <td>
                                                    
                                                      
@@ -130,13 +139,18 @@
                                                     
                                                     
                                                 </td>
+
+                                                <td>
+                                                    <input readonly type="text" class="form-control no-spinner" name="barcode-sale{{forloop.counter}}" id="barcode-sale{{forloop.counter}}" value="{{ item.barcodenumber }}">
+                                                </td>
+
                                                 <td width="20%;"> 
                                                   <input
                                                   readonly
                                                     type="text"
-                                                    id="product{{forloop.counter}}"
+                                                    id="product-sale{{forloop.counter}}"
                                                     autocomplete="off"
-                                                    name="product{{forloop.counter}}"
+                                                    name="product-sale{{forloop.counter}}"
                                                     value="{{item.name}}"
                                                     class="form-control no-spinner"
                                                  
@@ -147,24 +161,11 @@
                                                   <input
                                                   readonly
                                                     type="number"
-                                                    name="availablequantity{{forloop.counter}}"
-                                                    id="availablequantity{{forloop.counter}}"
+                                                    name="availablequantity-sale{{forloop.counter}}"
+                                                    id="availablequantity-sale{{forloop.counter}}"
                                                     min="0"
                                                     value="{{item.totalquantity}}"
                                                     class="form-control no-spinner"
-                                                    autocomplete="off"
-                                             
-                                                  />
-                                                </td>
-                                                <td >
-                                                  <input
-                                                  readonly
-                                                    type="number"
-                                                    name="qtynow{{forloop.counter}}"
-                                                    id="qtynow{{forloop.counter}}"
-                                                    min="0"
-                                                    value="{{item.availableqty}}"
-                                                    class="form-control no-spinner {{item.diffqty}}"
                                                     autocomplete="off"
                                              
                                                   />
@@ -176,8 +177,8 @@
                                                     type="number"
                                                     step="0.01"
                                                     min="0"
-                                                    name="price{{forloop.counter}}"
-                                                    id="price{{forloop.counter}}"
+                                                    name="price-sale{{forloop.counter}}"
+                                                    id="price-sale{{forloop.counter}}"
                                                     value="{{item.price}}"
                                                     autocomplete="off"
                                                     class="form-control no-spinner"
@@ -186,11 +187,22 @@
                                                 </td>
                                                 <td>
                                                     <input 
+                                                      readonly
+                                                      type="number"
+                                                      step="0.01"
+                                                      name="priceafteradjustment-sale{{forloop.counter}}"
+                                                      id="priceafteradjustment-sale{{forloop.counter}}"
+                                                      value="{{item.price}}"
+                                                      class="form-control no-spinner"
+                                                    />
+                                                  </td>
+                                                <td>
+                                                    <input 
                                                     readonly  
                                                     class="form-control no-spinner" 
-                                                    name="returnqty{{forloop.counter}}"
+                                                    name="returnqty-sale{{forloop.counter}}"
                                                      min="0" 
-                                                     id="returnqty{{forloop.counter}}"
+                                                     id="returnqty-sale{{forloop.counter}}"
                                                       type="number">
                                                 </td>
                                                 <td>
@@ -198,53 +210,46 @@
                                                     readonly 
                                                     value="{{item.price}}"  
                                                     class="form-control no-spinner" 
-                                                    name="rate{{forloop.counter}}" 
+                                                    name="rate-sale{{forloop.counter}}" 
                                                     min="0" 
                                                     step="0.01" 
-                                                    id="rate{{forloop.counter}}" 
+                                                    id="rate-sale{{forloop.counter}}" 
                                                     type="number">
                                                 </td>
                                                 <td>
                                                   <select
                                                 
-                                                    name="tax{{forloop.counter}}"
-                                                    id="tax{{forloop.counter}}"
+                                                    name="tax-sale{{forloop.counter}}"
+                                                    id="tax-sale{{forloop.counter}}"
                                                     class="form-control"
                                                     style="  border:1px solid #dee2e6;
                                                     "
                                                     autocomplete="off"
-                                                    disabled
+                                                    readonly
                                                   >
                                                     <option 
-                                                    value="{{item.purchasegstname}}"
+                                                    value="{{item.salegstname}}"
                                                     data-tax="{{item.tax}}"
                                                     
-                                                     selected>{{item.purchasegstname}}</option>
-                                                    {% for gst in tax %}
-                                                    <option
-                                                      data-tax="{{ gst.percentage }}"
-                                                      value="{{ gst.name }}"
-                                                      data-gst="{{gst}}"
-                                                    >
-                                                      {{ gst.name }}
-                                                    </option>
-                                                    {% endfor %}
+                                                     selected>{{item.salegstname}}</option>
+                                                    
+                                                   
                                                   </select>
                                                 </td>
                                                 <td>
                                                     <input 
                                                     readonly 
                                                     class="form-control no-spinner" 
-                                                    name="refundamount{{forloop.counter}}" 
-                                                    id="refundamount{{forloop.counter}}" 
+                                                    name="refundamount-sale{{forloop.counter}}" 
+                                                    id="refundamount-sale{{forloop.counter}}" 
                                                     type="text">
                                                 </td>
                                                 
                                                 <td>
                                                     <select
                                                    
-                                                      name="reason{{forloop.counter}}"
-                                                      id="reason{{forloop.counter}}"
+                                                      name="reason-sale{{forloop.counter}}"
+                                                      id="reason-sale{{forloop.counter}}"
                                                       class="form-control"
                                                       style="  border:1px solid #dee2e6;
                                                       "
@@ -287,14 +292,15 @@
 
 
                                             <div class="col-lg-6 col-md-6 col-sm-12">
+
                                                 <div class="row mb-2">
                                                     <div class="col-lg-6 col-md-12 col-sm-12">
                                                         <label for="paymentmode" class="">  <p><strong>Payment Mode</strong></p>   </label>
-                                                <select name="paymentmode" id="paymentmode" required class="form-control selectizefield">
-                                                    <option value="" selected>Select Payment Mode</option>
+                                                <select required name="paymentmode" id="paymentmode" class="form-control selectizefield">
+                                                  <option value="" selected>Select Payment Mode</option>
                                                     {% for mode in paymentmode %}
-                              <option value="{{mode.name}}">{{mode.name}}</option>
-                              {% endfor %}
+                                                    <option value="{{mode.name}}">{{mode.name}}</option>
+                                                    {% endfor %}
                                                 </select>
                                                     </div>
                                                     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -302,6 +308,7 @@
                                                     </div>
                                                     
                                                 </div>
+
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-12">
 
@@ -309,36 +316,38 @@
                                                     <li class="list-group-item">
                                                         <div class="d-flex justify-content-between">
                                                             <p class="fw-bold">Total Amount</p>
-                                                            <input readonly class="form-control w-50" type="text" value="0.00" name="totalamount" id="totalamount" type="number" step="0.01" min="0">
+                                                            <input readonly class="form-control w-50" type="text" value="{{totalamount}}" name="totalamount-sale" id="totalamount-sale" type="number" step="0.01" min="0">
                   
                                                           </div>
                                                     </li>
                                                     <li class="list-group-item">
                                                         <div class="d-flex justify-content-between">
-                                                            <p class="fw-bold">Adjustment</p>
-                                                            <input type="text" class="form-control w-50" name="adjustment" id="adjustment" type="number" step="0.01" min="0">
+                                                            <p class="fw-bold">Discount</p>
+                                                            <input type="number" class="form-control w-50" value="{{discount}}" name="discount-sale" id="discount-sale" type="number" step="0.01" min="0">
                   
                                                           </div>
                                                     </li>
                                                     <li class="list-group-item">
                                                         <div class="d-flex justify-content-between">
                                                             <p class="fw-bold">Net Total</p>
-                                                            <input readonly class="form-control w-50" type="text" value="0.00" name="nettotal" id="nettotal" type="number" step="0.01" min="0">
+                                                            <input readonly class="form-control w-50" type="text" value="{{nettotal}}" name="nettotal-sale" id="nettotal-sale" type="number" step="0.01" min="0">
                   
                                                           </div>
                                                     </li>
                                                     <li class="list-group-item">
                                                         <div class="d-flex justify-content-between">
                                                             <p class="fw-bold">Total Quantity</p>
-                                                            <input readonly class="form-control w-50" type="text" value="0" name="totalqty" id="totalqty" type="number"  min="0">
+                                                            <input readonly class="form-control w-50" type="text" value="{{totalqty}}" name="totalqty-sale" id="totalqty-sale" type="number"  min="0">
                   
                                                           </div>
                                                     </li>
-                                                    <input readonly class="form-control w-50" type="text" value="{{invoicenumber}}" name="invno" id="invno" type="text" hidden>
-                                                    <input readonly class="form-control w-50" type="text" value="{{supplier.name}}" name="sup" id="sup" type="text" hidden>
-                                                    <input readonly class="form-control w-50" type="text" value="{{purchaseid}}" name="purchaseid" id="purchaseid" type="text" hidden>
-                                                    <input readonly class="form-control w-50" type="text" value="{{branch.id}}" name="branch" id="branch" type="text" hidden>
-                                                    <input readonly class="form-control w-50" type="text" value="0" name="totaltax" id="totaltax" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="{{invoicenumber}}" name="invno-sale" id="invno-sale" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="{{customer}}" name="cust" id="cust" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="{{customertype}}" name="custtype" id="custtype" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="{{customerid}}" name="custid" id="custid" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="{{salesid}}" name="salesid" id="salesid" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="{{branch.id}}" name="branch-sale" id="branch-sale" type="text" hidden>
+                                                    <input readonly class="form-control w-50" type="text" value="0" name="totaltax-sale" id="totaltax-sale" type="text" hidden>
                                                     
                                                     <!-- <li class="list-group-item">Vestibulum at eros</li> -->
                                                   </ul>
