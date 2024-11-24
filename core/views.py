@@ -2272,7 +2272,7 @@ def purchaseForm(request):
         "added_supplier": "",
         "paymentmode": paymentmode,
     }
-    return render(request, "addpurchase.html", context)
+    return render(request, "addpurchasenew.html", context)
 
 
 # Ajax function

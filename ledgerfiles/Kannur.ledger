@@ -223,3 +223,9 @@
      Assets:SaleReturn
      Liabilities:Sale:TaxPayable      45.0  INR
 
+2024-11-24 * INV-24113 (Sale Credit Transaction)
+    Assets:Sale:Cash              10.0 INR
+    Assets:Sale:AccountReceivable:jishnu        335.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable                                   -45.0  INR
+

@@ -2406,11 +2406,15 @@ $(document).ready(function () {
   });
 });
 
+
+
+// purchase form product fetch function 
+
 const productFetchFucntion = function (num) {
   $(`.purchase-entry-table input[name="name${num}"]`).on("change input", function () {
     const productname = $(this).val();
 
-    console.log("product change")
+    console.log("product change11")
 
     let csrftoken = csrf_token;
 
@@ -2425,6 +2429,9 @@ const productFetchFucntion = function (num) {
       success: function (response) {
         // $(`.purchase-entry-table input[name="barcode${num}"]`).val(response.barcodenumber)
         $(`.purchase-entry-table input[name="price${num}"]`).val(
+          response.unitprice,
+        );
+        $(`.purchase-entry-table input[name="purchase_priceafterdiscount${num}"]`).val(
           response.unitprice,
         );
         $(`.purchase-entry-table input[name="sellingprice${num}"]`).val(
@@ -2457,99 +2464,7 @@ const productFetchFucntion = function (num) {
           $(`.purchase-entry-table input[name="quantity${num}"]`).val("");
           $(`.purchase-entry-table input[name="barcode${num}"]`).val("");
 
-          // ########################################################################
-
-          let totalAmount = 0;
-          let dueAmount = 0;
-          $('input[name="recieved"]').val(roundToTwoDecimal(0.0));
-          $('input[name="totalbillingamount"]').val(roundToTwoDecimal(0.0));
-
-          function calculateNetAmount() {
-            var netAmount = 0;
-            var totalTaxAmount = 0;
-            // Loop through each row in the table
-            $(".purchase-entry-table tr:gt(0)").each(function () {
-              var quantity =
-                parseInt($(this).find('input[name^="quantity"]').val()) || 0;
-              var price =
-                parseFloat($(this).find('input[name^="price"]').val()) || 0;
-              var purchaseGst =
-                parseFloat(
-                  $(this)
-                    .find('select[name^="purchasegst"]')
-                    .find(":selected")
-                    .data("purchasegst"),
-                ) || 0;
-              var totalTax = quantity * price * (purchaseGst / 100);
-              var totalPrice =
-                quantity * price + quantity * price * (purchaseGst / 100);
-              // var totalPrice = quantity * price
-
-              netAmount += totalPrice;
-              totalTaxAmount += totalTax;
-            });
-            // Set the calculated net amount in the input field and round to two decimal places
-            $('input[name="totalbillingamount"]').val(netAmount.toFixed(2));
-            $('input[name="recieved"]').val(netAmount.toFixed(2));
-            $('input[name="duebalance"]').val(netAmount.toFixed(2));
-            $('input[name="totalamount"]').val(netAmount.toFixed(2));
-            $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
-            totalAmount = netAmount;
-          }
-
-          function calculateDiscount() {
-            var discountMethod = $("#discountmethod").val();
-            console.log("discountmethod..", discountMethod);
-            var total = parseFloat($('input[name="totalbillingamount"]').val());
-            console.log("discount method..", discountMethod);
-            
-            if (discountMethod === "") {
-              // $('input[name="netamount"]').val(roundToTwoDecimal(total));
-              $('input[name="duebalance"]').val(totalAmount.toFixed(2));
-              $('input[name="totalbillingamount"]').val(totalAmount.toFixed(2));
-              $('input[name="recieved"]').val(totalAmount.toFixed(2));
-              dueAmount = totalAmount;
-            } else if (totalAmount === 0) {
-              $('input[name="duebalance"]').val(0);
-              $('input[name="totalbillingamount"]').val(0);
-              $('input[name="recieved"]').val(0);
-            } else if (discountMethod === "percentage") {
-              var discount = parseFloat($('input[name="discount"]').val()) || 0;
-              var net = parseFloat(
-                totalAmount - totalAmount * (discount / 100),
-              );
-              $('input[name="duebalance"]').val(net.toFixed(2));
-              $('input[name="totalbillingamount"]').val(net.toFixed(2));
-              $('input[name="recieved"]').val(net.toFixed(2));
-              dueAmount = net;
-            } else if (discountMethod === "flat") {
-              var discount = parseFloat($('input[name="discount"]').val()) || 0;
-              var net = parseFloat(totalAmount - discount);
-              $('input[name="duebalance"]').val(net.toFixed(2));
-              $('input[name="totalbillingamount"]').val(net.toFixed(2));
-              $('input[name="recieved"]').val(net.toFixed(2));
-              // $('input[name="totalamount"]').val(roundToTwoDecimal(net));
-              dueAmount = net;
-            }
-          }
-
-          // Helper function to round a number to two decimal places
-          function roundToTwoDecimal(number) {
-            return Math.round(number * 100) / 100;
-          }
-
-          function dueCalculation() {
-            let recieved = parseFloat($('input[name="recieved"]').val()) || 0;
-            let duebal = dueAmount - recieved;
-            console.log("DUE BAL3",duebal)
-            $('input[name="duebalance"]').val(duebal.toFixed(2));
-          }
-
-          calculateNetAmount();
-          calculateDiscount();
-          dueCalculation();
-
-          // ###########################################################################
+      
         }
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -2589,6 +2504,7 @@ $(document).ready(function () {
         .find('[name^="sellingprice"]')
         .attr("name", `sellingprice${rowCount}`);
       newRow.find('[name^="price"]').attr("name", `price${rowCount}`);
+      newRow.find('[name^="purchase_priceafterdiscount"]').attr("name", `purchase_priceafterdiscount${rowCount}`);
       newRow
         .find('[name^="purchasegst"]')
         .attr("name", `purchasegst${rowCount}`);
@@ -2638,6 +2554,9 @@ $(document).ready(function () {
       .find('[name^="price"]')
       .attr("name", `price${row.index() + 1}`);
     $(row)
+      .find('[name^="purchase_priceafterdiscount"]')
+      .attr("name", `purchase_priceafterdiscount${row.index() + 1}`);
+    $(row)
       .find('[name^="sellingprice"]')
       .attr("name", `sellingprice${row.index() + 1}`);
     $(row)
@@ -2671,149 +2590,306 @@ $(document).ready(function () {
   $(document).on("click", ".deletebtn", function () {
     var row = $(this).closest("tr");
     row.remove();
+    restoreOriginalPrices();
+    calculateNetAmount();
+    dueCalculation();
 
     // Update attributes for remaining rows
     $(".purchase-entry-table tbody tr").each(function () {
       updateAttributes($(this));
     });
   });
-});
 
-// this script do the Total quantity, Net quantity ,
-// Discount calculations when entering values in purchase form (addpurchase.html)
 
-$(document).ready(function () {
+
   let totalAmount = 0;
+  let originalTotalAmount = 0;
   let dueAmount = 0;
-  $('input[name="recieved"]').val(roundToTwoDecimal(0.0));
-  $('input[name="totalbillingamount"]').val(roundToTwoDecimal(0.0));
+  
+  // Initialize values
+  $('input[name="recieved"]').val(0.0);
+  $('input[name="totalbillingamount"]').val(0.0);
 
-  // Trigger the calculation when the quantity or unit price inputs change
+  // Event listeners for input changes
   $(".purchase-entry-table tbody").on(
     "input change",
     'input[name^="quantity"], input[name^="price"], select[name^="purchasegst"]',
     function () {
       calculateNetAmount();
-      calculateDiscount();
       dueCalculation();
-    },
+    }
   );
-
-  $(document).on("click", ".deletebtn", function () {
-    calculateNetAmount();
-    calculateDiscount();
-    dueCalculation();
-  });
-
-  function calculateNetAmount() {
-    var netAmount = 0;
-    var totalTaxAmount = 0;
-    // Loop through each row in the table
-    $(".purchase-entry-table tr:gt(0)").each(function () {
-      var quantity =
-        parseInt($(this).find('input[name^="quantity"]').val()) || 0;
-      var price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
-      var purchaseGst =
-        parseFloat(
-          $(this)
-            .find('select[name^="purchasegst"]')
-            .find(":selected")
-            .data("purchasegst"),
-        ) || 0;
-      var totalTax = quantity * price * (purchaseGst / 100);
-      var totalPrice =
-        quantity * price + quantity * price * (purchaseGst / 100);
-  
-    
-      totalPrice = parseFloat(totalPrice.toFixed(2))
-
-      netAmount += totalPrice;
-      totalTaxAmount += totalTax;
-
-      
-    });
-    // Set the calculated net amount in the input field and round to two decimal places
-    $('input[name="totalbillingamount"]').val(netAmount.toFixed(2));
-    $('input[name="recieved"]').val(netAmount.toFixed(2));
-    $('input[name="duebalance"]').val(netAmount.toFixed(2));
-    $('input[name="totalamount"]').val(netAmount.toFixed(2));
-    $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
-    totalAmount = netAmount;
-
-
-
-  }
 
   // Calculate discount when discount method changes
   $('select[name="discountmethod"]').on("change", function () {
- 
+    restoreOriginalPrices();
     calculateDiscount();
+    calculateNetAmount();
     dueCalculation();
   });
 
-  // Calculate discount when discount changes
+  // Calculate discount when discount amount changes
   $('input[name="discount"]').on("input change", function () {
-  
+    restoreOriginalPrices();
     calculateDiscount();
+    calculateNetAmount();
     dueCalculation();
   });
 
-  function calculateDiscount() {
-    var discountMethod = $("#discountmethod").val();
-  
-    var total = parseFloat($('input[name="totalbillingamount"]').val());
-   
-    if (discountMethod === "") {
-      // $('input[name="netamount"]').val(roundToTwoDecimal(total));
-      $('input[name="duebalance"]').val(totalAmount.toFixed(2));
-      $('input[name="totalbillingamount"]').val(totalAmount.toFixed(2));
-      $('input[name="recieved"]').val(totalAmount.toFixed(2));
-      dueAmount = totalAmount;
-    } else if (totalAmount === 0) {
-      $('input[name="duebalance"]').val(0);
-      $('input[name="totalbillingamount"]').val(0);
-      $('input[name="recieved"]').val(0);
-    } else if (discountMethod === "percentage") {
-      var discount = parseFloat($('input[name="discount"]').val()) || 0;
-      var net = parseFloat(totalAmount - totalAmount * (discount / 100));
-    
-      $('input[name="duebalance"]').val(net.toFixed(2));
-      $('input[name="totalbillingamount"]').val(net.toFixed(2));
-      $('input[name="recieved"]').val(net.toFixed(2));
-      dueAmount = net.toFixed(2);
-    } else if (discountMethod === "flat") {
-      var discount = parseFloat($('input[name="discount"]').val()) || 0;
-      var net = parseFloat(totalAmount - discount);
-    
-      $('input[name="duebalance"]').val(net.toFixed(2));
-      $('input[name="totalbillingamount"]').val(net.toFixed(2));
-      $('input[name="recieved"]').val(net.toFixed(2));
-      // $('input[name="totalamount"]').val(roundToTwoDecimal(net));
-      dueAmount = net.toFixed(2);
-    }
-  }
-
-  // Helper function to round a number to two decimal places
-  function roundToTwoDecimal(number) {
-    return Math.round(number * 100) / 100;
-  }
-
+  // Handle received amount changes
   $('input[name="recieved"]').on("input change", function () {
     dueCalculation();
   });
 
+  function calculateNetAmount() {
+    calculateDiscount();
+    var netAmount = 0;
+    var totalTaxAmount = 0;
+    var finalOriginal = 0;
+
+    // Calculate original total first
+    $(".purchase-entry-table tr:gt(0)").each(function () {
+      var quantity = parseInt($(this).find('input[name^="quantity"]').val()) || 0;
+      var price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
+      var purchaseGst = parseFloat(
+        $(this)
+          .find('select[name^="purchasegst"]')
+          .find(":selected")
+          .data("purchasegst")
+      ) || 0;
+      finalOriginal += (quantity * price) + (quantity * price * (purchaseGst / 100));
+    });
+    originalTotalAmount = finalOriginal;
+
+    // Calculate amounts after discount
+    $(".purchase-entry-table tr:gt(0)").each(function () {
+      var quantity = parseInt($(this).find('input[name^="quantity"]').val()) || 0;
+      var price = parseFloat($(this).find('input[name^="purchase_priceafterdiscount"]').val()) || 0;
+      var purchaseGst = parseFloat(
+        $(this)
+          .find('select[name^="purchasegst"]')
+          .find(":selected")
+          .data("purchasegst")
+      ) || 0;
+
+      var totalTax = quantity * price * (purchaseGst / 100);
+      var totalPrice = quantity * price + totalTax;
+
+      netAmount += totalPrice;
+      totalTaxAmount += totalTax;
+    });
+
+    // Update form fields with calculated values
+    $('input[name="totalbillingamount"]').val(netAmount.toFixed(2));
+    $('input[name="recieved"]').val(netAmount.toFixed(2));
+    $('input[name="duebalance"]').val(netAmount.toFixed(2));
+    $('input[name="totalamount"]').val((netAmount - totalTaxAmount).toFixed(2));
+    $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
+    totalAmount = netAmount;
+    dueAmount = netAmount;
+  }
+
+  function calculateDiscount() {
+    var discount = parseFloat($('input[name="discount"]').val()) || 0;
+    var discountMethod = $("#discountmethod").val();
+    
+    if (discount <= 0) {
+      restoreOriginalPrices();
+      return;
+    }
+
+    var discountPercentage = 0;
+    if (discountMethod === "percentage") {
+      discountPercentage = discount;
+    } else if (discountMethod === "flat") {
+      discountPercentage = (discount * 100) / originalTotalAmount;
+    }
+
+    // Distribute discount across products
+    $(".purchase-entry-table tr:gt(0)").each(function () {
+      var price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
+      var newPrice = price - (price * (discountPercentage / 100));
+      $(this).find('input[name^="purchase_priceafterdiscount"]').val(newPrice.toFixed(2));
+    });
+  }
+
+  function restoreOriginalPrices() {
+    var finalOriginal = 0;
+    $(".purchase-entry-table tr:gt(0)").each(function () {
+      var originalPrice = parseFloat($(this).find('input[name^="price"]').val());
+      if (originalPrice) {
+        $(this).find('input[name^="purchase_priceafterdiscount"]').val(originalPrice.toFixed(2));
+      }
+      
+      var quantity = parseInt($(this).find('input[name^="quantity"]').val()) || 0;
+      var price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
+      var purchaseGst = parseFloat(
+        $(this)
+          .find('select[name^="purchasegst"]')
+          .find(":selected")
+          .data("purchasegst")
+      ) || 0;
+      finalOriginal += (quantity * price) + (quantity * price * (purchaseGst / 100));
+    });
+    originalTotalAmount = finalOriginal;
+  }
+
   function dueCalculation() {
     let recieved = parseFloat($('input[name="recieved"]').val()) || 0;
+    let duebal = dueAmount - recieved;
+
     
-    console.log("due amnt",dueAmount)
-    console.log("received",recieved)
-    let duebal = dueAmount- recieved;
-    duebal = duebal.toFixed(2)
-    console.log("DUE BAL1",duebal )
-    $('input[name="duebalance"]').val(duebal);
-  
+    if (Math.abs(duebal) <= 0.01) {
+      duebal = 0.00;
+    }
+
+    $('input[name="duebalance"]').val(duebal.toFixed(2));
   }
+
+
+
+
+
+
 });
+
+// this script do the Total quantity, Net quantity ,
+// Discount calculations when entering values in purchase form (addpurchase.html)
+
+// $(document).ready(function () {
+//   let totalAmount = 0;
+//   let dueAmount = 0;
+//   $('input[name="recieved"]').val(roundToTwoDecimal(0.0));
+//   $('input[name="totalbillingamount"]').val(roundToTwoDecimal(0.0));
+
+//   // Trigger the calculation when the quantity or unit price inputs change
+//   $(".purchase-entry-table tbody").on(
+//     "input change",
+//     'input[name^="quantity"], input[name^="price"], select[name^="purchasegst"]',
+//     function () {
+//       calculateNetAmount();
+//       calculateDiscount();
+//       dueCalculation();
+//     },
+//   );
+
+//   $(document).on("click", ".deletebtn", function () {
+//     calculateNetAmount();
+//     calculateDiscount();
+//     dueCalculation();
+//   });
+
+//   function calculateNetAmount() {
+//     var netAmount = 0;
+//     var totalTaxAmount = 0;
+//     // Loop through each row in the table
+//     $(".purchase-entry-table tr:gt(0)").each(function () {
+//       var quantity =
+//         parseInt($(this).find('input[name^="quantity"]').val()) || 0;
+//       var price = parseFloat($(this).find('input[name^="price"]').val()) || 0;
+//       var purchaseGst =
+//         parseFloat(
+//           $(this)
+//             .find('select[name^="purchasegst"]')
+//             .find(":selected")
+//             .data("purchasegst"),
+//         ) || 0;
+//       var totalTax = quantity * price * (purchaseGst / 100);
+//       var totalPrice =
+//         quantity * price + quantity * price * (purchaseGst / 100);
+  
+    
+//       totalPrice = parseFloat(totalPrice.toFixed(2))
+
+//       netAmount += totalPrice;
+//       totalTaxAmount += totalTax;
+
+      
+//     });
+//     // Set the calculated net amount in the input field and round to two decimal places
+//     $('input[name="totalbillingamount"]').val(netAmount.toFixed(2));
+//     $('input[name="recieved"]').val(netAmount.toFixed(2));
+//     $('input[name="duebalance"]').val(netAmount.toFixed(2));
+//     $('input[name="totalamount"]').val(netAmount.toFixed(2));
+//     $('input[name="totaltax"]').val(totalTaxAmount.toFixed(2));
+//     totalAmount = netAmount;
+
+
+
+//   }
+
+//   // Calculate discount when discount method changes
+//   $('select[name="discountmethod"]').on("change", function () {
+ 
+//     calculateDiscount();
+//     dueCalculation();
+//   });
+
+//   // Calculate discount when discount changes
+//   $('input[name="discount"]').on("input change", function () {
+  
+//     calculateDiscount();
+//     dueCalculation();
+//   });
+
+//   function calculateDiscount() {
+//     var discountMethod = $("#discountmethod").val();
+  
+//     var total = parseFloat($('input[name="totalbillingamount"]').val());
+   
+//     if (discountMethod === "") {
+//       // $('input[name="netamount"]').val(roundToTwoDecimal(total));
+//       $('input[name="duebalance"]').val(totalAmount.toFixed(2));
+//       $('input[name="totalbillingamount"]').val(totalAmount.toFixed(2));
+//       $('input[name="recieved"]').val(totalAmount.toFixed(2));
+//       dueAmount = totalAmount;
+//     } else if (totalAmount === 0) {
+//       $('input[name="duebalance"]').val(0);
+//       $('input[name="totalbillingamount"]').val(0);
+//       $('input[name="recieved"]').val(0);
+//     } else if (discountMethod === "percentage") {
+//       var discount = parseFloat($('input[name="discount"]').val()) || 0;
+//       var net = parseFloat(totalAmount - totalAmount * (discount / 100));
+    
+//       $('input[name="duebalance"]').val(net.toFixed(2));
+//       $('input[name="totalbillingamount"]').val(net.toFixed(2));
+//       $('input[name="recieved"]').val(net.toFixed(2));
+//       dueAmount = net.toFixed(2);
+//     } else if (discountMethod === "flat") {
+//       var discount = parseFloat($('input[name="discount"]').val()) || 0;
+//       var net = parseFloat(totalAmount - discount);
+    
+//       $('input[name="duebalance"]').val(net.toFixed(2));
+//       $('input[name="totalbillingamount"]').val(net.toFixed(2));
+//       $('input[name="recieved"]').val(net.toFixed(2));
+//       // $('input[name="totalamount"]').val(roundToTwoDecimal(net));
+//       dueAmount = net.toFixed(2);
+//     }
+//   }
+
+//   // Helper function to round a number to two decimal places
+//   function roundToTwoDecimal(number) {
+//     return Math.round(number * 100) / 100;
+//   }
+
+//   $('input[name="recieved"]').on("input change", function () {
+//     dueCalculation();
+//   });
+
+//   function dueCalculation() {
+//     let recieved = parseFloat($('input[name="recieved"]').val()) || 0;
+    
+//     console.log("due amnt",dueAmount)
+//     console.log("received",recieved)
+//     let duebal = dueAmount- recieved;
+//     duebal = duebal.toFixed(2)
+//     console.log("DUE BAL1",duebal )
+//     $('input[name="duebalance"]').val(duebal);
+  
+//   }
+// });
+
+
 
 // this script is for supplier form pop up modal in purchase form
 
@@ -3078,150 +3154,11 @@ function saleQtyChecking(num){
   );
 };
 
-// const saleQtyChecking = function (num) {
-//   $(`.sale-entry-table tbody tr [name^='salequantity${num}']`).on('input change', function () {
-//     let closestTr = $(this).closest("tr");
-
-//     if ($(this).val() == "" || $(this).val() == undefined || $(this).val() == null) {
-//       // Do nothing if the value is empty or invalid
-//     } else {
-//       // Check if the entered quantity exceeds the available quantity
-//       if (parseInt($(this).val()) > parseInt(closestTr.find("[name^='availablesaleqty']").val())) {
-//         alert(
-//           `Available Quantity is ${closestTr
-//             .find("[name^='availablesaleqty']")
-//             .val()}`
-//         );
-//         $(this).val(""); // Clear the input if it exceeds available quantity
-//       }
-//     }
-//   });
-// };
-
 // #####fetching product in sales entry using barcode
-
-
-
-function funcSaleCalculation(){
-  let totalAmount = 0;
-  let originalTotalAmount = 0; // Store the original total amount
-  $('input[name="salerecieved"]').val(0.0);
-  $('input[name="saletotalbillingamount"]').val(0.0);
-
-  function calculateNetAmountsale() {
-    var netAmount = 0;
-    var totalTaxAmount = 0;
-    var finalOriginal = 0
-    $(".sale-entry-table tr:gt(0)").each(function (index) {
-      var quantity =
-        parseInt($(this).find('input[name^="salequantity"]').val()) || 0;
-      var price =
-        parseFloat($(this).find('input[name^="saleprice"]').val()) || 0;
-      var saleGst =
-        parseFloat(
-          $(this)
-            .find('select[name^="salegstsale"]')
-            .find(":selected")
-            .data("salegstsale")
-        ) || 0;
-      finalOriginal +=   ((quantity * price) + (quantity * price * (saleGst / 100))) ;
-    })
-    originalTotalAmount=finalOriginal
-
-    // Loop through each row in the table
-    $(".sale-entry-table tr:gt(0)").each(function (index) {
-      var quantity =
-        parseInt($(this).find('input[name^="salequantity"]').val()) || 0;
-      var price =
-        parseFloat($(this).find('input[name^="sale_priceafterdiscount"]').val()) || 0;
-      var saleGst =
-        parseFloat(
-          $(this)
-            .find('select[name^="salegstsale"]')
-            .find(":selected")
-            .data("salegstsale")
-        ) || 0;
-
-      var totalTax = quantity * price * (saleGst / 100);
-      var totalPrice = quantity * price + totalTax;
-
-      netAmount += totalPrice;
-      totalTaxAmount += totalTax;
-    });
-    // Set the calculated net amount in the input field and round to two decimal places
-    $('input[name="saletotalbillingamount"]').val(netAmount.toFixed(2));
-    $('input[name="salerecieved"]').val(netAmount.toFixed(2));
-    $('input[name="saleduebalance"]').val(netAmount.toFixed(2));
-    $('input[name="saletotalamount"]').val((netAmount - totalTaxAmount).toFixed(2));
-    $('input[name="saletotaltax"]').val(totalTaxAmount.toFixed(2));
-    totalAmount = netAmount;
-   
-  }
-
-
-
-  function calculateDiscountsale(action=null) {
-    var discount = parseFloat($('input[name="salediscount"]').val()) || 0;
-    var discountMethod = $("#salediscountmethod").val();
-      if (discount <= 0) {
-        restoreOriginalPrices(); // Restore original prices when no discount method is selected
-        $('input[name="saletotalbillingamount"]').val(originalTotalAmount.toFixed(2));
-        return;
-      }
-   
-    // Calculate the discount amount based on the method
-    var discountPercentage = 0;
-    if (discountMethod === "percentage") {
-      discountPercentage = discount;
-    } else if (discountMethod === "flat") {
-      discountPercentage = (discount * 100) / originalTotalAmount;
-    }
-
-    // Distribute the discount across products
-    $(".sale-entry-table tr:gt(0)").each(function (index) {
-      var price = parseFloat($(this).find('input[name^="saleprice"]').val()) || 0;
-      var newPrice = price - price * (discountPercentage / 100);
-      // Update the row with the new price
-      $(this).find('input[name^="sale_priceafterdiscount"]').val(newPrice.toFixed(2)); 
-    });
-
-   
-  }
-
-    // Restore original prices function
-    function restoreOriginalPrices() {
-      $(".sale-entry-table tr:gt(0)").each(function (index) {
-        var originalPrice = parseFloat($(this).find('input[name^="saleprice"]').val())
-        if (originalPrice) {
-          $(this).find('input[name^="sale_priceafterdiscount"]').val(originalPrice.toFixed(2)); 
-        }
-      });
-    }
-
-    
-  function dueCalculationsale() {
-    let total = parseFloat($('input[name="saletotalbillingamount"]').val()) || 0;
-    let recieved = parseFloat($('input[name="salerecieved"]').val()) || 0;
-    let duebal = total - recieved;
-    $('input[name="saleduebalance"]').val(duebal.toFixed(2));
-  }
-
-  restoreOriginalPrices()
-  calculateDiscountsale();
-calculateNetAmountsale();
-dueCalculationsale();
-
-return;
-}
 
 const productFetchFucntionSalesUsingProductName = function (num) {
   $(`.sale-entry-table input[name="salename${num}"]`).on("change input", function () {
     const product = $(this).val();
-
-
-
-  
-
     if (!product) {
       $(
         `.sale-entry-table select[name='salegstsale${num}'] option[value='']`,
@@ -3236,12 +3173,6 @@ const productFetchFucntionSalesUsingProductName = function (num) {
       $(`.sale-entry-table input[name="sale_priceafterdiscount${num}"]`).val("");
       $(`.sale-entry-table input[name="salemrp${num}"]`).val("");
       $(`.sale-entry-table input[name="salemop${num}"]`).val("");
-
-      //  ################################################################
-
-      // funcSaleCalculation();
-
-      //  #######################################################################
       return;
     }
     console.log(product);
@@ -3281,22 +3212,14 @@ const productFetchFucntionSalesUsingProductName = function (num) {
           $(`.sale-entry-table input[name="sale_priceafterdiscount${num}"]`).val("");
           $(`.sale-entry-table input[name="salemrp${num}"]`).val("");
           $(`.sale-entry-table input[name="salemop${num}"]`).val("");
-
-          //  ################################################################
-
-          // funcSaleCalculation();
-
-          //  #######################################################################
         } else {
 
-          console.log("got product..")
+        
           $(`.sale-entry-table input[name="salequantity${num}"]`).val("");
 
           $(`.sale-entry-table input[name="saleprice${num}"]`).val(
             response.Response.sellingprice,
           );
-
-          
 
           $(`.sale-entry-table input[name="sale_priceafterdiscount${num}"]`).val(
             response.Response.sellingprice,
@@ -3334,12 +3257,7 @@ const productFetchFucntionSalesUsingProductName = function (num) {
             $(`.sale-entry-table input[name="salemrp${num}"]`).val("");
             $(`.sale-entry-table input[name="salemop${num}"]`).val("");
           }
-          //  ################################################################
 
-          // funcSaleCalculation();
-
-          //  #######################################################################
-          // }
         }
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -3353,7 +3271,7 @@ const productFetchFucntionSalesUsingProductName = function (num) {
 
 const productFetchFucntionSales = function (num) {
   $(`.sale-entry-table input[name="salebarcode${num}"]`).on(
-    "change input",
+    "change",
     function () {
       const barcode = $(this).val();
 
@@ -3371,11 +3289,7 @@ const productFetchFucntionSales = function (num) {
         $(`.sale-entry-table input[name="salemrp${num}"]`).val("");
         $(`.sale-entry-table input[name="salemop${num}"]`).val("");
 
-        //  ################################################################
-
-        // funcSaleCalculation();
-
-        //  #######################################################################
+      
         return;
       }
      
@@ -3416,11 +3330,7 @@ const productFetchFucntionSales = function (num) {
             $(`.sale-entry-table input[name="salemrp${num}"]`).val("");
             $(`.sale-entry-table input[name="salemop${num}"]`).val("");
 
-            //  ################################################################
-
-            // funcSaleCalculation();
-
-            //  #######################################################################
+           
           } else {
             $(`.sale-entry-table input[name="saleprice${num}"]`).val(
               response.Response.sellingprice,
@@ -3765,6 +3675,8 @@ $(document).ready(function () {
     let total = parseFloat($('input[name="saletotalbillingamount"]').val()) || 0;
     let recieved = parseFloat($('input[name="salerecieved"]').val()) || 0;
     let duebal = total - recieved;
+
+
     $('input[name="saleduebalance"]').val(duebal.toFixed(2));
   }
 });
@@ -3790,7 +3702,7 @@ $(document).ready(function () {
 // ################### Sales Return section #######################
 
 // #############################################
-// ##############  Purchase Return #############
+// ##############  Sales Return #############
 // #############################################
 
 const salesReturnFormValidation = function () {
@@ -9438,7 +9350,6 @@ $(document).ready(function () {
     });
   });
 });
-
 
 
 
