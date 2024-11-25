@@ -396,3 +396,49 @@ WARNING 2024-11-19 09:35:32,392 custom_middleware 4086 123145445507072 Slow requ
 DEBUG 2024-11-23 15:40:32,691 views 11840 12688 Service entry form submission start SR1
 DEBUG 2024-11-23 15:40:32,920 views 11840 12688 Service entry form submission end
 DEBUG 2024-11-23 15:40:32,920 views 11840 12688 Form submission took 0.22 seconds.
+DEBUG 2024-11-25 09:44:08,437 views 16992 17156 Service entry form submission start SR1
+DEBUG 2024-11-25 09:44:09,078 views 16992 17156 Service entry form submission end
+DEBUG 2024-11-25 09:44:09,078 views 16992 17156 Form submission took 0.64 seconds.
+DEBUG 2024-11-25 10:02:22,078 views 10596 21656 Service entry form submission start SR2
+DEBUG 2024-11-25 10:02:22,395 views 10596 21656 Service entry form submission end
+DEBUG 2024-11-25 10:02:22,395 views 10596 21656 Form submission took 0.32 seconds.
+DEBUG 2024-11-25 10:10:22,017 views 11904 8728 Service entry form submission start SR1
+DEBUG 2024-11-25 10:10:22,299 views 11904 8728 Service entry form submission end
+DEBUG 2024-11-25 10:10:22,299 views 11904 8728 Form submission took 0.28 seconds.
+DEBUG 2024-11-25 10:27:54,928 views 1996 15320 Service entry form submission start SR2
+DEBUG 2024-11-25 10:27:55,251 views 1996 15320 Service entry form submission end
+DEBUG 2024-11-25 10:27:55,254 views 1996 15320 Form submission took 0.32 seconds.
+DEBUG 2024-11-25 11:02:10,275 views 13164 2684 Service entry form submission start SR3
+DEBUG 2024-11-25 11:02:10,533 views 13164 2684 Service entry form submission end
+DEBUG 2024-11-25 11:02:10,534 views 13164 2684 Form submission took 0.26 seconds.
+DEBUG 2024-11-25 11:34:45,094 views 20468 2856 Service entry form submission start SR4
+DEBUG 2024-11-25 11:34:45,366 views 20468 2856 Service entry form submission end
+DEBUG 2024-11-25 11:34:45,367 views 20468 2856 Form submission took 0.27 seconds.
+DEBUG 2024-11-25 11:50:53,021 views 1260 16840 Service entry form submission start SR5
+DEBUG 2024-11-25 11:52:38,180 views 20364 25384 Service entry form submission start SR5
+DEBUG 2024-11-25 11:52:38,450 views 20364 25384 Service entry form submission end
+DEBUG 2024-11-25 11:52:38,451 views 20364 25384 Form submission took 0.27 seconds.
+DEBUG 2024-11-25 11:53:43,141 views 23896 22580 Service entry form submission start SR6
+DEBUG 2024-11-25 11:53:43,388 views 23896 22580 Service entry form submission end
+DEBUG 2024-11-25 11:53:43,389 views 23896 22580 Form submission took 0.25 seconds.
+DEBUG 2024-11-25 12:20:35,219 views 14300 17792 Service entry form submission start SR7
+DEBUG 2024-11-25 12:20:35,462 views 14300 17792 Service entry form submission end
+DEBUG 2024-11-25 12:20:35,463 views 14300 17792 Form submission took 0.24 seconds.
+DEBUG 2024-11-25 12:31:00,573 views 21768 6200 Service entry form submission start SR8
+DEBUG 2024-11-25 12:31:00,802 views 21768 6200 Service entry form submission end
+DEBUG 2024-11-25 12:31:00,803 views 21768 6200 Form submission took 0.23 seconds.
+DEBUG 2024-11-25 12:35:02,742 views 11324 2292 Service entry form submission start SR9
+DEBUG 2024-11-25 12:35:02,977 views 11324 2292 Service entry form submission end
+DEBUG 2024-11-25 12:35:02,978 views 11324 2292 Form submission took 0.23 seconds.
+DEBUG 2024-11-25 12:46:20,251 views 13892 23208 Service entry form submission start SR10
+DEBUG 2024-11-25 12:46:20,529 views 13892 23208 Service entry form submission end
+DEBUG 2024-11-25 12:46:20,530 views 13892 23208 Form submission took 0.28 seconds.
+DEBUG 2024-11-25 12:51:45,301 views 8780 22228 Service entry form submission start SR11
+DEBUG 2024-11-25 12:51:45,590 views 8780 22228 Service entry form submission end
+DEBUG 2024-11-25 12:51:45,590 views 8780 22228 Form submission took 0.29 seconds.
+DEBUG 2024-11-25 12:54:02,933 views 8780 15964 Service entry form submission start SR12
+DEBUG 2024-11-25 12:54:03,176 views 8780 15964 Service entry form submission end
+DEBUG 2024-11-25 12:54:03,176 views 8780 15964 Form submission took 0.24 seconds.
+DEBUG 2024-11-25 12:58:52,742 views 8780 11448 Service entry form submission start SR13
+DEBUG 2024-11-25 12:58:52,996 views 8780 11448 Service entry form submission end
+DEBUG 2024-11-25 12:58:52,996 views 8780 11448 Form submission took 0.25 seconds.
