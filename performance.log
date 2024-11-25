@@ -448,3 +448,6 @@ DEBUG 2024-11-25 13:18:09,970 views 4092 20420 Form submission took 0.28 seconds
 DEBUG 2024-11-25 13:23:25,962 views 14956 16260 Service entry form submission start SR2
 DEBUG 2024-11-25 13:23:26,263 views 14956 16260 Service entry form submission end
 DEBUG 2024-11-25 13:23:26,266 views 14956 16260 Form submission took 0.30 seconds.
+DEBUG 2024-11-25 13:26:45,034 views 23152 11496 Service entry form submission start SR1
+DEBUG 2024-11-25 13:26:45,370 views 23152 11496 Service entry form submission end
+DEBUG 2024-11-25 13:26:45,375 views 23152 11496 Form submission took 0.34 seconds.

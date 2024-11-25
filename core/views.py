@@ -8447,15 +8447,21 @@ def accounts(request):
                    
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
 
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_p.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_p.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -8488,15 +8494,20 @@ def accounts(request):
                
                         
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_b.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_b.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -8536,15 +8547,20 @@ def accounts(request):
          
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -8582,15 +8598,20 @@ def accounts(request):
 
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = purchase_p.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = purchase_p.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8621,15 +8642,20 @@ def accounts(request):
           
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.invoicedate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.invoicedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8656,15 +8682,20 @@ def accounts(request):
 
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8692,15 +8723,20 @@ def accounts(request):
          
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = expense.expensedate
+                # if is_first:
+                #     transaction_dict['createddate'] = expense.expensedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8727,15 +8763,20 @@ def accounts(request):
               
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = payment.paymentdate
+                # if is_first:
+                #     transaction_dict['createddate'] = payment.paymentdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8762,15 +8803,20 @@ def accounts(request):
         
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = receipt.receiptdate
+                # if is_first:
+                #     transaction_dict['createddate'] = receipt.receiptdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8797,15 +8843,20 @@ def accounts(request):
             
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = journal.journaldate
+                # if is_first:
+                #     transaction_dict['createddate'] = journal.journaldate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8839,15 +8890,20 @@ def accounts(request):
                
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = service.memodate
+                # if is_first:
+                #     transaction_dict['createddate'] = service.memodate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -8939,17 +8995,22 @@ def daybook(request):
                   
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
-                    is_first = False
-                    if len(trans_obj) == 1:
-                        is_first = False
-                    elif tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
+                    # is_first = False
+                    # if len(trans_obj) == 1:
+                    #     is_first = False
+                    # elif tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
 
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_p.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_p.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
 
@@ -8987,17 +9048,23 @@ def daybook(request):
                  
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
-                    is_first = False
-                    if len(trans_obj) == 1:
-                        is_first = False
-                    elif tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
+                    # is_first = False
+                    # if len(trans_obj) == 1:
+                    #     is_first = False
+                    # elif tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_b.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_b.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -9038,18 +9105,23 @@ def daybook(request):
                   
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
-                    print("daybook",trans_obj)
-                    is_first = False
-                    if len(trans_obj) == 1:
-                        is_first = False
-                    elif tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
+                    # print("daybook",trans_obj)
+                    # is_first = False
+                    # if len(trans_obj) == 1:
+                    #     is_first = False
+                    # elif tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -9088,15 +9160,20 @@ def daybook(request):
                
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = purchase_p.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = purchase_p.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9130,15 +9207,20 @@ def daybook(request):
        
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.invoicedate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.invoicedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9168,15 +9250,20 @@ def daybook(request):
              
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9207,15 +9294,20 @@ def daybook(request):
           
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = expense.expensedate
+                # if is_first:
+                #     transaction_dict['createddate'] = expense.expensedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9245,15 +9337,20 @@ def daybook(request):
 
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = payment.paymentdate
+                # if is_first:
+                #     transaction_dict['createddate'] = payment.paymentdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9284,15 +9381,20 @@ def daybook(request):
              
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = receipt.receiptdate
+                # if is_first:
+                #     transaction_dict['createddate'] = receipt.receiptdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9322,15 +9424,20 @@ def daybook(request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = journal.journaldate
+                # if is_first:
+                #     transaction_dict['createddate'] = journal.journaldate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9367,15 +9474,20 @@ def daybook(request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = service.memodate
+                # if is_first:
+                #     transaction_dict['createddate'] = service.memodate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9504,15 +9616,20 @@ def search_daybook(request):
                
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
 
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_p.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_p.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -9549,15 +9666,20 @@ def search_daybook(request):
                    
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_b.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_b.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -9598,15 +9720,20 @@ def search_daybook(request):
                  
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -9646,15 +9773,20 @@ def search_daybook(request):
        
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = purchase_p.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = purchase_p.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9687,15 +9819,20 @@ def search_daybook(request):
 
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.invoicedate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.invoicedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9724,15 +9861,20 @@ def search_daybook(request):
               
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9763,15 +9905,20 @@ def search_daybook(request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = expense.expensedate
+                # if is_first:
+                #     transaction_dict['createddate'] = expense.expensedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9802,15 +9949,20 @@ def search_daybook(request):
              
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = payment.paymentdate
+                # if is_first:
+                #     transaction_dict['createddate'] = payment.paymentdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9841,15 +9993,20 @@ def search_daybook(request):
       
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = receipt.receiptdate
+                # if is_first:
+                #     transaction_dict['createddate'] = receipt.receiptdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9878,15 +10035,20 @@ def search_daybook(request):
          
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = journal.journaldate
+                # if is_first:
+                #     transaction_dict['createddate'] = journal.journaldate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -9922,15 +10084,20 @@ def search_daybook(request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = service.memodate
+                # if is_first:
+                #     transaction_dict['createddate'] = service.memodate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -11895,15 +12062,20 @@ def search_money_reciept(request):
                 
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
 
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_p.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_p.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -11938,15 +12110,20 @@ def search_money_reciept(request):
 
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_b.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_b.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -11984,15 +12161,20 @@ def search_money_reciept(request):
               
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -12029,15 +12211,20 @@ def search_money_reciept(request):
       
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
 
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_p.createddate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_p.createddate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -12065,15 +12252,20 @@ def search_money_reciept(request):
         
 
             ###############
-            trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
-            is_first = False
-            if tr==trans_obj.first():
-                is_first=True
-            else:
-                is_first = False
+            # trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
+            # is_first = False
+            # if tr==trans_obj.first():
+            #     is_first=True
+            # else:
+            #     is_first = False
 
-            if is_first:
-                transaction_dict['createddate'] = sale.invoicedate
+            # if is_first:
+            #     transaction_dict['createddate'] = sale.invoicedate
+            # else:
+            #     transaction_dict['createddate'] = tr.createddate
+            transaction_date = tr.transactiondate
+            if transaction_date:
+                transaction_dict['createddate'] = transaction_date
             else:
                 transaction_dict['createddate'] = tr.createddate
             ###############
@@ -12099,15 +12291,20 @@ def search_money_reciept(request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -12130,15 +12327,20 @@ def search_money_reciept(request):
          
 
             ###############
-            trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
-            is_first = False
-            if tr==trans_obj.first():
-                is_first=True
-            else:
-                is_first = False
+            # trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
+            # is_first = False
+            # if tr==trans_obj.first():
+            #     is_first=True
+            # else:
+            #     is_first = False
 
-            if is_first:
-                transaction_dict['createddate'] = expense.expensedate
+            # if is_first:
+            #     transaction_dict['createddate'] = expense.expensedate
+            # else:
+            #     transaction_dict['createddate'] = tr.createddate
+            transaction_date = tr.transactiondate
+            if transaction_date:
+                transaction_dict['createddate'] = transaction_date
             else:
                 transaction_dict['createddate'] = tr.createddate
             ###############
@@ -12165,15 +12367,20 @@ def search_money_reciept(request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = payment.paymentdate
+                # if is_first:
+                #     transaction_dict['createddate'] = payment.paymentdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -12200,15 +12407,20 @@ def search_money_reciept(request):
                
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = receipt.receiptdate
+                # if is_first:
+                #     transaction_dict['createddate'] = receipt.receiptdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -12237,15 +12449,20 @@ def search_money_reciept(request):
 
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = journal.journaldate
+                # if is_first:
+                #     transaction_dict['createddate'] = journal.journaldate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -12272,15 +12489,20 @@ def search_money_reciept(request):
             transaction_dict['date'] = service.memodate
 
             ###############
-            trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
-            is_first = False
-            if tr==trans_obj.first():
-                is_first=True
-            else:
-                is_first = False
+            # trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
+            # is_first = False
+            # if tr==trans_obj.first():
+            #     is_first=True
+            # else:
+            #     is_first = False
 
-            if is_first:
-                transaction_dict['createddate'] = service.memodate
+            # if is_first:
+            #     transaction_dict['createddate'] = service.memodate
+            # else:
+            #     transaction_dict['createddate'] = tr.createddate
+            transaction_date = tr.transactiondate
+            if transaction_date:
+                transaction_dict['createddate'] = transaction_date
             else:
                 transaction_dict['createddate'] = tr.createddate
             ###############
@@ -28331,7 +28553,7 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
         'QC Passed(Ok)',
         'CNP Inprogress(Ok)',
         'CNP Pending(Ok)',
-        'CNP Inprogress(Ok)',
+        'CNP Completed(Ok)',
     ]
     # Build the query
     service_obj = Service.objects.filter(
@@ -28590,15 +28812,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
                
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
 
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_p.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_p.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -28635,15 +28862,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
                    
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase_b.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase_b.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase_b.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -28684,15 +28916,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
                  
 
                     ###############
-                    trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
-                    is_first = False
-                    if tr==trans_obj.first():
-                        is_first=True
-                    else:
-                        is_first = False
+                    # trans_obj =Transaction.objects.filter(transactionid=purchase.purchaseid)
+                    # is_first = False
+                    # if tr==trans_obj.first():
+                    #     is_first=True
+                    # else:
+                    #     is_first = False
                    
-                    if is_first:
-                        transaction_dict['createddate'] = purchase.invoicedate
+                    # if is_first:
+                    #     transaction_dict['createddate'] = purchase.invoicedate
+                    # else:
+                    #     transaction_dict['createddate'] = tr.createddate
+                    transaction_date = tr.transactiondate
+                    if transaction_date:
+                        transaction_dict['createddate'] = transaction_date
                     else:
                         transaction_dict['createddate'] = tr.createddate
                     ###############
@@ -28732,15 +28969,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
        
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=purchase_p.purchasereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = purchase_p.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = purchase_p.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -28773,15 +29015,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
 
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.saleid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.invoicedate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.invoicedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -28810,15 +29057,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
               
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=sale.salereturnid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = sale.createddate
+                # if is_first:
+                #     transaction_dict['createddate'] = sale.createddate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -28849,15 +29101,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=expense.expenseid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = expense.expensedate
+                # if is_first:
+                #     transaction_dict['createddate'] = expense.expensedate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -28888,15 +29145,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
              
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=payment.paymentid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = payment.paymentdate
+                # if is_first:
+                #     transaction_dict['createddate'] = payment.paymentdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -28927,15 +29189,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
       
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=receipt.receiptid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = receipt.receiptdate
+                # if is_first:
+                #     transaction_dict['createddate'] = receipt.receiptdate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -28964,15 +29231,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
          
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = journal.journaldate
+                # if is_first:
+                #     transaction_dict['createddate'] = journal.journaldate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -29008,15 +29280,20 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
            
 
                 ###############
-                trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
-                is_first = False
-                if tr==trans_obj.first():
-                    is_first=True
-                else:
-                    is_first = False
+                # trans_obj =Transaction.objects.filter(transactionid=service.servicerefnumber)
+                # is_first = False
+                # if tr==trans_obj.first():
+                #     is_first=True
+                # else:
+                #     is_first = False
 
-                if is_first:
-                    transaction_dict['createddate'] = service.memodate
+                # if is_first:
+                #     transaction_dict['createddate'] = service.memodate
+                # else:
+                #     transaction_dict['createddate'] = tr.createddate
+                transaction_date = tr.transactiondate
+                if transaction_date:
+                    transaction_dict['createddate'] = transaction_date
                 else:
                     transaction_dict['createddate'] = tr.createddate
                 ###############
@@ -29473,7 +29750,7 @@ def balancesheet(request):
         'QC Passed(Ok)',
         'CNP Inprogress(Ok)',
         'CNP Pending(Ok)',
-        'CNP Inprogress(Ok)',
+        'CNP Completed(Ok)',
     ]
     # Build the query
     service_obj = Service.objects.filter(
@@ -29885,7 +30162,7 @@ def placcountnew(request):
         'QC Passed(Ok)',
         'CNP Inprogress(Ok)',
         'CNP Pending(Ok)',
-        'CNP Inprogress(Ok)',
+        'CNP Completed(Ok)',
     ]
     # Build the query
     service_obj = Service.objects.filter(
