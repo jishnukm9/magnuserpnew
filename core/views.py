@@ -16874,6 +16874,9 @@ def serviceBillingCheckout(request, servicerefnumber):
                 )
             )
 
+
+    print("due.............",due)
+
     service = Service.objects.filter(servicerefnumber=servicerefnumber).first()
     prev_recieved = float(service.amountrecieved)
     prev_status = service.status
@@ -16885,7 +16888,10 @@ def serviceBillingCheckout(request, servicerefnumber):
 
     # if float(request.POST.get('finaldiscount',0)) > 0:
     if prev_status == "CNP Completed(Ok)":
+
         if prev_discount != float(request.POST.get('finaldiscount',0)) or tax_service != prev_tot_tax:
+
+            print("discount changed or tax changed")
             sparetotal_incltax_afterdiscount = request.POST.get('spare_cost_total',None)
             sparetaxtotal_afterdiscount = request.POST.get('sparetx2',None)
             sparetotal_excltax_afterdiscount = float(sparetotal_incltax_afterdiscount) - float(sparetaxtotal_afterdiscount)
@@ -16927,7 +16933,7 @@ def serviceBillingCheckout(request, servicerefnumber):
             serv_discount.save()
         
             ########################
-
+    print("dueeee....1",due)
 
     if discountmethod == 'Percentage':
         ######## 12-9-2024 servicecharge with tax ##################
@@ -16954,49 +16960,50 @@ def serviceBillingCheckout(request, servicerefnumber):
 
     # Do not save anything if amount recieved is 0 or not larger than previous recieved
     if prev_status == "CNP Completed(Ok)":
+        print("dueeee....2",due)
         if received == prev_recieved or received == 0 or received < prev_recieved:
-            # messages.error(request, "Amount received cannot be zero or less than or equal to the previously received amount!")
-            
-
-            ########### 2/11/2024 #########
-            if total != None:
-                service.totalamount = total
-            if discount != None:
-                service.discount = discount
-            if final != None:
-                service.finalamount = final
-            if received != None:
-                service.amountrecieved = received
-            if due != None:
-                service.duebalance = due
-            if paymentmode != None:
-                service.paymentmode = paymentmode
-            if tax_service != None:
-                service.totaltax = tax_service
-                if float(tax_service) == 0.0:
-                    service.servicetax = 0
-                else:
-                    servicetax = ServiceTax.objects.all().first()
-                    service.servicetax = servicetax.tax
-            if service_charge:
-                service.servicecharge = float(service_charge)
-            if discountmethod:
-                service.discountmethod = discountmethod
-            service.discountpercentage = discountpercentage
-            service.modifieddate = date.today()
-            service.save()
-            ########### 2/11/2024 #########
-            
-            return redirect(
-                reverse(
-                    "servicecheckout", kwargs={"servicerefnumber": servicerefnumber}
+           if due != 0:
+                print("dueeee....3",due)
+                ########### 2/11/2024 #########
+                if total != None:
+                    service.totalamount = total
+                if discount != None:
+                    service.discount = discount
+                if final != None:
+                    service.finalamount = final
+                if received != None:
+                    service.amountrecieved = received
+                if due != None:
+                    service.duebalance = due
+                if paymentmode != None:
+                    service.paymentmode = paymentmode
+                if tax_service != None:
+                    service.totaltax = tax_service
+                    if float(tax_service) == 0.0:
+                        service.servicetax = 0
+                    else:
+                        servicetax = ServiceTax.objects.all().first()
+                        service.servicetax = servicetax.tax
+                if service_charge:
+                    service.servicecharge = float(service_charge)
+                if discountmethod:
+                    service.discountmethod = discountmethod
+                service.discountpercentage = discountpercentage
+                service.modifieddate = date.today()
+                service.save()
+                ########### 2/11/2024 #########
+                
+                return redirect(
+                    reverse(
+                        "servicecheckout", kwargs={"servicerefnumber": servicerefnumber}
+                    )
                 )
-            )
 
                 
 
     if received:
         if prev_status == "CNP Completed(Ok)":
+            print("dueeee....4",due)
             if float(received) != 0:
                 if prev_recieved != received and received > prev_recieved:
                     recieved_amount = received - prev_recieved
@@ -17038,6 +17045,7 @@ def serviceBillingCheckout(request, servicerefnumber):
     service.discountpercentage = discountpercentage
 
     if due == 0:
+        print("dueeee....11",due)
         if prev_status == "CNP Completed(Ok)":
             service.status = "Delivered(Ok)"
         elif prev_status == "CNP Completed(NotOk)":
@@ -30214,7 +30222,6 @@ def placcountnew(request):
     for ret in purchase_return_obj:
         purchase_return += (ret.nettotal - ret.totaltax)
     income_total += purchase_return
-
 
 
     sale_return = 0
