@@ -377,3 +377,21 @@
     Assets:Service:AccountReceivable:jishnu   -0.0   INR 
     Assets:Service:Bank
 
+2024-11-25 * SR2 (Service Due Transaction)
+    Assets:Service:AccountReceivable:jishnu       -100.0 INR
+    Assets:Service:Card
+
+2024-11-25 * SR2 (Service Due full Transaction)
+    Assets:Service:AccountReceivable:jishnu   -50.0   INR 
+    Assets:Service:UPI
+
+2024-11-25 * INV7674444444 (Purchase Transaction)
+     Expenses:Purchase        34500.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-25 * SR3 (Service Credit Transaction)
+    Assets:Service:Cash              100.0 INR
+    Assets:Service:AccountReceivable:jishnu       4125.0 INR
+    Income:Service
+    Liabilities:Service:TaxPayable                     -551.09   INR
+

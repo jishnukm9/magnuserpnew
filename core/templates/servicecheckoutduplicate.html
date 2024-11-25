@@ -787,8 +787,8 @@
                                <li class="list-group-item d-flex justify-content-between py-2">
                                    <span class="fw-bold">Amount Received:</span>
                                    <div class="col-lg-6">
-                                       <input style="background-color:#d0ebff;" type="number" min="0" value="{{amountrecieved}}" id="finalamountreceivedold" hidden step="0.01" class="form-control border-0 border-bottom">
-                                       <input style="background-color:#d0ebff;" required {% if status == 'CNP Completed(NotOk)' %} readonly {% endif %} type="number" min="0" value="{{amountrecieved}}" id="finalamountreceived" name="finalamountreceived" step="0.01" class="form-control border-0 {% if status == 'CNP Completed(Ok)' %} border-bottom {% endif %} no-spinner-pad-sc" style="background:none;">
+                                       <input style="background-color:#d0ebff;" type="number" min="0" value="{{amountrecieved}}" id="finalamountreceivedold" hidden step="0.01" class="form-control border-0 border-bottom amountreceived-service-checkout-old">
+                                       <input style="background-color:#d0ebff;" required {% if status == 'CNP Completed(NotOk)' %} readonly {% endif %} type="number" min="0" value="{{amountrecieved}}" id="finalamountreceived" name="finalamountreceived" step="0.01" class="form-control border-0 {% if status == 'CNP Completed(Ok)' %} border-bottom {% endif %} no-spinner-pad-sc amountreceived-service-checkout" style="background:none;">
                                    </div>
                                </li>
 

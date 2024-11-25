@@ -5258,6 +5258,33 @@ $(document).ready(function () {
       }
     }
   }
+
+
+
+  $(".amountreceived-service-checkout").on('change',function(){
+
+    let finalamountreceived = parseFloat($(this).val()) || 0;
+    let finalamountreceivedold = parseFloat($('.amountreceived-service-checkout-old').val()) || 0;
+    console.log("old amount",finalamountreceivedold,finalamountreceived);
+
+    if(finalamountreceived < finalamountreceivedold){
+      alert("Received amount should be greater than previously received amount");
+      location.reload();
+
+    }
+
+
+
+
+
+
+  })
+
+
+
+
+
+
 });
 
 

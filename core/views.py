@@ -16728,7 +16728,7 @@ def serviceCheckout(request, servicerefnumber):
 
     # print("-----",sparecostafter_discount_excltax,sparetax_afterdiscount,sparecostafter_discount_incltax)
 
-
+    print("\n\namount received.....",amountrecieved)
 
 
     context = {
@@ -16875,8 +16875,6 @@ def serviceBillingCheckout(request, servicerefnumber):
             )
 
 
-    print("due.............",due)
-
     service = Service.objects.filter(servicerefnumber=servicerefnumber).first()
     prev_recieved = float(service.amountrecieved)
     prev_status = service.status
@@ -16890,8 +16888,6 @@ def serviceBillingCheckout(request, servicerefnumber):
     if prev_status == "CNP Completed(Ok)":
 
         if prev_discount != float(request.POST.get('finaldiscount',0)) or tax_service != prev_tot_tax:
-
-            print("discount changed or tax changed")
             sparetotal_incltax_afterdiscount = request.POST.get('spare_cost_total',None)
             sparetaxtotal_afterdiscount = request.POST.get('sparetx2',None)
             sparetotal_excltax_afterdiscount = float(sparetotal_incltax_afterdiscount) - float(sparetaxtotal_afterdiscount)
@@ -16933,7 +16929,6 @@ def serviceBillingCheckout(request, servicerefnumber):
             serv_discount.save()
         
             ########################
-    print("dueeee....1",due)
 
     if discountmethod == 'Percentage':
         ######## 12-9-2024 servicecharge with tax ##################
@@ -16960,10 +16955,8 @@ def serviceBillingCheckout(request, servicerefnumber):
 
     # Do not save anything if amount recieved is 0 or not larger than previous recieved
     if prev_status == "CNP Completed(Ok)":
-        print("dueeee....2",due)
         if received == prev_recieved or received == 0 or received < prev_recieved:
            if due != 0:
-                print("dueeee....3",due)
                 ########### 2/11/2024 #########
                 if total != None:
                     service.totalamount = total
@@ -17003,7 +16996,6 @@ def serviceBillingCheckout(request, servicerefnumber):
 
     if received:
         if prev_status == "CNP Completed(Ok)":
-            print("dueeee....4",due)
             if float(received) != 0:
                 if prev_recieved != received and received > prev_recieved:
                     recieved_amount = received - prev_recieved
@@ -17045,7 +17037,6 @@ def serviceBillingCheckout(request, servicerefnumber):
     service.discountpercentage = discountpercentage
 
     if due == 0:
-        print("dueeee....11",due)
         if prev_status == "CNP Completed(Ok)":
             service.status = "Delivered(Ok)"
         elif prev_status == "CNP Completed(NotOk)":
@@ -20131,6 +20122,8 @@ def serviceUpdateForm(request, servicerefnumber):
         filtered_values = {k: v for k, v in value.items() if k != "Rejected"}
         data["pending"] = sum(filtered_values.values())
         technician_list_new.append(data)
+
+    
 
     context = {
         "technician_status": service_status,
