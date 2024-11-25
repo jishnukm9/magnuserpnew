@@ -9494,11 +9494,32 @@ def daybook(request):
 
                 transaction_list.append(transaction_dict)
 
-    transaction_list = sorted(
+
+    startdate = date.today()
+    enddate = date.today()
+
+
+    if startdate and enddate:
+        transaction_list  = sorted(
+        [
+            transaction for transaction in transaction_list 
+            if startdate <= transaction['createddate'] <= enddate
+        ],
+        key=lambda x: x['createddate'],
+        reverse=False
+        )
+    else:
+        transaction_list = sorted(
         transaction_list,
         key=lambda x: x['createddate'],
-        reverse=True
+        reverse=False
     )
+
+    # transaction_list = sorted(
+    #     transaction_list,
+    #     key=lambda x: x['createddate'],
+    #     reverse=True
+    # )
 
     total_balance = total_debit - total_credit
 
@@ -10173,6 +10194,11 @@ def addChartOfAccounts(request):
     gstring = rootcoasub.replace(" ", "_")
     data.gstring = gstring
     data.title = request.POST["title"]
+    if CoASubAccounts.objects.filter(title=request.POST['title']).first():
+        messages.error(request, "Title already exist!")
+        return redirect("chartofaccountsform")
+
+
     data.description = request.POST["description"]
     data.save()
 
@@ -10208,6 +10234,10 @@ def updateChartOfAccounts(request):
     gstring = rootcoasub.replace(" ", "_")
     data.gstring = gstring
     data.title = request.POST["title"]
+    if CoASubAccounts.objects.filter(title=request.POST['title']).first():
+        messages.error(request, "Title already exist!")
+        # return redirect("editchartofaccounts")
+        return redirect(reverse("editchartofaccounts", kwargs={"id": id_no}))
     data.description = request.POST["description"]
     data.save()
 
