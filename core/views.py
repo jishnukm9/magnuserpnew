@@ -29477,7 +29477,7 @@ def balancesheet(request):
     ]
     # Build the query
     service_obj = Service.objects.filter(
-        Q(branch=branch) &
+        Q(branch=homebranch) &
         Q(memodate__gte=startdate) &
         Q(memodate__lte=enddate) &
         (

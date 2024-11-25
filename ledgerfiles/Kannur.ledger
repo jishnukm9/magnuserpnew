@@ -357,3 +357,7 @@
     Income:Service
     Liabilities:Service:TaxPayable                     -163.04   INR
 
+2024-11-25 * INV6565644 (Purchase Transaction)
+     Expenses:Purchase        34500.0  INR 
+     Assets:Purchase:Cash 
+
