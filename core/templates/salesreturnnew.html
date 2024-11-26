@@ -324,10 +324,11 @@
                                                         <div class="d-flex justify-content-between">
                                                             <p class="fw-bold">Adjustment</p>
                                                             <input type="number" class="form-control w-50" value="{{discount}}" name="discount-sale" id="discount-sale" type="number" step="0.01" min="0">
-                                                            {% if discount != 0 %}
+                                                            
+                                                          </div>
+                                                          {% if discount != 0 %}
                                                             <p class="text-danger fw-bold">Discount : {{discount}} {{discountmethod}} has got applied to this purchase</p>
                                                             {% endif %}
-                                                          </div>
                                                     </li>
                                                     <li class="list-group-item">
                                                         <div class="d-flex justify-content-between">

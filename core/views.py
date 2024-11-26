@@ -3879,6 +3879,7 @@ def purchaseReturn(request):
         "invoicenumbers": invoicenumber_list,
         "data": data,
         "paymentmode": paymentmode,
+        'discount':0,
     }
     return render(request, "purchasereturnnew.html", context)
 
@@ -6065,6 +6066,7 @@ def salesReturn(request):
         "invoicenumbers": invoicenumber_list,
         "data": data,
         "paymentmode": paymentmode,
+        'discount':0,
     }
     return render(request, "salesreturnnew.html", context)
 
