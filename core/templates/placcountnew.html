@@ -146,6 +146,15 @@
                                     </tr>
                                     {% endfor %}
                                     {% endfor %}
+                                    {% for item in journal_list_expense %}
+                                    {% for key, value in item.items %}
+                                    <tr>
+                                    <td class="py-2">{{ key | replaceunderscore }}</td>
+                                    <td class="text-end py-2">{{ value | floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endfor %}
+                            
                             
                                   
                                    
@@ -204,6 +213,14 @@
                                     {% endfor %}
                                     {% endfor %}
                                     {% for item in receipt_list_income %}
+                                    {% for key, value in item.items %}
+                                    <tr>
+                                    <td class="py-2">{{ key | replaceunderscore }}</td>
+                                    <td class="text-end py-2">{{ value | floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endfor %}
+                                    {% for item in journal_list_income %}
                                     {% for key, value in item.items %}
                                     <tr>
                                     <td class="py-2">{{ key | replaceunderscore }}</td>

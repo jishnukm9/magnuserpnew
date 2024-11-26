@@ -114,14 +114,13 @@
                                         <div class="form-group col-lg-8">
           
                                           <select required  style=" border:1px solid #dee2e6;" class="form-control" name="debitaccount" id="debitaccount">
+                                            <option selected value="" ></option>
                                             {% for item in all_dropdown %}
                                             <option value="{{ item }}" >{{ item }}</option>
                                              {% endfor %}
                                             <!-- <option value="office" >Office Expenses</option>
                                             <option value="salary">Network And Communication</option> -->
                                           </select>
-                                        
-                                       
                                         </div>
                                       </div>
 
@@ -135,6 +134,7 @@
                                         <div class="form-group col-lg-8">
           
                                           <select required  style=" border:1px solid #dee2e6;" class="form-control" name="creditaccount" id="creditaccount">
+                                            <option selected value="" ></option>
                                             {% for item in all_dropdown %}
                                             <option value="{{ item }}" >{{ item }}</option>
                                              {% endfor %}

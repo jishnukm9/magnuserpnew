@@ -395,3 +395,51 @@
     Income:Service
     Liabilities:Service:TaxPayable                     -551.09   INR
 
+2024-11-26   *  Bought Furniture in credit (Journal) 
+     Assets:FIXED ASSETS:Office Furniture     1000 INR
+     Liabilities:OTHER LIABILITIES:Jishnu Payable
+
+2024-11-26   *  Repaid Jishnu payable taken for Buying office furniture (Journal) 
+     Liabilities:OTHER LIABILITIES:Jishnu Payable     1000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-26   *  Office Computerbought in credit (Journal) 
+     Assets:FIXED ASSETS:Office Computers     3000 INR
+     Liabilities:OTHER LIABILITIES:Name 1 accounts payable
+
+2024-11-26   *  Amoutnt repaid for Office Computer bought in credit (Journal) 
+     Liabilities:OTHER LIABILITIES:Name 1 accounts payable     3000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-26   *  Bought new Office Furniture (Payment) 
+     Assets:FIXED ASSETS:Office Furniture     500 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-26   *  Bought Furniture In Credit (Journal) 
+     Assets:FIXED ASSETS:Office Furniture     1000 INR
+     Liabilities:OTHER LIABILITIES:Rony Electronincs Accounts Payable
+
+2024-11-26   *  Repaid Roy Electronics Account Payable (Journal) 
+     Liabilities:OTHER LIABILITIES:Rony Electronincs Accounts Payable     1000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-26   *  Rent Expence Payable this month (Journal) 
+     Expenses:EXPENSES:Rent Expense     1000 INR
+     Liabilities:OTHER LIABILITIES:Rent Payable
+
+2024-11-26   *  Rent Expense is 800 , 1000 wrongly entered (Journal) 
+     Liabilities:OTHER LIABILITIES:Rent Payable     200 INR
+     Expenses:EXPENSES:Rent Expense
+
+2024-11-26   *  Rent Payable paid (Journal) 
+     Liabilities:OTHER LIABILITIES:Rent Payable     800 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-26 * INV65656546544 (Purchase Transaction)
+     Expenses:Purchase        11500.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-26   *  Rent Expense this Month (Journal) 
+     Expenses:EXPENSES:Rent Expense     3000 INR
+     Liabilities:OTHER LIABILITIES:Rent Payable
+

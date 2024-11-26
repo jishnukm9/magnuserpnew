@@ -8831,6 +8831,7 @@ def accounts(request):
             if not journal:
                 pass
             else:
+                
                 invoicenumber_list.add(journal.referenceno)
                 # accounts_list.add(sale.customer)
                 transaction_dict["invoicenumber"] = journal.referenceno
@@ -9406,22 +9407,31 @@ def daybook(request):
             transactionid = tr.transactionid
             transaction_dict = {}
             journal = Journals.objects.filter(journalid=transactionid).first()
+
             if not journal:
                 pass
             else:
+                amount_type = ''
+                accounts = ''
+                cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+
+                if journal.creditaccount in cash_list:
+                    amount_type = 'Credit'
+                    accounts = journal.debitaccount
+                elif journal.debitaccount in cash_list:
+                    amount_type = 'Debit'
+                    accounts = journal.creditaccount
+
                 invoicenumber_list.add(journal.referenceno)
-                # accounts_list.add(sale.customer)
                 transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = ""
+                transaction_dict["accounts"] = accounts
                 transaction_dict["paymentmode"] = tr.paymentmode
                 transaction_dict["transaction"] = tr
                 transaction_dict["remarks"] = journal.description
                 transaction_dict["branch"] = tr.branch
                 transaction_dict["title"] = "Journal"
-                transaction_dict["amounttype"] = ""
+                transaction_dict["amounttype"] = amount_type
                 transaction_dict['date'] = journal.journaldate
-
-           
 
                 ###############
                 # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
@@ -10042,17 +10052,39 @@ def search_daybook(request):
             if not journal:
                 pass
             else:
+
+                amount_type = ''
+                accounts = ''
+                cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+
+                if journal.creditaccount in cash_list:
+                    amount_type = 'Credit'
+                    accounts = journal.debitaccount
+                elif journal.debitaccount in cash_list:
+                    amount_type = 'Debit'
+                    accounts = journal.creditaccount
+
                 invoicenumber_list.add(journal.referenceno)
-                # accounts_list.add(sale.customer)
                 transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = ""
+                transaction_dict["accounts"] = accounts
                 transaction_dict["paymentmode"] = tr.paymentmode
                 transaction_dict["transaction"] = tr
                 transaction_dict["remarks"] = journal.description
                 transaction_dict["branch"] = tr.branch
                 transaction_dict["title"] = "Journal"
-                transaction_dict["amounttype"] = ""
+                transaction_dict["amounttype"] = amount_type
                 transaction_dict['date'] = journal.journaldate
+                # invoicenumber_list.add(journal.referenceno)
+                # # accounts_list.add(sale.customer)
+                # transaction_dict["invoicenumber"] = journal.referenceno
+                # transaction_dict["accounts"] = ""
+                # transaction_dict["paymentmode"] = tr.paymentmode
+                # transaction_dict["transaction"] = tr
+                # transaction_dict["remarks"] = journal.description
+                # transaction_dict["branch"] = tr.branch
+                # transaction_dict["title"] = "Journal"
+                # transaction_dict["amounttype"] = ""
+                # transaction_dict['date'] = journal.journaldate
          
 
                 ###############
@@ -11603,6 +11635,7 @@ def journal_details(request, id):
 @login_required
 def add_journal(request):
     if request.method == "POST":
+
         data = Journals()
         currentuser = request.user
         today_date = datetime.today().date()
@@ -11614,8 +11647,10 @@ def add_journal(request):
             data.referenceno = request.POST.get("referenceno")
         else:
             data.referenceno = None
-        data.creditaccount = request.POST.get("creditaccount")
-        data.debitaccount = request.POST.get("debitaccount")
+        credit_account = request.POST.get("creditaccount")
+        debit_account = request.POST.get("debitaccount")
+        data.creditaccount =credit_account
+        data.debitaccount = debit_account
         data.narration = request.POST.get("narration")
         data.amount = request.POST.get("amount")
         data.branch = currentuser.userprofile.branch
@@ -11623,17 +11658,48 @@ def add_journal(request):
         data.mode = request.POST.get("mode")
         data.save()
 
-        transaction = Transaction()
-        transaction.transactionid = journalid
-        transaction.amount = float(request.POST.get("amount"))
-        transaction.transactiontype = "journal"
-        transaction.paymentmode = request.POST.get("mode")
-        transaction.branch = currentuser.userprofile.branch
-        transaction.invoice_number = request.POST.get("referenceno")
-        transaction.accounts = "NA"
-        transaction.remarks = request.POST.get("description")
-        transaction.transactiondate = datetime.now()
-        transaction.save()
+        cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+
+
+        if credit_account in cash_list:
+            credit_account_head_title = credit_account
+        else:
+            credit_account_head_title = CoASubAccounts.objects.filter(
+                title=credit_account
+            ).first()
+            if credit_account_head_title:
+                credit_account_head_title = credit_account_head_title.title
+            else:
+                credit_account_head_title = credit_account
+
+        if debit_account in cash_list:
+            debit_account_head_title = debit_account
+        else:
+            debit_account_head_title = CoASubAccounts.objects.filter(
+                title=debit_account
+            ).first()
+            if debit_account_head_title:
+                debit_account_head_title = debit_account_head_title.title
+            else:
+                debit_account_head_title = debit_account
+
+        print("debit account title", debit_account_head_title)
+        print("credit account title", credit_account_head_title)
+
+        if credit_account_head_title in cash_list or debit_account_head_title in cash_list:
+            print("debit account title 1", debit_account_head_title)
+            print("credit account title 1", credit_account_head_title)
+            transaction = Transaction()
+            transaction.transactionid = journalid
+            transaction.amount = float(request.POST.get("amount"))
+            transaction.transactiontype = "journal"
+            transaction.paymentmode = request.POST.get("mode")
+            transaction.branch = currentuser.userprofile.branch
+            transaction.invoice_number = request.POST.get("referenceno")
+            transaction.accounts = "NA"
+            transaction.remarks = request.POST.get("narration")
+            transaction.transactiondate = datetime.now()
+            transaction.save()
 
         debit_coa, debit_coa_level1 = get_coa_root(data.debitaccount)
         credit_coa, credit_coa_level1 = get_coa_root(data.creditaccount)
@@ -28675,9 +28741,6 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     income_accounts = {}
     expense_accounts = {}
 
-    # Initialize lists for final results
-    payment_list_income = []
-    payment_list_expense = []
     # Process all payments
     payments_obj = Payments.objects.filter(Q(branch=branch)& Q(paymentdate__gte=startdate)
         & Q(paymentdate__lte=enddate))
@@ -28703,14 +28766,6 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
             else:
                 expense_accounts[acc_key] = pay.amount
                 expense_total += pay.amount
-            
-
-    # Convert accumulated accounts to list format
-    for acc_key, amount in income_accounts.items():
-        payment_list_income.append({acc_key: amount})
-
-    for acc_key, amount in expense_accounts.items():
-        payment_list_expense.append({acc_key: amount})
 
 
 
@@ -28720,9 +28775,6 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
     income_accounts = {}
     expense_accounts = {}
 
-    # Initialize lists for final results
-    receipt_list_income = []
-    receipt_list_expense = []
     # Process all receipts
     receipts_obj = Receipts.objects.filter(Q(branch=branch)& Q(receiptdate__gte=startdate)
         & Q(receiptdate__lte=enddate))
@@ -28748,14 +28800,73 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
             else:
                 expense_accounts[acc_key] = receipt.amount
                 expense_total += receipt.amount
-            
-    # Convert accumulated accounts to list format
-    for acc_key, amount in income_accounts.items():
-        receipt_list_income.append({acc_key: amount})
 
-    for acc_key, amount in expense_accounts.items():
-        receipt_list_expense.append({acc_key: amount})
 
+
+    # Initialize dictionaries to store accumulated values for each account
+    income_accounts = {}
+    expense_accounts = {}
+
+    cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+
+    # Process all journals
+    journals_obj = Journals.objects.filter(Q(branch=branch)& Q(journaldate__gte=startdate)
+        & Q(journaldate__lte=enddate))
+
+    for journal in journals_obj:
+        credit_acc = journal.creditaccount
+        debit_acc = journal.debitaccount
+        credit_acc_key = credit_acc.replace(" ", "_")
+        debit_acc_key = debit_acc.replace(" ", "_")
+
+        # Get account heads
+        if credit_acc in cash_list:
+            credit_acc_head = credit_acc
+        elif CoASubAccounts.objects.filter(title=credit_acc).first():
+            credit_acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
+        else:
+            credit_acc_head = credit_acc
+
+        if debit_acc in cash_list:
+            debit_acc_head = debit_acc
+        elif CoASubAccounts.objects.filter(title=debit_acc).first():
+            debit_acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
+        else:
+            debit_acc_head = debit_acc
+        
+        # Process credit side
+        if credit_acc_head in INCOME_SIDE:
+            if credit_acc_key in income_accounts:
+                income_accounts[credit_acc_key] += journal.amount
+                income_total += journal.amount
+            else:
+                income_accounts[credit_acc_key] = journal.amount
+                income_total += journal.amount
+                
+        elif credit_acc_head in EXPENSE_SIDE:
+            if credit_acc_key in expense_accounts:
+                expense_accounts[credit_acc_key] -= journal.amount
+                expense_total -= journal.amount
+            else:
+                expense_accounts[credit_acc_key] = journal.amount
+                expense_total -= journal.amount
+
+        # Process debit side
+        if debit_acc_head in INCOME_SIDE:
+            if debit_acc_key in income_accounts:
+                income_accounts[debit_acc_key] -= journal.amount
+                income_total -= journal.amount
+            else:
+                income_accounts[debit_acc_key] = journal.amount
+                income_total -= journal.amount
+                
+        elif debit_acc_head in EXPENSE_SIDE:
+            if debit_acc_key in expense_accounts:
+                expense_accounts[debit_acc_key] += journal.amount
+                expense_total += journal.amount
+            else:
+                expense_accounts[debit_acc_key] = journal.amount
+                expense_total += journal.amount
 
 
     if income_total > expense_total:
@@ -28770,10 +28881,6 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
         final = expense_total
 
     # balance = round((balance / (1 + (15/100))),2)
-
-    print("bal",balance,"pnl",pnl)
-
-
 
     return {"balance":balance,'pnl':pnl}
 
@@ -29248,16 +29355,27 @@ def func_get_transaction_for_balancesheet(startdate,enddate,request):
             if not journal:
                 pass
             else:
+                amount_type = ''
+                accounts = ''
+                cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+                
+                if journal.creditaccount in cash_list:
+                    amount_type = 'Credit'
+                    accounts = journal.debitaccount
+                elif journal.debitaccount in cash_list:
+                    amount_type = 'Debit'
+                    accounts = journal.creditaccount
+
                 invoicenumber_list.add(journal.referenceno)
                 # accounts_list.add(sale.customer)
                 transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = ""
+                transaction_dict["accounts"] = accounts
                 transaction_dict["paymentmode"] = tr.paymentmode
                 transaction_dict["transaction"] = tr
                 transaction_dict["remarks"] = journal.description
                 transaction_dict["branch"] = tr.branch
                 transaction_dict["title"] = "Journal"
-                transaction_dict["amounttype"] = ""
+                transaction_dict["amounttype"] = amount_type
                 transaction_dict['date'] = journal.journaldate
          
 
@@ -29500,6 +29618,8 @@ def balancesheet(request):
 
     transaction_obj = func_get_transaction_for_balancesheet(startdate,enddate,request)
 
+    # print("transaction obj...in balancesheet",transaction_obj)
+
     # print('transaction today',transaction_obj)
     for trans in transaction_obj:
         credit_or_debit = 'credit'
@@ -29517,8 +29637,8 @@ def balancesheet(request):
             credit_or_debit = 'credit'
         elif trans['transaction'].transactiontype == 'receipt':
             credit_or_debit = 'debit'
-        else:
-            pass
+        elif trans['transaction'].transactiontype == 'journal':
+            credit_or_debit = trans['amounttype'].lower()
 
 
         # All possible combinations
@@ -29698,65 +29818,222 @@ def balancesheet(request):
         receipt_list_equity.append({acc_key: amount})
 
 
+
+
+    # Initialize dictionaries to store accumulated values for each account
+    asset_accounts = {}
+    liability_accounts = {}
+    equity_accounts = {}
+
+    # Initialize lists for final results
+    journal_list_asset = []
+    journal_list_liability = []
+    journal_list_equity = []
+
+    cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+
+    # Process all receipts
+    journals_obj = Journals.objects.filter(Q(branch=homebranch)& Q(journaldate__gte=startdate)
+        & Q(journaldate__lte=enddate))
+
+    for index,journal in enumerate(journals_obj):
+
+        credit_acc = journal.creditaccount
+        debit_acc = journal.debitaccount
+        credit_acc_key = credit_acc.replace(" ", "_")
+        debit_acc_key = debit_acc.replace(" ", "_")
+
+        if credit_acc in cash_list:
+            credit_acc_head = credit_acc
+        elif CoASubAccounts.objects.filter(title=credit_acc).first():
+            credit_acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
+        else:
+            credit_acc_head = credit_acc
+
+        if debit_acc in cash_list:
+            debit_acc_head = debit_acc
+        elif CoASubAccounts.objects.filter(title=debit_acc).first():
+            debit_acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
+        else:
+            debit_acc_head = debit_acc
+        
+        
+        if credit_acc_head in ASSET_SIDE:
+            if credit_acc_key in asset_accounts:
+                asset_accounts[credit_acc_key] -= journal.amount
+            else:
+                asset_accounts[credit_acc_key] = journal.amount
+            asset_total -= journal.amount
+
+        elif credit_acc_head in LIABILITY_SIDE:
+            if credit_acc_key in liability_accounts:
+                liability_accounts[credit_acc_key] += journal.amount
+            else:
+                liability_accounts[credit_acc_key] = journal.amount
+            liability_total += journal.amount
+
+        elif credit_acc_head in EQUITY_SIDE:
+            if credit_acc_key in equity_accounts:
+                equity_accounts[credit_acc_key] += journal.amount
+            else:
+                equity_accounts[credit_acc_key] = journal.amount
+            equity_total += journal.amount
+
+        if debit_acc_head in ASSET_SIDE:
+            if debit_acc_key in asset_accounts:
+                asset_accounts[debit_acc_key] += journal.amount
+            else:
+                asset_accounts[debit_acc_key] = journal.amount
+            asset_total += journal.amount
+
+        elif debit_acc_head in LIABILITY_SIDE:
+            if debit_acc_key in liability_accounts:
+                liability_accounts[debit_acc_key] -= journal.amount
+            else:
+                liability_accounts[debit_acc_key] = journal.amount
+            liability_total -= journal.amount
+
+        elif debit_acc_head in EQUITY_SIDE:
+            if debit_acc_key in equity_accounts:
+                equity_accounts[debit_acc_key] -= journal.amount
+            else:
+                equity_accounts[debit_acc_key] = journal.amount
+            equity_total -= journal.amount
+
+
+    for acc_key, amount in asset_accounts.items():
+        journal_list_asset.append({acc_key: amount})
+
+    for acc_key, amount in liability_accounts.items():
+        journal_list_liability.append({acc_key: amount})
+
+    for acc_key, amount in equity_accounts.items():
+        journal_list_equity.append({acc_key: amount})
+
+
+
+    # list_asset_total = []
+    # asset_keys = set()
+
+    # for rec_item in receipt_list_asset:
+    #     asset_keys.update(rec_item.keys())
+    # for pay_item in payment_list_asset:
+    #     asset_keys.update(pay_item.keys())
+
+    # for key in asset_keys:
+    #     dict = {}
+    #     rec_value = next((item[key] for item in receipt_list_asset if key in item), 0)
+    #     pay_value = next((item[key] for item in payment_list_asset if key in item), 0)
+    #     final = pay_value - rec_value
+    #     dict[key] = format_negative_value(round(final, 2))
+    #     list_asset_total.append(dict)
+             
+
+    # list_liability_total = []
+    # liability_keys = set()
+
+    # for rec_item in receipt_list_liability:
+    #     liability_keys.update(rec_item.keys())
+    # for pay_item in payment_list_liability:
+    #     liability_keys.update(pay_item.keys())
+
+    # for key in liability_keys:
+    #     dict = {}
+    #     rec_value = next((item[key] for item in receipt_list_liability if key in item), 0)
+    #     pay_value = next((item[key] for item in payment_list_liability if key in item), 0)
+    #     final = rec_value - pay_value
+    #     dict[key] = format_negative_value(round(final, 2))
+    #     list_liability_total.append(dict)
+
+
+    # list_equity_total = []
+    # equity_keys = set()
+
+    # for rec_item in receipt_list_equity:
+    #     equity_keys.update(rec_item.keys())
+    # for pay_item in payment_list_equity:
+    #     equity_keys.update(pay_item.keys())
+
+    # for key in equity_keys:
+    #     dict = {}
+    #     rec_value = next((item[key] for item in receipt_list_equity if key in item), 0)
+    #     pay_value = next((item[key] for item in payment_list_equity if key in item), 0)
+    #     final = rec_value - pay_value
+    #     dict[key] = format_negative_value(round(final,2))
+    #     list_equity_total.append(dict)
+    #     for pay_item in payment_list_equity:
+    #         for key in rec_item.keys():
+    #             if key in pay_item.keys():
+    #                 dict = {}
+    #                 final = rec_item[key] - pay_item[key] 
+    #                 dict[key] = format_negative_value(round(final,2))
+    #                 list_equity_total.append(dict)
+    #                 continue
+
+
+
+    # For Assets
     list_asset_total = []
     asset_keys = set()
 
+    # Update asset_keys set to include journal entries
     for rec_item in receipt_list_asset:
         asset_keys.update(rec_item.keys())
     for pay_item in payment_list_asset:
         asset_keys.update(pay_item.keys())
+    for journal_item in journal_list_asset:
+        asset_keys.update(journal_item.keys())
 
     for key in asset_keys:
         dict = {}
         rec_value = next((item[key] for item in receipt_list_asset if key in item), 0)
         pay_value = next((item[key] for item in payment_list_asset if key in item), 0)
-        final = pay_value - rec_value
+        journal_value = next((item[key] for item in journal_list_asset if key in item), 0)
+        final = pay_value - rec_value + journal_value
         dict[key] = format_negative_value(round(final, 2))
         list_asset_total.append(dict)
-             
 
-
-
+    # For Liabilities
     list_liability_total = []
     liability_keys = set()
 
+    # Update liability_keys set to include journal entries
     for rec_item in receipt_list_liability:
         liability_keys.update(rec_item.keys())
     for pay_item in payment_list_liability:
         liability_keys.update(pay_item.keys())
+    for journal_item in journal_list_liability:
+        liability_keys.update(journal_item.keys())
 
     for key in liability_keys:
         dict = {}
         rec_value = next((item[key] for item in receipt_list_liability if key in item), 0)
         pay_value = next((item[key] for item in payment_list_liability if key in item), 0)
-        final = rec_value - pay_value
+        journal_value = next((item[key] for item in journal_list_liability if key in item), 0)
+        final = rec_value - pay_value + journal_value
         dict[key] = format_negative_value(round(final, 2))
         list_liability_total.append(dict)
 
-
+    # For Equity
     list_equity_total = []
     equity_keys = set()
 
+    # Update equity_keys set to include journal entries
     for rec_item in receipt_list_equity:
         equity_keys.update(rec_item.keys())
     for pay_item in payment_list_equity:
         equity_keys.update(pay_item.keys())
+    for journal_item in journal_list_equity:
+        equity_keys.update(journal_item.keys())
 
     for key in equity_keys:
         dict = {}
         rec_value = next((item[key] for item in receipt_list_equity if key in item), 0)
         pay_value = next((item[key] for item in payment_list_equity if key in item), 0)
-        final = rec_value - pay_value
-        dict[key] = format_negative_value(round(final,2))
+        journal_value = next((item[key] for item in journal_list_equity if key in item), 0)
+        final = rec_value - pay_value + journal_value
+        dict[key] = format_negative_value(round(final, 2))
         list_equity_total.append(dict)
-        for pay_item in payment_list_equity:
-            for key in rec_item.keys():
-                if key in pay_item.keys():
-                    dict = {}
-                    final = rec_item[key] - pay_item[key] 
-                    dict[key] = format_negative_value(round(final,2))
-                    list_equity_total.append(dict)
-                    continue
 
     data = Sale.objects.filter(Q(branch=homebranch)& Q(invoicedate__gte=startdate)
         & Q(invoicedate__lte=enddate)).order_by("-pk")
@@ -29975,6 +30252,9 @@ def balancesheet(request):
     'receipt_list_asset':receipt_list_asset,
     'receipt_list_liability':receipt_list_liability,
     'receipt_list_equity':receipt_list_equity,
+    'journal_list_asset':journal_list_asset,
+    'journal_list_liability':journal_list_liability,
+    'journal_list_equity':journal_list_equity,
     'account_receivable':account_receivable_list,
     'account_payable_list':account_payable_list,
     'total_asset':asset_total,
@@ -30366,6 +30646,86 @@ def placcountnew(request):
 
 
 
+    # Initialize dictionaries to store accumulated values for each account
+    income_accounts = {}
+    expense_accounts = {}
+
+    # Initialize lists for final results
+    journal_list_income = []
+    journal_list_expense = []
+
+    cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+
+    # Process all journals
+    journals_obj = Journals.objects.filter(Q(branch=branch)& Q(journaldate__gte=startdate)
+        & Q(journaldate__lte=enddate))
+
+    for journal in journals_obj:
+        credit_acc = journal.creditaccount
+        debit_acc = journal.debitaccount
+        credit_acc_key = credit_acc.replace(" ", "_")
+        debit_acc_key = debit_acc.replace(" ", "_")
+
+        # Get account heads
+        if credit_acc in cash_list:
+            credit_acc_head = credit_acc
+        elif CoASubAccounts.objects.filter(title=credit_acc).first():
+            credit_acc_head = CoASubAccounts.objects.filter(title=credit_acc).first().head_root
+        else:
+            credit_acc_head = credit_acc
+
+        if debit_acc in cash_list:
+            debit_acc_head = debit_acc
+        elif CoASubAccounts.objects.filter(title=debit_acc).first():
+            debit_acc_head = CoASubAccounts.objects.filter(title=debit_acc).first().head_root
+        else:
+            debit_acc_head = debit_acc
+        
+        # Process credit side
+        if credit_acc_head in INCOME_SIDE:
+            if credit_acc_key in income_accounts:
+                income_accounts[credit_acc_key] += journal.amount
+                income_total += journal.amount
+            else:
+                income_accounts[credit_acc_key] = journal.amount
+                income_total += journal.amount
+                
+        elif credit_acc_head in EXPENSE_SIDE:
+            if credit_acc_key in expense_accounts:
+                expense_accounts[credit_acc_key] -= journal.amount
+                expense_total -= journal.amount
+            else:
+                expense_accounts[credit_acc_key] = journal.amount
+                expense_total -= journal.amount
+
+        # Process debit side
+        if debit_acc_head in INCOME_SIDE:
+            if debit_acc_key in income_accounts:
+                income_accounts[debit_acc_key] -= journal.amount
+                income_total -= journal.amount
+            else:
+                income_accounts[debit_acc_key] = journal.amount
+                income_total -= journal.amount
+                
+        elif debit_acc_head in EXPENSE_SIDE:
+            if debit_acc_key in expense_accounts:
+                expense_accounts[debit_acc_key] += journal.amount
+                expense_total += journal.amount
+            else:
+                expense_accounts[debit_acc_key] = journal.amount
+                expense_total += journal.amount
+
+    # Convert accumulated accounts to list format
+    for acc_key, amount in income_accounts.items():
+        journal_list_income.append({acc_key: amount})
+
+    for acc_key, amount in expense_accounts.items():
+        journal_list_expense.append({acc_key: amount})
+
+        
+
+
+
     if income_total > expense_total:
         balance = income_total - expense_total
         balance_text = 'Net Profilt (Income > Expenses)'
@@ -30396,6 +30756,8 @@ def placcountnew(request):
     'payment_list_expense':payment_list_expense,
     'receipt_list_income':receipt_list_income,
     'receipt_list_expense':receipt_list_expense,
+    'journal_list_income':journal_list_income,
+    'journal_list_expense':journal_list_expense,
     'startdate_text':startdate_text,
     'enddate_text':enddate_text,
     }
