@@ -472,3 +472,31 @@
     Income:Sale
     Liabilities:Sale:TaxPayable      -521.74  INR
 
+2024-11-26   *  Account Payable given with Account Receivable (Journal) 
+     Liabilities:OTHER LIABILITIES:Jishnu Account Payable     50000 INR
+     Assets:OTHER ASSETS:Sayooj Account Receivable
+
+2024-11-26   *  Account Payable given with Account Receivable 2 (Journal) 
+     Liabilities:OTHER LIABILITIES:Jishnu Account Payable     200 INR
+     Assets:OTHER ASSETS:Sayooj Account Receivable
+
+2024-11-26   *  Jishnu Accounts Payable Paid by Jishnu Receivable (Journal) 
+     Liabilities:OTHER LIABILITIES:Jishnu Accounts Payable     50000 INR
+     Assets:OTHER ASSETS:Jishnu Account Receivable
+
+2024-11-26   *  Bought a chair for Nexcrest office (Payment) 
+     Assets:FIXED ASSETS:Office Furniture     350 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-26  *  Borrowed Money From X Shop  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      10000  INR
+     Liabilities:BORROWINGS:Borrowed Money From X Shop
+
+2024-11-26  *  Owners Share Capital  (Receipt) 
+     Assets:CASH AT BANKS:CASH AT BANKS      2000000  INR
+     Equity:SHARE CAPITAL:Owners Share Capital
+
+2024-11-26   *  Office Computer (Payment) 
+     Assets:FIXED ASSETS:Office Computer     5000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+

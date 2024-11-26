@@ -10284,10 +10284,9 @@ def updateChartOfAccounts(request):
     gstring = rootcoasub.replace(" ", "_")
     data.gstring = gstring
     data.title = request.POST["title"]
-    if CoASubAccounts.objects.filter(title=request.POST['title']).first():
-        messages.error(request, "Title already exist!")
-        # return redirect("editchartofaccounts")
-        return redirect(reverse("editchartofaccounts", kwargs={"id": id_no}))
+    # if CoASubAccounts.objects.filter(title=request.POST['title']).first():
+    #     messages.error(request, "Title already exist!")
+    #     return redirect(reverse("editchartofaccounts", kwargs={"id": id_no}))
     data.description = request.POST["description"]
     data.save()
 
@@ -29609,6 +29608,107 @@ def func_get_opening_closing_stock_for_balancesheet(startdate, enddate, request)
 
 
 
+
+
+def process_account_lists(asset_list, liability_list, equity_list):
+    """
+    Process lists of financial accounts, group them by head_root, and sort them.
+    
+    Args:
+        asset_list: List of asset dictionaries
+        liability_list: List of liability dictionaries
+        equity_list: List of equity dictionaries
+    
+    Returns:
+        tuple: Three dictionaries (assets, liabilities, equity) grouped by head_root
+    """
+    def process_single_list(account_list):
+        # Dictionary to store results grouped by head_root
+        grouped_accounts = {}
+        
+        for account_dict in account_list:
+            for key, value in account_dict.items():
+                # Convert key from underscore format to original title format
+                original_title = key.replace('_', ' ')
+                
+                try:
+                    # Query the CoASubAccounts model to get the head_root
+                    sub_account = CoASubAccounts.objects.get(title=original_title)
+                    head_root = sub_account.head_root
+                    
+                    # Initialize the list for this head_root if it doesn't exist
+                    if head_root not in grouped_accounts:
+                        grouped_accounts[head_root] = []
+                    
+                    # Add the account to its head_root group
+                    grouped_accounts[head_root].append({
+                        'title': original_title,
+                        'value': value
+                    })
+                    
+                except CoASubAccounts.DoesNotExist:
+                    print(f"Warning: No CoASubAccounts entry found for title: {original_title}")
+                    continue
+        
+        # Sort accounts within each head_root group by title
+        for head_root in grouped_accounts:
+            grouped_accounts[head_root].sort(key=lambda x: x['title'])
+            
+        return grouped_accounts
+
+    grouped_assets = process_single_list(asset_list)
+    grouped_liabilities = process_single_list(liability_list)
+    grouped_equity = process_single_list(equity_list)
+    
+    return grouped_assets, grouped_liabilities, grouped_equity
+
+
+def format_negative_value(value):
+    if value < 0:
+        return f"({abs(round(value,2))})" 
+    return format(value, '.2f')
+
+
+def process_grouped_accounts(grouped_accounts):
+    """
+    Process grouped accounts to add totals for each group, handling negative values in parentheses.
+    
+    Args:
+        grouped_accounts: Dictionary of grouped accounts
+        
+    Returns:
+        Dictionary with totals and data for each group
+    """
+    def convert_value_to_float(value_str):
+        # Remove any spaces and commas
+        cleaned_value = value_str.replace(' ', '').replace(',', '')
+        
+        # Check if the value is in parentheses (negative)
+        if cleaned_value.startswith('(') and cleaned_value.endswith(')'):
+            # Remove parentheses and make it negative
+            return -float(cleaned_value[1:-1])
+        
+        # Regular positive value
+        return float(cleaned_value)
+    
+    result = {}
+    
+    for head_root, accounts in grouped_accounts.items():
+        # Calculate total for the group
+        total = sum(convert_value_to_float(account['value']) for account in accounts)
+
+        print("total",total)
+        total = format_negative_value(round(total,2))
+        print("total 1",total)
+        # Create new structure with total and original data
+        result[head_root] = {
+            "total": total,
+            "data": accounts
+        }
+    
+    return result
+
+
 def balancesheet(request):
 
     if request.method == 'POST':
@@ -29642,13 +29742,8 @@ def balancesheet(request):
     upi_credit = 0
     upi_debit = 0
 
-    # transaction_obj = Transaction.objects.filter(branch=homebranch)
-
     transaction_obj = func_get_transaction_for_balancesheet(startdate,enddate,request)
 
-    # print("transaction obj...in balancesheet",transaction_obj)
-
-    # print('transaction today',transaction_obj)
     for trans in transaction_obj:
         credit_or_debit = 'credit'
         if trans['transaction'].transactiontype == 'purchase':
@@ -29697,10 +29792,6 @@ def balancesheet(request):
         else:
             pass
 
-    def format_negative_value(value):
-        if value < 0:
-            return f"({abs(round(value,2))})" 
-        return format(value, '.2f')
 
     CASH_ACCOUNT = cash_debit-cash_credit
     CASH_IN_BANK = bank_debit-bank_credit
@@ -29846,8 +29937,6 @@ def balancesheet(request):
         receipt_list_equity.append({acc_key: amount})
 
 
-
-
     # Initialize dictionaries to store accumulated values for each account
     asset_accounts = {}
     liability_accounts = {}
@@ -29890,7 +29979,7 @@ def balancesheet(request):
             if credit_acc_key in asset_accounts:
                 asset_accounts[credit_acc_key] -= journal.amount
             else:
-                asset_accounts[credit_acc_key] = journal.amount
+                asset_accounts[credit_acc_key] = -journal.amount
             asset_total -= journal.amount
 
         elif credit_acc_head in LIABILITY_SIDE:
@@ -29918,14 +30007,14 @@ def balancesheet(request):
             if debit_acc_key in liability_accounts:
                 liability_accounts[debit_acc_key] -= journal.amount
             else:
-                liability_accounts[debit_acc_key] = journal.amount
+                liability_accounts[debit_acc_key] = -journal.amount
             liability_total -= journal.amount
 
         elif debit_acc_head in EQUITY_SIDE:
             if debit_acc_key in equity_accounts:
                 equity_accounts[debit_acc_key] -= journal.amount
             else:
-                equity_accounts[debit_acc_key] = journal.amount
+                equity_accounts[debit_acc_key] = -journal.amount
             equity_total -= journal.amount
 
 
@@ -29937,67 +30026,6 @@ def balancesheet(request):
 
     for acc_key, amount in equity_accounts.items():
         journal_list_equity.append({acc_key: amount})
-
-
-
-    # list_asset_total = []
-    # asset_keys = set()
-
-    # for rec_item in receipt_list_asset:
-    #     asset_keys.update(rec_item.keys())
-    # for pay_item in payment_list_asset:
-    #     asset_keys.update(pay_item.keys())
-
-    # for key in asset_keys:
-    #     dict = {}
-    #     rec_value = next((item[key] for item in receipt_list_asset if key in item), 0)
-    #     pay_value = next((item[key] for item in payment_list_asset if key in item), 0)
-    #     final = pay_value - rec_value
-    #     dict[key] = format_negative_value(round(final, 2))
-    #     list_asset_total.append(dict)
-             
-
-    # list_liability_total = []
-    # liability_keys = set()
-
-    # for rec_item in receipt_list_liability:
-    #     liability_keys.update(rec_item.keys())
-    # for pay_item in payment_list_liability:
-    #     liability_keys.update(pay_item.keys())
-
-    # for key in liability_keys:
-    #     dict = {}
-    #     rec_value = next((item[key] for item in receipt_list_liability if key in item), 0)
-    #     pay_value = next((item[key] for item in payment_list_liability if key in item), 0)
-    #     final = rec_value - pay_value
-    #     dict[key] = format_negative_value(round(final, 2))
-    #     list_liability_total.append(dict)
-
-
-    # list_equity_total = []
-    # equity_keys = set()
-
-    # for rec_item in receipt_list_equity:
-    #     equity_keys.update(rec_item.keys())
-    # for pay_item in payment_list_equity:
-    #     equity_keys.update(pay_item.keys())
-
-    # for key in equity_keys:
-    #     dict = {}
-    #     rec_value = next((item[key] for item in receipt_list_equity if key in item), 0)
-    #     pay_value = next((item[key] for item in payment_list_equity if key in item), 0)
-    #     final = rec_value - pay_value
-    #     dict[key] = format_negative_value(round(final,2))
-    #     list_equity_total.append(dict)
-    #     for pay_item in payment_list_equity:
-    #         for key in rec_item.keys():
-    #             if key in pay_item.keys():
-    #                 dict = {}
-    #                 final = rec_item[key] - pay_item[key] 
-    #                 dict[key] = format_negative_value(round(final,2))
-    #                 list_equity_total.append(dict)
-    #                 continue
-
 
 
     # For Assets
@@ -30063,6 +30091,23 @@ def balancesheet(request):
         dict[key] = format_negative_value(round(final, 2))
         list_equity_total.append(dict)
 
+
+
+    grouped_assets, grouped_liabilities, grouped_equity = process_account_lists(
+                        list_asset_total, list_liability_total, list_equity_total
+                )
+
+    grouped_assets = process_grouped_accounts(grouped_assets)
+    grouped_liabilities = process_grouped_accounts(grouped_liabilities)
+    grouped_equity = process_grouped_accounts(grouped_equity)
+
+    print("grouped asset",grouped_assets)
+    print("grouped liability",grouped_liabilities)
+    print("grouped equity",grouped_equity)
+
+
+
+
     data = Sale.objects.filter(Q(branch=homebranch)& Q(invoicedate__gte=startdate)
         & Q(invoicedate__lte=enddate)).order_by("-pk")
 
@@ -30074,9 +30119,6 @@ def balancesheet(request):
     ]
 
 
-
-    # service_obj =Service.objects.filter(Q(branch=homebranch)& Q(memodate__gte=startdate)
-    #     & Q(memodate__lte=enddate))
     statuses = [
         'Unassigned',
         'Unacknowledged',
@@ -30306,6 +30348,9 @@ def balancesheet(request):
     'list_asset_total':list_asset_total,
     'list_liability_total':list_liability_total,
     'list_equity_total':list_equity_total,
+    'grouped_assets':grouped_assets,
+    'grouped_liabilities':grouped_liabilities,
+    'grouped_equity':grouped_equity
     }
 
     return render(request,'balancesheetnew.html',context)
@@ -30733,7 +30778,7 @@ def placcountnew(request):
                 expense_accounts[credit_acc_key] -= journal.amount
                 expense_total -= journal.amount
             else:
-                expense_accounts[credit_acc_key] = journal.amount
+                expense_accounts[credit_acc_key] = -journal.amount
                 expense_total -= journal.amount
 
         # Process debit side
@@ -30742,7 +30787,7 @@ def placcountnew(request):
                 income_accounts[debit_acc_key] -= journal.amount
                 income_total -= journal.amount
             else:
-                income_accounts[debit_acc_key] = journal.amount
+                income_accounts[debit_acc_key] = -journal.amount
                 income_total -= journal.amount
                 
         elif debit_acc_head in EXPENSE_SIDE:
