@@ -125,7 +125,7 @@
 
 
 
-                        {% with merged_keys=receipt_list_liability|merge_keys:payment_list_liability|merge_keys:journal_list_liability %}
+{% merge_keys receipt_list_liability payment_list_liability journal_list_liability as merged_keys %}
                         {% for key in merged_keys %}
                           <tr class="section-header" data-section="{{ key }}">
                             <td class="fw-bold fs-7 py-3">
@@ -174,7 +174,7 @@
                             {% endif %}
                           {% endwith %}
                         {% endfor %}
-                        {% endwith %}
+                    
                         
 
 
@@ -212,8 +212,9 @@
 
 
 
-                      {% with merged_keys=receipt_list_equity|merge_keys:payment_list_equity|merge_keys:journal_list_equity %}
-                          {% for key in merged_keys %}
+                      
+                      {% merge_keys receipt_list_equity payment_list_equity journal_list_equity as merged_keys %}
+                      {% for key in merged_keys %}
                             <!-- Section Header -->
                             <tr class="section-header" data-section="{{ key }}">
                               <td class="fw-bold fs-7 py-3">
@@ -265,7 +266,7 @@
                               {% endif %}
                             {% endwith %}
                           {% endfor %}
-                          {% endwith %}
+                      
 
 
 
@@ -290,7 +291,7 @@
                           <td class="py-3 px-4 text-end align-middle">{{ retained_earnings.balance }}</td>
                         </tr>
                         <tr class="section-content" data-section="retEarning">
-                          <td class="py-3 px-4 align-middle">Reatained Earnings ({{retained_earnings.pnl}})</td>
+                          <td class="py-3 px-4 align-middle">Retained Earnings ({{retained_earnings.pnl}})</td>
                           <td class="py-3 px-4 text-end align-middle">{{ retained_earnings.balance }}</td>
                         </tr>
 
@@ -378,7 +379,7 @@
       
 
 
-                        {% with merged_keys=receipt_list_asset|merge_keys:payment_list_asset|merge_keys:journal_list_asset %}
+                        {% merge_keys receipt_list_asset payment_list_asset journal_list_asset as merged_keys %}
                         {% for key in merged_keys %}
                           <tr class="section-header" data-section="{{ key }}">
                             <td class="fw-bold fs-7 py-3">
@@ -427,7 +428,7 @@
                             {% endif %}
                           {% endwith %}
                         {% endfor %}
-                        {% endwith %}
+                      
 
 
 

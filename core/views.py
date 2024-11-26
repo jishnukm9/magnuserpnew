@@ -28671,8 +28671,18 @@ def func_get_placcount_for_balancesheet(startdate,enddate,request):
         finalamount = item.finalamount
         servicerefnumber = item.servicerefnumber
         servicedic_obj = ServiceDiscountDetails.objects.filter(servicerefnumber=servicerefnumber).first()
-        total_tax = servicedic_obj.sparetaxtotal_afterdiscount + servicedic_obj.servicetaxtotal_afterdiscount
-        service_income += (finalamount - total_tax)
+        if servicedic_obj:
+            total_tax = servicedic_obj.sparetaxtotal_afterdiscount + servicedic_obj.servicetaxtotal_afterdiscount
+            service_income += (finalamount - total_tax)
+        else:
+            service_tax = item.totaltax
+            spare_tax = 0
+            spare_obj = SpareParts.objects.filter(servicerefnumber=servicerefnumber)
+            if spare_obj:
+                for sub_item in spare_obj:
+                    spare_tax += (sub_item.price * (float(sub_item.salegst) / 100))
+            total_tax = service_tax + spare_tax
+            service_income += (finalamount - total_tax)
     income_total += service_income
 
     # spare cost
@@ -30494,8 +30504,18 @@ def placcountnew(request):
         finalamount = item.finalamount
         servicerefnumber = item.servicerefnumber
         servicedic_obj = ServiceDiscountDetails.objects.filter(servicerefnumber=servicerefnumber).first()
-        total_tax = servicedic_obj.sparetaxtotal_afterdiscount + servicedic_obj.servicetaxtotal_afterdiscount
-        service_income += (finalamount - total_tax)
+        if servicedic_obj:
+            total_tax = servicedic_obj.sparetaxtotal_afterdiscount + servicedic_obj.servicetaxtotal_afterdiscount
+            service_income += (finalamount - total_tax)
+        else:
+            service_tax = item.totaltax
+            spare_tax = 0
+            spare_obj = SpareParts.objects.filter(servicerefnumber=servicerefnumber)
+            if spare_obj:
+                for sub_item in spare_obj:
+                    spare_tax += (sub_item.price * (float(sub_item.salegst) / 100))
+            total_tax = service_tax + spare_tax
+            service_income += (finalamount - total_tax)
     income_total += service_income
 
     # spare cost

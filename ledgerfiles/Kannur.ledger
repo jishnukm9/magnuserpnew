@@ -443,3 +443,11 @@
      Expenses:EXPENSES:Rent Expense     3000 INR
      Liabilities:OTHER LIABILITIES:Rent Payable
 
+2024-11-26   *  Rent Payable New (Journal) 
+     Expenses:EXPENSES:Rent Expense     1300 INR
+     Liabilities:OTHER LIABILITIES:Rent Payable
+
+2024-11-26   *  Rent payable paid new (Payment) 
+     Liabilities:OTHER LIABILITIES:Rent Payable     1300 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+

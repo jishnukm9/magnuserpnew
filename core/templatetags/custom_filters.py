@@ -18,13 +18,15 @@ def replaceunderscore(value):
 
 
 
-@register.filter
-def merge_keys(receipt_list, payment_list):
+@register.simple_tag
+def merge_keys(receipt_list, payment_list,journal_list):
     """Get unique keys from both receipt and payment lists"""
     keys = set()
     for item in receipt_list:
         keys.update(item.keys())
     for item in payment_list:
+        keys.update(item.keys())
+    for item in journal_list:
         keys.update(item.keys())
     return sorted(keys)
 
