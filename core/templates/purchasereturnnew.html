@@ -26,9 +26,13 @@
                        
 
                                 <div class="card  mb-4" style="border-radius:5px;border:0.5px solid #e2e2e2;" >
-                                  <div class="card-header py-3 bg-white" >
+                                  <div class="card-header py-3 bg-white d-flex justify-content-between" >
                                       <h5 class="m-0 font-weight-bold " style="color:#2c2e2f"> <strong>Purchase Return </strong> </h5>
-                                      
+                                      {% if already_returned == True %}
+                                    <p class="fw-bold text-danger m-0 p-0">Note : This Purchase Invoice is already returned once</p>
+                                    {% else %}
+                                    <p></p>
+                                    {% endif %}
                                   </div>
                                   <div class="card-body">
 
@@ -330,6 +334,9 @@
                                                             <input type="text" class="form-control w-50" name="adjustment" id="adjustment" type="number" step="0.01" min="0">
                   
                                                           </div>
+                                                          {% if discount != 0 %}
+                                                          <p class="text-danger fw-bold">Discount : {{discount}} {{discountmethod}} has got applied to this purchase</p>
+                                                          {% endif %}
                                                     </li>
                                                     <li class="list-group-item">
                                                         <div class="d-flex justify-content-between">
@@ -353,7 +360,7 @@
                                                     
                                                     <!-- <li class="list-group-item">Vestibulum at eros</li> -->
                                                   </ul>
-                                                    <div class="d-flex justify-content-end">
+                                                    <div class="d-flex justify-content-between">
                                                         <button type="submit" class="btn btn-primary mt-3 float-right text-white"> <strong>Save</strong> </button>
                                                     </div>
                                                   
@@ -364,7 +371,7 @@
 
 
 
-
+                                   
 
 
 

@@ -3889,6 +3889,9 @@ def purchaseReturnSearch(request):
     # inv_no = request.POST["invoiceno"]
     purchaseid = request.POST["purid"]
 
+    already_returned = False
+    invoice_number = None
+
     if user.is_superuser:
         data = Purchase.objects.all()
         # purchasedata = Purchase.objects.filter(invoicenumber=inv_no)
@@ -3896,6 +3899,10 @@ def purchaseReturnSearch(request):
         invoice_data = Purchase.objects.filter(
             ~Q(purchase_type="stockadd") & ~Q(purchase_type="transfer")
         )
+        invoicenumber = Purchase.objects.filter(purchaseid=purchaseid).first().invoicenumber
+        pur_ret_obj = PurchaseReturn.objects.filter(invoicenumber=invoicenumber)
+        if pur_ret_obj:
+            already_returned = True
     else:
         data = BranchPurchase.objects.filter(branch=user.userprofile.branch)
         # purchasedata = BranchPurchase.objects.filter(invoicenumber=inv_no)
@@ -3903,6 +3910,10 @@ def purchaseReturnSearch(request):
         invoice_data = BranchPurchase.objects.filter(
             ~Q(purchase_type="stockadd") & ~Q(purchase_type="transfer")
         )
+        invoicenumber = BranchPurchase.objects.filter(purchaseid=purchaseid).first().invoicenumber
+        pur_ret_obj = PurchaseReturn.objects.filter(invoicenumber=invoicenumber)
+        if pur_ret_obj:
+            already_returned = True
 
     # invoicenumber_list = [i.invoicenumber for i in invoice_data]
     invoicenumber_list = [{"invoicenumber":i.invoicenumber,"purchaseid":i.purchaseid} for i in invoice_data]
@@ -3979,6 +3990,7 @@ def purchaseReturnSearch(request):
         "discountmethod": discountmethod,
         "paymentmode": paymentmode,
         "user": user,
+        "already_returned":already_returned
     }
 
     return render(request, "purchasereturnnew.html", context)
@@ -6165,6 +6177,8 @@ def salesReturnSearch(request):
         totalamount = item.totalamount
         salesid = item.saleid
         branch = item.branch
+        discountmethod = item.discountmethod
+        discount = item.discount
 
         break
   
@@ -6207,7 +6221,9 @@ def salesReturnSearch(request):
         "invoicenumbers": invoicenumber_list,
         "paymentmode": paymentmode,
         "user": user,
-        "already_returned":already_returned
+        "already_returned":already_returned,
+        'discount':discount,
+        'discountmethod':discountmethod
     }
 
     return render(request, "salesreturnnew.html", context)
