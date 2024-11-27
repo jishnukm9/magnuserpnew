@@ -512,3 +512,11 @@
      Assets:CASH ACCOUNT:CASH ACCOUNT      10000  INR
      Income:INCOMES:Commission Income
 
+2024-11-27   *  Cash to Card (Journal) 
+     Assets:CASH ACCOUNT:Cash In Card     1000 INR
+     Assets:CASH ACCOUNT:Cash In Hand
+
+2024-11-27   *  sample sample (Journal) 
+     Income:INCOMES:Commission Income     20000 INR
+     Expenses:EXPENSES:Rent Expense
+

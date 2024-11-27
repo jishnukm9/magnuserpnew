@@ -722,6 +722,7 @@ urlpatterns = [
                  path("daybook/", daybook, name="daybook"),
                   path("balancesheet_new/", balancesheet, name="balancesheet_new"),
                   path("placcount_new/", placcountnew, name="placcount_new"),
+                  path("cashtocash_form/", cashtocash_form, name="cashtocash_form"),
 ]
 
 

@@ -11633,16 +11633,38 @@ def journal(request):
     return render(request, "journal.html", {"journal_data": journal_data})
 
 
+
+
 def journal_form(request):
-    print("journal form")
+ 
     all_coa = []
     db_dropdown = CoASubAccounts.objects.all()
-    # coa_dropdown = coa.COA_GROUP_LIST
+    cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+    coa_dropdown = coa.COA_GROUP_LIST
     for item in db_dropdown:
-        all_coa.append(item.title)
+        if item.head_root not in cash_list:
+            all_coa.append(item.title)
+
     # for item in coa_dropdown:
-    #     all_coa.append(item["name"])
+    #     if item["name"] in cash_list:
+    #         all_coa.append(item["name"])
     return render(request, "journalform.html", {"all_dropdown": all_coa})
+
+
+def cashtocash_form(request):
+ 
+    all_coa = []
+    # db_dropdown = CoASubAccounts.objects.all()
+    cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+    coa_dropdown = coa.COA_GROUP_LIST
+    # for item in db_dropdown:
+    #     if item.head_root not in cash_list:
+    #         all_coa.append(item.title)
+
+    for item in coa_dropdown:
+        if item["name"] in cash_list:
+            all_coa.append(item["name"])
+    return render(request, "cashtocashform.html", {"all_dropdown": all_coa})
 
 
 def journal_details(request, id):
@@ -11707,6 +11729,8 @@ def add_journal(request):
 
         print("debit account title", debit_account_head_title)
         print("credit account title", credit_account_head_title)
+
+
 
         if credit_account_head_title in cash_list or debit_account_head_title in cash_list:
             print("debit account title 1", debit_account_head_title)
