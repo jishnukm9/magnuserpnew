@@ -10240,10 +10240,14 @@ def addChartOfAccounts(request):
     data = CoASubAccounts()
     expensecatagory = ExpenseCategory()
     rootcoasub = request.POST["coa"]
+    title = request.POST["title"]
+    if '_' in title:
+        messages.error(request, "There should not be '_' in the title!")
+        return redirect("chartofaccountsform")
     data.head_root = rootcoasub
     gstring = rootcoasub.replace(" ", "_")
     data.gstring = gstring
-    data.title = request.POST["title"]
+    data.title = title
     if CoASubAccounts.objects.filter(title=request.POST['title']).first():
         messages.error(request, "Title already exist!")
         return redirect("chartofaccountsform")
@@ -29697,9 +29701,8 @@ def process_grouped_accounts(grouped_accounts):
         # Calculate total for the group
         total = sum(convert_value_to_float(account['value']) for account in accounts)
 
-        print("total",total)
         total = format_negative_value(round(total,2))
-        print("total 1",total)
+   
         # Create new structure with total and original data
         result[head_root] = {
             "total": total,
@@ -30105,9 +30108,6 @@ def balancesheet(request):
     print("grouped liability",grouped_liabilities)
     print("grouped equity",grouped_equity)
 
-
-
-
     data = Sale.objects.filter(Q(branch=homebranch)& Q(invoicedate__gte=startdate)
         & Q(invoicedate__lte=enddate)).order_by("-pk")
 
@@ -30179,8 +30179,6 @@ def balancesheet(request):
 
     account_receivable_list = [cust_dict]
     
-
-
     data = BranchPurchase.objects.filter(
         Q(branch=homebranch)
         & ~Q(purchase_type="transfer")
@@ -30218,8 +30216,6 @@ def balancesheet(request):
 
 
     accounts_payable_total = format_negative_value(round(accounts_payable_total,2))
-
-
 
     ###################################################
 
@@ -30697,6 +30693,7 @@ def placcountnew(request):
     # Process all receipts
     receipts_obj = Receipts.objects.filter(Q(branch=branch)& Q(receiptdate__gte=startdate)
         & Q(receiptdate__lte=enddate))
+
     for receipt in receipts_obj:
         credit_acc = receipt.creditaccount
         acc_key = credit_acc.replace(" ", "_")
