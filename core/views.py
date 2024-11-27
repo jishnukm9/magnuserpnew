@@ -11634,13 +11634,14 @@ def journal(request):
 
 
 def journal_form(request):
+    print("journal form")
     all_coa = []
     db_dropdown = CoASubAccounts.objects.all()
-    coa_dropdown = coa.COA_GROUP_LIST
+    # coa_dropdown = coa.COA_GROUP_LIST
     for item in db_dropdown:
         all_coa.append(item.title)
-    for item in coa_dropdown:
-        all_coa.append(item["name"])
+    # for item in coa_dropdown:
+    #     all_coa.append(item["name"])
     return render(request, "journalform.html", {"all_dropdown": all_coa})
 
 

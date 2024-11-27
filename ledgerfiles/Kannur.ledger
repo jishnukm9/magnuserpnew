@@ -500,3 +500,15 @@
      Assets:FIXED ASSETS:Office Computer     5000 INR
      Assets:CASH ACCOUNT:CASH ACCOUNT
 
+2024-11-27  *  Commission Income  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      10000  INR
+     Income:INCOMES:Commission Income
+
+2024-11-27   *  Rent expense paid using commission (Journal) 
+     Expenses:EXPENSES:Rent Expense     5000 INR
+     Income:INCOMES:Commission Income
+
+2024-11-27  *  Commission Income  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      10000  INR
+     Income:INCOMES:Commission Income
+
