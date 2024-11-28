@@ -11652,7 +11652,6 @@ def journal_form(request):
 
 
 def cashtocash_form(request):
- 
     all_coa = []
     # db_dropdown = CoASubAccounts.objects.all()
     cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
@@ -30264,14 +30263,22 @@ def balancesheet(request):
         # if item.duebalance == 0:
         servicerefnum = item.servicerefnumber
         serv_disc_obj = ServiceDiscountDetails.objects.filter(servicerefnumber=servicerefnum).first()
-        servicetax=serv_disc_obj.servicetaxtotal_afterdiscount
-        sparetax=serv_disc_obj.sparetaxtotal_afterdiscount
-        totaltax = servicetax + sparetax
-        service_tax_payable += totaltax
+        if serv_disc_obj:
+            servicetax=serv_disc_obj.servicetaxtotal_afterdiscount
+            sparetax=serv_disc_obj.sparetaxtotal_afterdiscount
+            totaltax = servicetax + sparetax
+            service_tax_payable += totaltax
+        else:
+            service_tax = item.totaltax
+            spare_tax = 0
+            spare_obj = SpareParts.objects.filter(servicerefnumber=servicerefnum)
+            if spare_obj:
+                for sub_item in spare_obj:
+                    spare_tax += (sub_item.price * (float(sub_item.salegst) / 100))
+            totaltax = service_tax + spare_tax
+            service_tax_payable += totaltax
+
     liability_total += service_tax_payable
-
-    
-
 
     purchase_return_tax = 0
     data = PurchaseReturn.objects.filter(Q(status='Processed') & Q(branch=homebranch) & Q(createddate__gte=startdate)
