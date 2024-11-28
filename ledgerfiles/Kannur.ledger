@@ -520,3 +520,29 @@
      Income:INCOMES:Commission Income     20000 INR
      Expenses:EXPENSES:Rent Expense
 
+2024-11-28 * INV7655555 (Purchase Transaction)
+     Expenses:Purchase        4600.0  INR 
+     Assets:Purchase:Cash 
+
+2024-11-28 * INV-24111 (Sale Transaction)
+    Assets:Sale:Card              575.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -75.0  INR
+
+2024-11-28   *  RENT EXPENCE PAYABLE (Journal) 
+     Expenses:EXPENSES:RENT EXPENSE     2000 INR
+     Liabilities:OTHER LIABILITIES:RENT PAYABLE
+
+2024-11-28 * SR1 (Service Due full Transaction)
+    Assets:Service:AccountReceivable:jishnu   -775.0   INR 
+    Assets:Service:Cash
+
+2024-11-28 * INV-24113 (Sale Transaction)
+    Assets:Sale:Cash              525.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable      -68.48  INR
+
+2024-11-28   *  Rent Paid (Payment) 
+     Liabilities:OTHER LIABILITIES:RENT PAYABLE     2000 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+

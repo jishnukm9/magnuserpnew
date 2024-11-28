@@ -499,7 +499,7 @@
             <li class="list-group-item">
                 <div class="d-flex justify-content-between">
                     <p class="fw-bold">Amount Paid</p>
-                    <input required class="form-control w-50 " type="number" min="0" step="0.01" id="amountrecieved" name="recieved" value="0">
+                    <input required class="form-control w-50 amount-paid-purchase" type="number" min="0" step="0.01" id="amountrecieved" name="recieved" value="0">
                   </div>
             </li>
             <li class="list-group-item">
@@ -775,13 +775,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!mop) {
                 throw "MOP is required.";
             }
+
+            // const paid = $(this).find('.amount-paid-purchase').val();
+            // console.log(paid)
+            // if (!paid) {
+            //     throw "Please enter a valid number (Amount Paid).";
+            // }
         });
 
         // Validate amount paid vs final amount
         let finalAmount = $("#totalbillingamount").val();
         let amountPaid = $("#amountrecieved").val();
+        
         if (parseFloat(amountPaid) > parseFloat(finalAmount)) {
-            throw "Amount Paid is larger than Final Amount.";
+            throw `Amount Paid is larger than Final Amoun. ${amountPaid} > ${finalAmount}`;
+        }
+
+        if (amountPaid == null || amountPaid == "" || amountPaid == undefined) {
+          throw "Please enter a valid number (Amount Paid).";
         }
 
         // If we reach here, validation passed
@@ -866,7 +877,10 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#amountrecieved").on("change", function () {
         validateAndShowConfirmation();
     });
+   
 });
+
+
 
 
 
