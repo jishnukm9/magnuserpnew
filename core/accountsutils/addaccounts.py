@@ -387,7 +387,8 @@ class AccountStatement():
             ledger.debit_amount = 0
             ledger.credit_amount = amount
             ledger.account_head = params['creditac']
-            ledger.account_subhead = params['creditac']
+            # ledger.account_subhead = params['creditac']
+            ledger.account_subhead = params['paymentmode']
 
             ledger.pk = None
             ledger.save()
@@ -415,7 +416,8 @@ class AccountStatement():
             ledger.debit_amount = amount
             ledger.credit_amount = 0
             ledger.account_head = params['debitac']
-            ledger.account_subhead = params['debitac']
+            # ledger.account_subhead = params['debitac']
+            ledger.account_subhead = params['paymentmode']
             ledger.pk = None
             ledger.save()
         elif type == "Journal":

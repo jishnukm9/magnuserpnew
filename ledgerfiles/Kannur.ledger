@@ -577,3 +577,19 @@
      Expenses:EXPENSES:RENT EXPENSE     3400 INR
      Liabilities:OTHER LIABILITIES:RENT PAYABLE
 
+2024-11-28   *  Rent Paid (Payment) 
+     Expenses:EXPENSES:RENT EXPENSE     500 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-28   *  Rent Paid (Payment) 
+     Expenses:EXPENSES:RENT EXPENSE     600 INR
+     Assets:CASH ACCOUNT:CASH ACCOUNT
+
+2024-11-28  *  Commission Income  (Receipt) 
+     Assets:CASH ACCOUNT:CASH ACCOUNT      450  INR
+     Income:INCOMES:Commission Income
+
+2024-11-28  *  Commission Income 2  (Receipt) 
+     Assets:CASH AT BANKS:CASH AT BANKS      540  INR
+     Income:INCOMES:Commission Income
+
