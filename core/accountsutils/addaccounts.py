@@ -15,6 +15,9 @@ class AccountStatement():
         ledger = Ledger()
         if type == "Purchase":
 
+
+            print("params",params)
+
             try:
                 totalbillingamount = round(params["totalbillingamount"],2)
             except:
@@ -47,7 +50,8 @@ class AccountStatement():
             ledger.debit_amount  = 0
             ledger.account_type  = coa.ASSET["account_type"]
             ledger.account_head  = coa.ASSET["name"]
-            ledger.account_subhead  = "Cash"
+            # ledger.account_subhead  = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 
@@ -86,7 +90,8 @@ class AccountStatement():
             ledger.debit_amount = 0 
             ledger.credit_amount = amount_received
             ledger.account_head = coa.ASSET["name"]
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 
@@ -125,7 +130,8 @@ class AccountStatement():
             ledger.debit_amount = amount_received
             ledger.credit_amount = 0 
             ledger.account_head = coa.ASSET["name"]
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 
@@ -161,7 +167,8 @@ class AccountStatement():
             ledger.account_type = "DEBIT" # because cash is increasing
             ledger.debit_amount = amount_received
             ledger.credit_amount = 0
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 
@@ -188,7 +195,8 @@ class AccountStatement():
 
             ledger.debit_amount = net_total
             ledger.credit_amount = 0
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 
@@ -216,7 +224,8 @@ class AccountStatement():
             ledger.debit_amount = 0
             ledger.credit_amount = amount
             ledger.account_head = coa.ASSET["name"]
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
 
             ledger.pk = None
             ledger.save()
@@ -245,7 +254,8 @@ class AccountStatement():
             ledger.debit_amount = 0
             ledger.credit_amount = params['amount']
             ledger.account_head = coa.ASSET["name"]
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
         elif type == "ServiceEntry":
@@ -283,7 +293,8 @@ class AccountStatement():
             ledger.debit_amount = amount_received
             ledger.credit_amount = 0 
             ledger.account_head = coa.ASSET["name"]
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 
@@ -319,7 +330,10 @@ class AccountStatement():
             for item in adjustLedger:
                 if item.narration == 'Service Entry Transaction' and item.account_subhead == 'Service':
                     item.credit_amount = total_amount
-                if item.narration == 'Service Entry Transaction' and item.account_subhead == 'Cash':
+                # ledger cash bank card upi saving 28-11-2024
+                # if item.narration == 'Service Entry Transaction' and item.account_subhead == 'Cash':
+                #     advanceamount = item.debit_amount
+                if item.narration == 'Service Entry Transaction' and (item.account_subhead == 'Cash' or item.account_subhead == 'Bank' or item.account_subhead == 'Card' or item.account_subhead == 'UPI'): 
                     advanceamount = item.debit_amount
                 if item.narration == 'Service Entry Transaction' and item.account_subhead == 'Customer':
                     balanceamount = total_amount - advanceamount
@@ -345,7 +359,8 @@ class AccountStatement():
             ledger.debit_amount = cashpaid
             ledger.credit_amount = 0 
             ledger.account_head = coa.ASSET["name"]
-            ledger.account_subhead = "Cash"
+            # ledger.account_subhead = "Cash"
+            ledger.account_subhead  = params['paymentmode']
             ledger.pk = None
             ledger.save()
 

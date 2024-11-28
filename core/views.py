@@ -2623,6 +2623,7 @@ def addPurchase(request):
         "userbranch": data.branch,
         "amountrecieved": data.amountrecieved,
         "duebalance": data.duebalance,
+        "paymentmode":request.POST.get("paymentmode")
     }
 
     financial_statement.add_ledger("Purchase", ledger_params)
@@ -2879,6 +2880,7 @@ def addBulkPurchaseForm(request):
                         "amountrecieved": amount_received,
                         "duebalance": bill_total[df["Bill Number"][i]]["total"]
                         - amount_received,
+                        "paymentmode": df["Payment Mode"][i],
                     }
                     financial_statement.add_ledger("Purchase", ledger_params)
                     cashbook_params = {
@@ -3280,6 +3282,7 @@ def addBranchPurchase(request):
         "userbranch": data.branch,
         "amountrecieved": data.amountrecieved,
         "duebalance": data.duebalance,
+        "paymentmode":request.POST.get("paymentmode")
     }
 
     financial_statement.add_ledger("Purchase", ledger_params)
@@ -3395,6 +3398,7 @@ def addPurchaseDue(request):
         "amountreceived": float(amountrecieved),
         "customer_or_vendor": transaction.accounts,
         "userbranch": transaction.branch,
+        "paymentmode":request.POST.get("paymentmode")
     }
 
     financial_statement.add_ledger("PurchaseDue", ledger_params)
@@ -4256,6 +4260,7 @@ def changePurchaseReturnStatus(request):
         "nettotal": nettotal,
         "customer_or_vendor": supplier,
         "userbranch": branch,
+        "paymentmode": paymentmode,
     }
 
     financial_statement.add_ledger("PurchaseReturn", ledger_params)
@@ -6381,6 +6386,7 @@ def addSalesReturn(request):
         "amount": float(request.POST["nettotal-sale"]),
         "customer_or_vendor": return_customer,
         "userbranch": request.user.userprofile.branch,
+         "paymentmode": request.POST["paymentmode"],
     }
 
     financial_statement.add_ledger("SaleReturn", ledger_params)
@@ -6388,7 +6394,7 @@ def addSalesReturn(request):
     cashbook_params = {
         "userbranch": request.user.userprofile.branch,
         "amount": float(request.POST["nettotal-sale"]),
-        "paymentmode": transaction.paymentmode,
+        "paymentmode": request.POST["paymentmode"],
     }
 
     financial_statement.add_cashbook("SaleReturn", cashbook_params)
@@ -7078,6 +7084,7 @@ def addSale(request):
         "userbranch": data.branch,
         "amountrecieved": data.amountrecieved,
         "duebalance": data.duebalance,
+        "paymentmode": sale_paymentmode,
     }
 
     financial_statement.add_ledger("Sale", ledger_params)
@@ -7371,6 +7378,7 @@ def addSaleDue(request):
         "amountrecieved": amountrecieved,
         "customer_or_vendor": transaction.accounts,
         "userbranch": request.user.userprofile.branch,
+        "paymentmode": paymentmode,
     }
 
     financial_statement.add_ledger("SaleDue", ledger_params)
@@ -11505,6 +11513,7 @@ def add_payment(request):
             "date": today_date,
             "debitac": data.debitaccount,
             "creditac": data.creditaccount,
+             "paymentmode": request.POST.get("paymentmode"),
         }
 
         transaction_type = "Payment"
@@ -11745,6 +11754,31 @@ def add_journal(request):
             transaction.remarks = request.POST.get("narration")
             transaction.transactiondate = datetime.now()
             transaction.save()
+        # else:
+        #     transaction = Transaction()
+        #     transaction.transactionid = journalid
+        #     transaction.amount = float(request.POST.get("amount"))
+        #     transaction.transactiontype = "journal"
+        #     transaction.paymentmode = request.POST.get("mode")
+        #     transaction.branch = currentuser.userprofile.branch
+        #     transaction.invoice_number = request.POST.get("referenceno")
+        #     transaction.accounts = credit_account_head_title
+        #     transaction.remarks = request.POST.get("narration")
+        #     transaction.transactiondate = datetime.now()
+        #     transaction.save()
+
+        #     transaction = Transaction()
+        #     transaction.transactionid = journalid
+        #     transaction.amount = float(request.POST.get("amount"))
+        #     transaction.transactiontype = "journal"
+        #     transaction.paymentmode = request.POST.get("mode")
+        #     transaction.branch = currentuser.userprofile.branch
+        #     transaction.invoice_number = request.POST.get("referenceno")
+        #     transaction.accounts = debit_account_head_title
+        #     transaction.remarks = request.POST.get("narration")
+        #     transaction.transactiondate = datetime.now()
+        #     transaction.save()
+
 
         debit_coa, debit_coa_level1 = get_coa_root(data.debitaccount)
         credit_coa, credit_coa_level1 = get_coa_root(data.creditaccount)
@@ -11759,6 +11793,7 @@ def add_journal(request):
             "date": today_date,
             "debitac": data.debitaccount,
             "creditac": data.creditaccount,
+            'paymentmode':request.POST.get("mode"),
         }
 
         transaction_type = "Journal"
@@ -11886,6 +11921,7 @@ def add_receipt(request):
             "date": today_date,
             "debitac": data.debitaccount,
             "creditac": data.creditaccount,
+            "paymentmode":request.POST.get("receiptmode")
         }
 
         transaction_type = "Receipt"
@@ -15644,6 +15680,7 @@ def addService(request):
         "userbranch": request.user.userprofile.branch,
         "amountrecieved": request.POST.get("amountrecievedservice"),
         "duebalance": due,
+        "paymentmode": paymentmode,
     }
 
     financial_statement.add_ledger("ServiceEntry", ledger_params)
@@ -17217,6 +17254,7 @@ def serviceBillingCheckout(request, servicerefnumber):
         "amountrecieved": received,
         "previousreceived": prev_recieved,
         "duebalance": due,
+        "paymentmode": paymentmode,
     }
 
     financial_statement.add_ledger("ServiceCheckout", ledger_params)
