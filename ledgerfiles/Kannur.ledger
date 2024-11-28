@@ -550,3 +550,30 @@
      Expenses:Purchase        34500.0  INR 
      Assets:Purchase:Card 
 
+2024-11-28 * INV-24114 (Sale Credit Transaction)
+    Assets:Sale:Bank              500.0 INR
+    Assets:Sale:AccountReceivable:jishnu        3525.0 INR
+    Income:Sale
+    Liabilities:Sale:TaxPayable                                   -525.0  INR
+
+2024-11-28 * INV-24114 (Sale Due full Transaction)
+    Assets:Sale:AccountReceivable:jishnu     -3525.0 INR 
+    Assets:Sale:Bank 
+
+2024-11-28 * INV543545 (Purchase Credit Transaction)
+     Expenses:Purchase        34500.0 INR 
+     Assets:Purchase:UPI
+     Liabilities:Purchase:AccountPayable:Rony electronics  -4500.0 INR
+
+2024-11-28 * INV543545 (Purchase Due Transaction)
+     Liabilities:Purchase:AccountPayable:Rony electronics    4500.0 INR
+     Assets:Purchase:UPI
+
+2024-11-28   *  Rent Payable (Journal) 
+     Liabilities:OTHER LIABILITIES:RENT PAYABLE     2000 INR
+     Expenses:EXPENSES:RENT EXPENSE
+
+2024-11-28   *  Rent payable 2 (Journal) 
+     Expenses:EXPENSES:RENT EXPENSE     3400 INR
+     Liabilities:OTHER LIABILITIES:RENT PAYABLE
+

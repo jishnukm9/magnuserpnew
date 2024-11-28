@@ -8849,47 +8849,31 @@ def accounts(request):
 
                 transaction_list.append(transaction_dict)
 
-        if tr.transactiontype == "journal":
+        # if tr.transactiontype == "journal":
 
-            transactionid = tr.transactionid
-            transaction_dict = {}
-            journal = Journals.objects.filter(journalid=transactionid).first()
-            if not journal:
-                pass
-            else:
+        #     transactionid = tr.transactionid
+        #     transaction_dict = {}
+        #     journal = Journals.objects.filter(journalid=transactionid).first()
+        #     if not journal:
+        #         pass
+        #     else:
                 
-                invoicenumber_list.add(journal.referenceno)
-                # accounts_list.add(sale.customer)
-                transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = ""
-                transaction_dict["paymentmode"] = tr.paymentmode
-                transaction_dict["transaction"] = tr
-                transaction_dict["remarks"] = journal.description
-                transaction_dict["branch"] = tr.branch
-                transaction_dict['date'] = journal.journaldate
+        #         invoicenumber_list.add(journal.referenceno)
+        #         transaction_dict["invoicenumber"] = journal.referenceno
+        #         transaction_dict["accounts"] = ""
+        #         transaction_dict["paymentmode"] = tr.paymentmode
+        #         transaction_dict["transaction"] = tr
+        #         transaction_dict["remarks"] = journal.description
+        #         transaction_dict["branch"] = tr.branch
+        #         transaction_dict['date'] = journal.journaldate
             
+        #         transaction_date = tr.transactiondate
+        #         if transaction_date:
+        #             transaction_dict['createddate'] = transaction_date
+        #         else:
+        #             transaction_dict['createddate'] = tr.createddate
 
-                ###############
-                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                # is_first = False
-                # if tr==trans_obj.first():
-                #     is_first=True
-                # else:
-                #     is_first = False
-
-                # if is_first:
-                #     transaction_dict['createddate'] = journal.journaldate
-                # else:
-                #     transaction_dict['createddate'] = tr.createddate
-                transaction_date = tr.transactiondate
-                if transaction_date:
-                    transaction_dict['createddate'] = transaction_date
-                else:
-                    transaction_dict['createddate'] = tr.createddate
-                ###############
-
-
-                transaction_list.append(transaction_dict)
+        #         transaction_list.append(transaction_dict)
 
         if tr.transactiontype == "service":
 
@@ -9439,18 +9423,16 @@ def daybook(request):
             else:
                 amount_type = ''
                 accounts = ''
-                cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+                # cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
 
-                if journal.creditaccount in cash_list:
+                if journal.creditaccount == tr.accounts:
                     amount_type = 'Credit'
-                    accounts = journal.debitaccount
-                elif journal.debitaccount in cash_list:
+                elif journal.debitaccount == tr.accounts:
                     amount_type = 'Debit'
-                    accounts = journal.creditaccount
 
                 invoicenumber_list.add(journal.referenceno)
                 transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = accounts
+                transaction_dict["accounts"] = tr.accounts
                 transaction_dict["paymentmode"] = tr.paymentmode
                 transaction_dict["transaction"] = tr
                 transaction_dict["remarks"] = journal.description
@@ -10081,18 +10063,16 @@ def search_daybook(request):
 
                 amount_type = ''
                 accounts = ''
-                cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+                # cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
 
-                if journal.creditaccount in cash_list:
+                if journal.creditaccount == tr.accounts:
                     amount_type = 'Credit'
-                    accounts = journal.debitaccount
-                elif journal.debitaccount in cash_list:
+                elif journal.debitaccount == tr.accounts:
                     amount_type = 'Debit'
-                    accounts = journal.creditaccount
 
                 invoicenumber_list.add(journal.referenceno)
                 transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = accounts
+                transaction_dict["accounts"] = tr.accounts
                 transaction_dict["paymentmode"] = tr.paymentmode
                 transaction_dict["transaction"] = tr
                 transaction_dict["remarks"] = journal.description
@@ -10100,6 +10080,8 @@ def search_daybook(request):
                 transaction_dict["title"] = "Journal"
                 transaction_dict["amounttype"] = amount_type
                 transaction_dict['date'] = journal.journaldate
+
+
                 # invoicenumber_list.add(journal.referenceno)
                 # # accounts_list.add(sale.customer)
                 # transaction_dict["invoicenumber"] = journal.referenceno
@@ -11710,50 +11692,60 @@ def add_journal(request):
         data.mode = request.POST.get("mode")
         data.save()
 
-        cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
+        # cash_list = ['CASH ACCOUNT', 'CASH AT BANKS']
 
 
-        if credit_account in cash_list:
+        # if credit_account in cash_list:
+        #     credit_account_head_title = credit_account
+        # else:
+        credit_account_head_title = CoASubAccounts.objects.filter(
+            title=credit_account
+        ).first()
+        if credit_account_head_title:
+            credit_account_head_title = credit_account_head_title.title
+        else:
             credit_account_head_title = credit_account
-        else:
-            credit_account_head_title = CoASubAccounts.objects.filter(
-                title=credit_account
-            ).first()
-            if credit_account_head_title:
-                credit_account_head_title = credit_account_head_title.title
-            else:
-                credit_account_head_title = credit_account
 
-        if debit_account in cash_list:
-            debit_account_head_title = debit_account
+        # if debit_account in cash_list:
+        #     debit_account_head_title = debit_account
+        # else:
+        debit_account_head_title = CoASubAccounts.objects.filter(
+            title=debit_account
+        ).first()
+        if debit_account_head_title:
+            debit_account_head_title = debit_account_head_title.title
         else:
-            debit_account_head_title = CoASubAccounts.objects.filter(
-                title=debit_account
-            ).first()
-            if debit_account_head_title:
-                debit_account_head_title = debit_account_head_title.title
-            else:
-                debit_account_head_title = debit_account
+            debit_account_head_title = debit_account
 
         print("debit account title", debit_account_head_title)
         print("credit account title", credit_account_head_title)
 
+        # if credit_account_head_title in cash_list or debit_account_head_title in cash_list:
+        # print("debit account title 1", debit_account_head_title)
+        # print("credit account title 1", credit_account_head_title)
+        transaction = Transaction()
+        transaction.transactionid = journalid
+        transaction.amount = float(request.POST.get("amount"))
+        transaction.transactiontype = "journal"
+        transaction.paymentmode = request.POST.get("mode")
+        transaction.branch = currentuser.userprofile.branch
+        transaction.invoice_number = request.POST.get("referenceno")
+        transaction.accounts = debit_account_head_title
+        transaction.remarks = request.POST.get("narration")
+        transaction.transactiondate = datetime.now()
+        transaction.save()
 
-
-        if credit_account_head_title in cash_list or debit_account_head_title in cash_list:
-            print("debit account title 1", debit_account_head_title)
-            print("credit account title 1", credit_account_head_title)
-            transaction = Transaction()
-            transaction.transactionid = journalid
-            transaction.amount = float(request.POST.get("amount"))
-            transaction.transactiontype = "journal"
-            transaction.paymentmode = request.POST.get("mode")
-            transaction.branch = currentuser.userprofile.branch
-            transaction.invoice_number = request.POST.get("referenceno")
-            transaction.accounts = "NA"
-            transaction.remarks = request.POST.get("narration")
-            transaction.transactiondate = datetime.now()
-            transaction.save()
+        transaction = Transaction()
+        transaction.transactionid = journalid
+        transaction.amount = float(request.POST.get("amount"))
+        transaction.transactiontype = "journal"
+        transaction.paymentmode = request.POST.get("mode")
+        transaction.branch = currentuser.userprofile.branch
+        transaction.invoice_number = request.POST.get("referenceno")
+        transaction.accounts = credit_account_head_title
+        transaction.remarks = request.POST.get("narration")
+        transaction.transactiondate = datetime.now()
+        transaction.save()
         # else:
         #     transaction = Transaction()
         #     transaction.transactionid = journalid
@@ -12604,47 +12596,30 @@ def search_money_reciept(request):
 
                 transaction_list.append(transaction_dict)
 
-        if tr.transactiontype == "journal":
+        # if tr.transactiontype == "journal":
 
-            transactionid = tr.transactionid
-            transaction_dict = {}
-            journal = Journals.objects.filter(journalid=transactionid).first()
-            if not journal:
-                pass
-            else:
-                invoicenumber_list.add(journal.referenceno)
-                # accounts_list.add(sale.customer)
-                transaction_dict["invoicenumber"] = journal.referenceno
-                transaction_dict["accounts"] = ""
-                transaction_dict["paymentmode"] = tr.paymentmode
-                transaction_dict["transaction"] = tr
-                transaction_dict["remarks"] = journal.description
-                transaction_dict["branch"] = tr.branch
-                transaction_dict['date'] = journal.journaldate
+        #     transactionid = tr.transactionid
+        #     transaction_dict = {}
+        #     journal = Journals.objects.filter(journalid=transactionid).first()
+        #     if not journal:
+        #         pass
+        #     else:
+        #         invoicenumber_list.add(journal.referenceno)
+        #         transaction_dict["invoicenumber"] = journal.referenceno
+        #         transaction_dict["accounts"] = ""
+        #         transaction_dict["paymentmode"] = tr.paymentmode
+        #         transaction_dict["transaction"] = tr
+        #         transaction_dict["remarks"] = journal.description
+        #         transaction_dict["branch"] = tr.branch
+        #         transaction_dict['date'] = journal.journaldate
 
-                
+        #         transaction_date = tr.transactiondate
+        #         if transaction_date:
+        #             transaction_dict['createddate'] = transaction_date
+        #         else:
+        #             transaction_dict['createddate'] = tr.createddate
 
-
-                ###############
-                # trans_obj =Transaction.objects.filter(transactionid=journal.journalid)
-                # is_first = False
-                # if tr==trans_obj.first():
-                #     is_first=True
-                # else:
-                #     is_first = False
-
-                # if is_first:
-                #     transaction_dict['createddate'] = journal.journaldate
-                # else:
-                #     transaction_dict['createddate'] = tr.createddate
-                transaction_date = tr.transactiondate
-                if transaction_date:
-                    transaction_dict['createddate'] = transaction_date
-                else:
-                    transaction_dict['createddate'] = tr.createddate
-                ###############
-
-                transaction_list.append(transaction_dict)
+        #         transaction_list.append(transaction_dict)
 
         if tr.transactiontype == "service":
 
@@ -29810,6 +29785,7 @@ def balancesheet(request):
     transaction_obj = func_get_transaction_for_balancesheet(startdate,enddate,request)
 
     for trans in transaction_obj:
+
         credit_or_debit = 'credit'
         if trans['transaction'].transactiontype == 'purchase':
             credit_or_debit = 'credit'
@@ -29827,7 +29803,6 @@ def balancesheet(request):
             credit_or_debit = 'debit'
         elif trans['transaction'].transactiontype == 'journal':
             credit_or_debit = trans['amounttype'].lower()
-
 
         # All possible combinations
         if trans['transaction'].paymentmode == 'Cash':
@@ -30165,10 +30140,6 @@ def balancesheet(request):
     grouped_assets = process_grouped_accounts(grouped_assets)
     grouped_liabilities = process_grouped_accounts(grouped_liabilities)
     grouped_equity = process_grouped_accounts(grouped_equity)
-
-    print("grouped asset",grouped_assets)
-    print("grouped liability",grouped_liabilities)
-    print("grouped equity",grouped_equity)
 
     data = Sale.objects.filter(Q(branch=homebranch)& Q(invoicedate__gte=startdate)
         & Q(invoicedate__lte=enddate)).order_by("-pk")
